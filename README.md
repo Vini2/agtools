@@ -6,7 +6,11 @@ Currently, I have added code for [SPAdes](https://github.com/ablab/spades) (incl
 
 ## Requirements
 
-You should have Python and [python-igraph](https://python.igraph.org/en/stable/index.html) package installed.
+You should have Python and the following packages installed.
+
+* [collections](https://docs.python.org/3/library/collections.html) - Usually installed by default with Python
+* [re](https://docs.python.org/3/library/re.html) - Usually installed by default with Python
+* [python-igraph](https://python.igraph.org/en/stable/index.html)
 
 ## Demo
 
