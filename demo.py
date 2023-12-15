@@ -11,8 +11,8 @@ def main():
             assembly_graph_file, 
             contig_paths_file)
     
-    print(f"Total number of vertices in the assembly graph: {len(list(assembly_graph.vs))}")
-    print(f"Total number of edges in the assembly graph: {len(list(assembly_graph.es))}")
+    print(f"Total number of vertices in the assembly graph: {assembly_graph.vcount()}")
+    print(f"Total number of edges in the assembly graph: {assembly_graph.ecount()}")
 
 if __name__ == "__main__":
     main()
