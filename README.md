@@ -4,6 +4,12 @@ This repo contains useful scripts to manipulate assembly graph files from differ
 
 Currently, I have added code for [SPAdes](https://github.com/ablab/spades) (including metaSPAdes) assembly graphs.
 
+## Requirements
+
+You should have Python and [python-igraph](https://python.igraph.org/en/stable/index.html) package installed.
+
+## Demo
+
 Please see `demo.py` for an example.
 
 ```python
