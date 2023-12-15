@@ -1,4 +1,4 @@
-from agtools.graph_utils import get_graph
+from agtools.spades_graph_utils import get_graph
 
 def main():
     assembly_graph_file = "tests/data/assembly_graph_with_scaffolds.gfa"
