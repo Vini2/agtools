@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from .bidirectionalmap import BidirectionalMap
 
+
 def get_segment_paths_spades(contig_paths):
     paths = {}
     segment_contigs = {}
@@ -119,7 +120,6 @@ def get_graph_edges_spades(
 
 
 def get_graph(assembly_graph_file, contig_paths_file):
-
     # Get paths, segments, links and contigs of the assembly graph
     (
         paths,
