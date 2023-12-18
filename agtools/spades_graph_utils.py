@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import re
 
-from igraph import *
+from igraph import Graph
 from collections import defaultdict
 
 from .bidirectionalmap import BidirectionalMap
