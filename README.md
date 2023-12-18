@@ -17,6 +17,8 @@ You should have Python and the following packages installed.
 Please see `demo.py` for an example.
 
 ```python
+from agtools.spades_graph_utils import get_graph
+
 def main():
     assembly_graph_file = "tests/data/assembly_graph_with_scaffolds.gfa"
     contig_paths_file = "tests/data/contigs.paths"
