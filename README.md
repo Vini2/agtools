@@ -48,4 +48,10 @@ if __name__ == "__main__":
     main()
 ```
 
+You can run `demo.py` as follows.
+
+```python
+python demo.py
+```
+
 You will get `assembly_graph` which is an `igraph.Graph` object. You can get more details from the official [`python-igraph` documentation](https://python.igraph.org/en/stable/analysis.html#graph-analysis).
