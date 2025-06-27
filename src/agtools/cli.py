@@ -87,6 +87,17 @@ _click_command_opts = dict(
 @main.command(**_click_command_opts)
 @_graph
 @_output
+def stats(
+    graph,
+    output
+):
+    """Compute statstics about the graph"""
+    print("Running stats")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
 def gfa2fasta(
     graph,
     output
