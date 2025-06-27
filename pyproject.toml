@@ -20,7 +20,7 @@ include = ["doc/", "requirements.txt", "src/*", "pyproject.toml"]
 exclude = ["doc/*.html"]
 
 [project.scripts]
-gbintk = "gbintk.cli:main"
+agtools = "agtools.cli:main"
 
 [project.optional-dependencies]
 test = [
@@ -33,4 +33,5 @@ dev = [
     "click",
     "flit",
     "isort==5.13.2",
+    "agtools[test]"
 ]
