@@ -57,18 +57,21 @@ def main():
 
 _graph = click.option(
     "--graph",
+    "-g",
     help="path to the assembly graph file",
     type=click.Path(exists=True),
     required=True,
 )
 _output = click.option(
     "--output",
+    "-o",
     help="path to the output folder",
     type=click.Path(dir_okay=True, writable=True, readable=True),
     required=True,
 )
 _prefix = click.option(
     "--prefix",
+    "-p",
     help="prefix for the output file",
     type=str,
     default="",
@@ -96,6 +99,7 @@ def gfa2fasta(
 @_graph
 @click.option(
     "--ksize",
+    "-k",
     help="k-mer size used for the assembly",
     type=int,
     default=141,
@@ -127,6 +131,7 @@ def rename(
 @_graph
 @click.option(
     "--segment",
+    "-s",
     help="segment ID",
     type=str,
     show_default=True,
