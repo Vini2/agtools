@@ -1,4 +1,4 @@
-from agtools.spades_graph_utils import get_graph
+from agtools.assemblers.spades import get_graph
 
 
 def main():
