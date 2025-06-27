@@ -4,7 +4,7 @@ import re
 from igraph import Graph
 from collections import defaultdict
 
-from .bidirectionalmap import BidirectionalMap
+from agtools.utils.bidirectionalmap import BidirectionalMap
 
 
 def get_segment_paths_spades(contig_paths):
