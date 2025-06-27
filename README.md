@@ -39,3 +39,22 @@ flit install -s --python `which python`
 agtools --help
 ```
 
+## Available subcommands in `agtools`
+
+Run `agtools --help` or `agtools -h` to list the help message for `agtools`.
+
+```bash
+Usage: agtools [OPTIONS] COMMAND [ARGS]...
+
+  agtools: Tools for manipulating assembly graphs
+
+Options:
+  -v, --version  Show the version and exit.
+  -h, --help     Show this message and exit.
+
+Commands:
+  gfa2fasta  Get segments in FASTA format
+  fastg2gfa  Convert FASTG file to GFA
+  rename     Rename segments in a GFA file
+  subgraph   Extract a subgraph containing a given segment
+```
