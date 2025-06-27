@@ -23,7 +23,7 @@ Please follow the steps below to install `agtools` using `flit` for development.
 
 ```bash
 # clone repository
-git clone https://github.com/metagentools/gbintk.git
+git clone https://github.com/Vini2/agtools.git
 
 # move to gbintk directory
 cd agtools
