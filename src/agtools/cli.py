@@ -91,7 +91,7 @@ def stats(
     graph,
     output
 ):
-    """Compute statstics about the graph"""
+    """Compute statistics about the graph"""
     print("Running stats")
 
 
