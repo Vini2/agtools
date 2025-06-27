@@ -53,6 +53,7 @@ Options:
   -h, --help     Show this message and exit.
 
 Commands:
+  stats      Compute statistics about the graph
   gfa2fasta  Get segments in FASTA format
   fastg2gfa  Convert FASTG file to GFA
   rename     Rename segments in a GFA file
