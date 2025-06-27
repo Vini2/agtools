@@ -149,10 +149,10 @@ def rename(
     required=True,
 )
 @_output
-def subgraph(
+def component(
     graph,
     segment,
     output
 ):
-    """Extract a subgraph containing a given segment"""
-    print("Extracting a subgraph given a segment")
+    """Extract a component containing a given segment"""
+    print("Extracting a component given a segment")
