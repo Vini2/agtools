@@ -57,5 +57,5 @@ Commands:
   gfa2fasta  Get segments in FASTA format
   fastg2gfa  Convert FASTG file to GFA
   rename     Rename segments in a GFA file
-  subgraph   Extract a subgraph containing a given segment
+  component  Extract a component containing a given segment
 ```
