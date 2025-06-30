@@ -197,7 +197,7 @@ def gfa2dot(
     ksize,
     output
 ):
-    """Convert GFA file to DOT format"""
+    """Convert GFA file to DOT format (Graphviz)"""
     print("Running gfa2dot")
 
 
