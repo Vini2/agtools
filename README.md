@@ -53,6 +53,7 @@ Options:
 Commands:
   stats      Compute statistics about the graph
   rename     Rename segments in a GFA file
+  merge      Merge two or more GFA files
   filter     Filter segments from GFA file
   component  Extract a component containing a given segment
   fastg2gfa  Convert FASTG file to GFA format
