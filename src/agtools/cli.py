@@ -210,3 +210,14 @@ def gfa2fasta(
 ):
     """Get segments in FASTA format"""
     print("Running gfa2fasta")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
+def gfa2adj(
+    graph,
+    output
+):
+    """Get adjacency matrix of the assembly graph"""
+    print("Running gfa2adj")
