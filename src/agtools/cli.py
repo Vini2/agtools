@@ -98,44 +98,33 @@ def stats(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2fasta(
-    graph,
-    output
-):
-    """Get segments in FASTA format"""
-    print("Running gfa2fasta")
-
-
-@main.command(**_click_command_opts)
-@_graph
-@click.option(
-    "--ksize",
-    "-k",
-    help="k-mer size used for the assembly",
-    type=int,
-    default=141,
-    show_default=True,
-    required=True,
-)
-@_output
-def fastg2gfa(
-    graph,
-    ksize,
-    output
-):
-    """Convert FASTG file to GFA"""
-    print("Running fastg2gfa")
-
-
-@main.command(**_click_command_opts)
-@_graph
-@_output
 def rename(
     graph,
     output
 ):
     """Rename segments in a GFA file"""
     print("Renaming segments")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@click.option(
+    "--min-length",
+    "-l",
+    help="minimum length of segments to filter",
+    type=int,
+    default=141,
+    show_default=True,
+    required=True,
+)
+@_output
+def filter(
+    graph,
+    length,
+    output
+):
+    """Filter segments from GFA file"""
+    print("Running filter")
 
 
 @main.command(**_click_command_opts)
@@ -156,3 +145,68 @@ def component(
 ):
     """Extract a component containing a given segment"""
     print("Extracting a component given a segment")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@click.option(
+    "--ksize",
+    "-k",
+    help="k-mer size used for the assembly",
+    type=int,
+    default=141,
+    show_default=True,
+    required=True,
+)
+@_output
+def fastg2gfa(
+    graph,
+    ksize,
+    output
+):
+    """Convert FASTG file to GFA format"""
+    print("Running fastg2gfa")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@click.option(
+    "--ksize",
+    "-k",
+    help="k-mer size used for the assembly",
+    type=int,
+    default=141,
+    show_default=True,
+    required=True,
+)
+@_output
+def gfa2fastg(
+    graph,
+    ksize,
+    output
+):
+    """Convert GFA file to FASTG format"""
+    print("Running gfa2fastg")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
+def gfa2dot(
+    graph,
+    ksize,
+    output
+):
+    """Convert GFA file to DOT format"""
+    print("Running gfa2dot")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
+def gfa2fasta(
+    graph,
+    output
+):
+    """Get segments in FASTA format"""
+    print("Running gfa2fasta")
