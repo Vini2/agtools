@@ -1,8 +1,6 @@
 # agtools: Tools for manipulating assembly graphs
 
-This repo contains useful scripts to manipulate assembly graph files from different assemblers.
-
-Currently, I have added code for [SPAdes](https://github.com/ablab/spades) (including metaSPAdes) assembly graphs.
+`agtools` is a toolkit for manipulating assembly graphs, with a focus on metagenomic applications. It offers a command-line interface for tasks such as graph format conversion, segment filtering, and subgraph extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
 
 ## Requirements
 
