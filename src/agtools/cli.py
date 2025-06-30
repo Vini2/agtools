@@ -108,6 +108,17 @@ def rename(
 
 @main.command(**_click_command_opts)
 @_graph
+@_output
+def merge(
+    graph,
+    output
+):
+    """Merge two or more GFA files"""
+    print("Merging GFA files")
+
+
+@main.command(**_click_command_opts)
+@_graph
 @click.option(
     "--min-length",
     "-l",
