@@ -58,8 +58,6 @@ class OrderedGroup(click.Group):
 @click.version_option(__version__, "-v", "--version", is_flag=True)
 def main():
     """agtools: Tools for manipulating assembly graphs"""
-
-    logger.info("Welcome to agtools, tools for manipulating assembly graphs")
     pass
 
 
@@ -169,7 +167,13 @@ def component(graph, segment, output):
 @_output
 def fastg2gfa(graph, ksize, output):
     """Convert FASTG file to GFA format"""
-    print("Running fastg2gfa")
+
+    logger.info(f"Converting FASTG file {graph} to GFA format")
+    logger.info(f"k-mer size {ksize} will be used as the overlap")
+    
+    gfa_path = commands.fastg2gfa(graph, ksize, output)
+
+    logger.info(f"GFA file written to {gfa_path} with fixed overlap: {ksize}M")
 
 
 @main.command(**_click_command_opts)

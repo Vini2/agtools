@@ -8,7 +8,3 @@ __version__ = "0.0.1"
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
-
-
-from .rename import rename
-from .fastg2gfa import fastg2gfa

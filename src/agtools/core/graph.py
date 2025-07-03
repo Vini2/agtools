@@ -113,56 +113,34 @@ class AssemblyGraph:
         return new_ag
 
 
-# def load_gfa(gfa_file):
-#     print(f"Loading GFA file {gfa_file}")
-
-
 def parse_fastg(fastg_file):
     segments = {}
-    segments = {}
+    edges = {}
 
-    with open(fastg_file, "r") as f:
+    with open(fastg_file, 'r') as f:
         current_node = None
         sequence = []
 
         for line in f:
             line = line.strip()
-            if line.startswith(">"):
+            if line.startswith('>'):
                 if current_node and sequence:
-                    segments[current_node] = "".join(sequence)
+                    segments[current_node] = ''.join(sequence)
                     sequence = []
 
                 header = line[1:]
-                parts = header.split(":")
+                parts = header.split(':')
                 node = parts[0].strip("'")
                 neighbors = []
                 if len(parts) > 1:
-                    neighbors = re.split(r"[,\s]+", parts[1])
+                    neighbors = re.split(r'[,\s]+', parts[1])
                 current_node = node
-                segments[node] = neighbors
+                edges[node] = neighbors
             else:
                 sequence.append(line)
 
         if current_node and sequence:
-            segments[current_node] = "".join(sequence)
+            segments[current_node] = ''.join(sequence)
 
-    return segments, segments
+    return segments, edges
 
-
-def extract_links_fastg(segments, fixed_overlap: int):
-    links = []
-
-    for from_node, neighbors in segments.items():
-        for raw_to_node in neighbors:
-            if not raw_to_node:
-                continue
-
-            from_ori = "+" if not from_node.endswith("'") else "-"
-            to_ori = "+" if not raw_to_node.endswith("'") else "-"
-
-            from_clean = from_node.strip("'")
-            to_clean = raw_to_node.strip("'")
-
-            links.append((from_clean, from_ori, to_clean, to_ori, f"{fixed_overlap}M"))
-
-    return links
