@@ -7,5 +7,6 @@ dependencies:
   - flit
   - click
   - loguru
+  - bidict
   - biopython
   - python-igraph

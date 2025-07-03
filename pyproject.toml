@@ -10,7 +10,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 dynamic = ["version", "description"]
-dependencies = ["click", "loguru", "igraph"]
+dependencies = ["click", "loguru", "bidict", "biopython", "igraph"]
 
 [project.urls]
 Home = "https://agtools.readthedocs.io"
