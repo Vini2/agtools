@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
-import logging
+import sys
+
 from collections import OrderedDict
 from pathlib import Path
 from typing import Mapping, Optional
+from loguru import logger
+from agtools import commands
 
 import click
 
@@ -19,13 +22,15 @@ __status__ = "Alpha"
 # Setup logger
 # ---------------------------------------------------
 
-logger = logging.getLogger(f"agtools {__version__}")
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-consoleHeader = logging.StreamHandler()
-consoleHeader.setFormatter(formatter)
-consoleHeader.setLevel(logging.INFO)
-logger.addHandler(consoleHeader)
+# Remove the default logger configuration
+logger.remove()
+
+# Console logging (INFO level and above)
+logger.add(sink=sys.stdout, level="INFO")
+
+# File logging (DEBUG level and above)
+logger.add(sink="agtools.log", level="DEBUG")
+
 
 class OrderedGroup(click.Group):
     """custom group class to ensure help function returns commands in desired order.
@@ -53,7 +58,10 @@ class OrderedGroup(click.Group):
 @click.version_option(__version__, "-v", "--version", is_flag=True)
 def main():
     """agtools: Tools for manipulating assembly graphs"""
+
+    logger.info("Welcome to agtools, tools for manipulating assembly graphs")
     pass
+
 
 _graph = click.option(
     "--graph",
@@ -69,14 +77,6 @@ _output = click.option(
     type=click.Path(dir_okay=True, writable=True, readable=True),
     required=True,
 )
-_prefix = click.option(
-    "--prefix",
-    "-p",
-    help="prefix for the output file",
-    type=str,
-    default="",
-    required=False,
-)
 
 
 _click_command_opts = dict(
@@ -87,32 +87,37 @@ _click_command_opts = dict(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def stats(
-    graph,
-    output
-):
+def stats(graph, output):
     """Compute statistics about the graph"""
     print("Running stats")
 
 
 @main.command(**_click_command_opts)
 @_graph
+@click.option(
+    "--prefix",
+    "-p",
+    help="prefix for the output file",
+    type=str,
+    default="",
+    required=False,
+)
 @_output
-def rename(
-    graph,
-    output
-):
+def rename(graph, prefix, output):
     """Rename segments in a GFA file"""
-    print("Renaming segments")
+
+    logger.info(f"Renaming segments in graph file {graph}")
+    logger.info(f"Prefix used is {prefix}")
+
+    output_file = commands.rename(graph, prefix, output)
+
+    logger.info(f"Renamed graph file is {output_file}")
 
 
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def merge(
-    graph,
-    output
-):
+def merge(graph, output):
     """Merge two or more GFA files"""
     print("Merging GFA files")
 
@@ -129,11 +134,7 @@ def merge(
     required=True,
 )
 @_output
-def filter(
-    graph,
-    length,
-    output
-):
+def filter(graph, length, output):
     """Filter segments from GFA file"""
     print("Running filter")
 
@@ -149,11 +150,7 @@ def filter(
     required=True,
 )
 @_output
-def component(
-    graph,
-    segment,
-    output
-):
+def component(graph, segment, output):
     """Extract a component containing a given segment"""
     print("Extracting a component given a segment")
 
@@ -170,11 +167,7 @@ def component(
     required=True,
 )
 @_output
-def fastg2gfa(
-    graph,
-    ksize,
-    output
-):
+def fastg2gfa(graph, ksize, output):
     """Convert FASTG file to GFA format"""
     print("Running fastg2gfa")
 
@@ -191,11 +184,7 @@ def fastg2gfa(
     required=True,
 )
 @_output
-def gfa2fastg(
-    graph,
-    ksize,
-    output
-):
+def gfa2fastg(graph, ksize, output):
     """Convert GFA file to FASTG format"""
     print("Running gfa2fastg")
 
@@ -203,11 +192,7 @@ def gfa2fastg(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2dot(
-    graph,
-    ksize,
-    output
-):
+def gfa2dot(graph, ksize, output):
     """Convert GFA file to DOT format (Graphviz)"""
     print("Running gfa2dot")
 
@@ -215,10 +200,7 @@ def gfa2dot(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2fasta(
-    graph,
-    output
-):
+def gfa2fasta(graph, output):
     """Get segments in FASTA format"""
     print("Running gfa2fasta")
 
@@ -226,9 +208,6 @@ def gfa2fasta(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2adj(
-    graph,
-    output
-):
+def gfa2adj(graph, output):
     """Get adjacency matrix of the assembly graph"""
     print("Running gfa2adj")

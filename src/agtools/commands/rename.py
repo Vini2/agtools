@@ -1,1 +1,112 @@
-#!/usr/bin/env python3
+def _remap_segment(seg_id, segment_map) -> str:
+    """
+    Remap a segment ID using the provided mapping.
+
+    Args:
+        seg_id (str): The original segment ID.
+        segment_map (dict): A mapping from original segment IDs to new IDs.
+
+    Returns:
+        str: The remapped segment ID if found in the map, otherwise the original ID.
+    """
+
+    return segment_map.get(seg_id, seg_id)
+
+
+def _build_map_segments(input_gfa, prefix) -> dict:
+    """
+    Create a mapping of segment IDs from an input GFA file, applying a prefix to each segment ID.
+
+    Args:
+        input_gfa (str): Path to the input GFA file.
+        prefix (str): Prefix to prepend to each segment ID.
+
+    Returns:
+        dict: A dictionary mapping original segment IDs to prefixed segment IDs.
+    """
+
+    segment_map = {}
+
+    # Build map of old_id -> new_id
+    with open(input_gfa, "r") as infile:
+        for line in infile:
+            if line.startswith("S"):
+                parts = line.strip().split("\t")
+                old_id = parts[1]
+                new_id = f"{prefix}_{old_id}"
+                segment_map[old_id] = new_id
+
+    return segment_map
+
+
+def _write_renamed_file(input_gfa, segment_map, output_path) -> str:
+    """
+    Write a new GFA file with segment IDs renamed based on the provided segment map.
+
+    Args:
+        input_gfa (str): Path to the original GFA file.
+        segment_map (dict): Mapping of old segment IDs to new IDs.
+        output_path (str): Directory path where the renamed GFA file will be saved.
+
+    Returns:
+        str: Path to the renamed GFA file.
+    """
+
+    output_file = f"{output_path}renamed_graph.gfa"
+
+    # Rewrite file with renamed segment IDs
+    with open(input_gfa, "r") as infile, open(output_file, "w") as outfile:
+        for line in infile:
+            parts = line.strip().split("\t")
+            if not parts:
+                continue
+
+            tag = parts[0]
+
+            if tag == "S":
+                parts[1] = _remap_segment(parts[1], segment_map)
+                outfile.write("\t".join(parts) + "\n")
+
+            elif tag == "L":
+                parts[1] = _remap_segment(parts[1], segment_map)
+                parts[3] = _remap_segment(parts[3], segment_map)
+                outfile.write("\t".join(parts) + "\n")
+
+            elif tag == "P":
+                segments = parts[2].split(",")
+                segments = [
+                    _remap_segment(s[:-1], segment_map) + s[-1] for s in segments
+                ]
+                parts[2] = ",".join(segments)
+                outfile.write("\t".join(parts) + "\n")
+
+            elif tag == "W":
+                segments = parts[5].split(",")
+                segments = [
+                    _remap_segment(s[:-1], segment_map) + s[-1] for s in segments
+                ]
+                parts[5] = ",".join(segments)
+                outfile.write("\t".join(parts) + "\n")
+
+            else:
+                outfile.write(line)
+
+    return output_file
+
+
+def rename(gfa_file, prefix, output_path) -> str:
+    """
+    Rename segment IDs in a GFA file by applying a prefix and save the modified file.
+
+    Args:
+        gfa_file (str): Path to the input GFA file.
+        prefix (str): Prefix to prepend to each segment ID.
+        output_path (str): Directory path where the renamed GFA file will be saved.
+
+    Returns:
+        str: Path to the renamed GFA file.
+    """
+
+    segment_map = _build_map_segments(gfa_file, prefix)
+    output_file = _write_renamed_file(gfa_file, segment_map, output_path)
+    return output_file
