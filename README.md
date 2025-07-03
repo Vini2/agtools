@@ -1,6 +1,6 @@
 # agtools: Tools for manipulating assembly graphs
 
-`agtools` is a toolkit for manipulating assembly graphs, with a focus on metagenomic applications. It offers a command-line interface for tasks such as graph format conversion, segment filtering, and subgraph extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
+`agtools` is a toolkit for manipulating assembly graphs, with a focus on metagenomic applications. It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
 
 ## Requirements
 
