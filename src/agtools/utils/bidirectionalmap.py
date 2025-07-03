@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-This code is used from the source found at 
-https://stackoverflow.com/questions/3318625/how-to-implement-an-efficient-bidirectional-hash-table 
+This code is used from the source found at
+https://stackoverflow.com/questions/3318625/how-to-implement-an-efficient-bidirectional-hash-table
 answered by user jme
 """
 
