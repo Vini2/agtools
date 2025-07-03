@@ -2,6 +2,7 @@
 
 from agtools.core.graph import parse_fastg
 
+
 def _extract_links(edges, fixed_overlap) -> list:
     """
     Convert a edges adjacency dictionary into GFA-style links.
@@ -49,11 +50,11 @@ def _write_gfa(segments, links, output_path) -> str:
     """
 
     output_file = f"{output_path}/converted_graph.gfa"
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         for seg_id, seq in segments.items():
-            f.write(f'S\t{seg_id}\t{seq}\n')
+            f.write(f"S\t{seg_id}\t{seq}\n")
         for from_node, from_ori, to_node, to_ori, overlap in links:
-            f.write(f'L\t{from_node}\t{from_ori}\t{to_node}\t{to_ori}\t{overlap}\n')
+            f.write(f"L\t{from_node}\t{from_ori}\t{to_node}\t{to_ori}\t{overlap}\n")
 
     return output_file
 

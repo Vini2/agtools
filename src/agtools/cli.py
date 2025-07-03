@@ -170,7 +170,7 @@ def fastg2gfa(graph, ksize, output):
 
     logger.info(f"Converting FASTG file {graph} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
-    
+
     gfa_path = commands.fastg2gfa(graph, ksize, output)
 
     logger.info(f"GFA file written to {gfa_path} with fixed overlap: {ksize}M")
