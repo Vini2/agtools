@@ -2,11 +2,23 @@
 
 from agtools.core.graph import parse_fastg
 
-def _extract_links(segments, fixed_overlap) -> list:
+def _extract_links(edges, fixed_overlap) -> list:
+    """
+    Convert a edges adjacency dictionary into GFA-style links.
 
+    Args:
+        edges (dict): Dictionary mapping each segment ID to a list of neighboring segment IDs.
+                         Segment IDs may include orientation suffixes (e.g., `'` to denote reverse).
+        fixed_overlap (int): The overlap length (in base pairs) to include in each GFA link,
+                             formatted as "{overlap}M".
+
+    Returns:
+        list: A list of tuples representing GFA links. Each tuple contains:
+              (from_node, from_orientation, to_node, to_orientation, overlap).
+    """
     links = []
 
-    for from_node, neighbors in segments.items():
+    for from_node, neighbors in edges.items():
         for raw_to_node in neighbors:
             if not raw_to_node:
                 continue
@@ -23,6 +35,18 @@ def _extract_links(segments, fixed_overlap) -> list:
 
 
 def _write_gfa(segments, links, output_path) -> str:
+    """
+    Write segments and links to a GFA file.
+
+    Args:
+        segments (dict): Dictionary of segment IDs mapped to their nucleotide sequences.
+        links (list): List of tuples representing GFA links, each in the format:
+                      (from_node, from_orientation, to_node, to_orientation, overlap).
+        output_path (str): Directory path where the output GFA file should be saved.
+
+    Returns:
+        str: Full path to the written GFA file.
+    """
 
     output_file = f"{output_path}/converted_graph.gfa"
     with open(output_file, 'w') as f:
@@ -35,6 +59,17 @@ def _write_gfa(segments, links, output_path) -> str:
 
 
 def fastg2gfa(fastg_path, k_overlap, gfa_path) -> str:
+    """
+    Convert a FASTG file to a GFA file format with fixed k-mer overlap.
+
+    Args:
+        fastg_path (str): Path to the input FASTG file.
+        k_overlap (int): Fixed k-mer overlap length to apply to all links (e.g., 41).
+        gfa_path (str): Directory path where the output GFA file will be saved.
+
+    Returns:
+        str: Full path to the generated GFA file.
+    """
 
     segments, edges = parse_fastg(fastg_path)
     links = _extract_links(edges, fixed_overlap=k_overlap)
