@@ -10,5 +10,5 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
-from .rename import rename
 from .fastg2gfa import fastg2gfa
+from .rename import rename

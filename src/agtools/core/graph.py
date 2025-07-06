@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import re
-
-from igraph import Graph
 from collections import defaultdict
-from Bio.Seq import Seq
+
 from bidict import bidict
+from Bio.Seq import Seq
+from igraph import Graph
 
 
 class AssemblyGraph:

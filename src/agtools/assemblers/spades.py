@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import re
+from collections import defaultdict
 
 from igraph import Graph
-from collections import defaultdict
 
 from agtools.utils.bidirectionalmap import BidirectionalMap
 

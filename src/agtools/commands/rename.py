@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def _remap_segment(seg_id, segment_map) -> str:
     """
     Remap a segment ID using the provided mapping.
