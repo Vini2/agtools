@@ -37,6 +37,15 @@ def test_agtools_rename(runner, tmp_dir):
     r = runner.invoke(rename, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
 
+def test_agtools_merge(runner, tmp_dir):
+    outpath = tmp_dir
+    graph_1 = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    graph_2 = DATADIR / "5G" / "assembly_graph_with_scaffolds.gfa"
+    prefix = "test"
+    args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
+    r = runner.invoke(merge, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
 def test_agtools_fastg2gfa(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "final.contigs.fastg"
