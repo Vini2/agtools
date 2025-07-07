@@ -1,5 +1,9 @@
 # agtools: Tools for manipulating assembly graphs
 
+![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
+[![CI](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 `agtools` is a toolkit for manipulating assembly graphs, with a focus on metagenomic applications. It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
 
 ## Requirements
