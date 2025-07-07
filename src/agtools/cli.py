@@ -9,6 +9,7 @@ import click
 from loguru import logger
 
 from agtools import commands
+from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -18,18 +19,6 @@ __version__ = "0.0.1"
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
-
-# Setup logger
-# ---------------------------------------------------
-
-# Remove the default logger configuration
-logger.remove()
-
-# Console logging (INFO level and above)
-logger.add(sink=sys.stdout, level="INFO")
-
-# File logging (DEBUG level and above)
-logger.add(sink="agtools.log", level="DEBUG")
 
 
 class OrderedGroup(click.Group):
@@ -64,8 +53,9 @@ def main():
 _graph = click.option(
     "--graph",
     "-g",
-    help="path to the assembly graph file",
+    help="path(s) to the assembly graph file(s)",
     type=click.Path(exists=True),
+    multiple=True,
     required=True,
 )
 _output = click.option(
@@ -104,10 +94,10 @@ def stats(graph, output):
 def rename(graph, prefix, output):
     """Rename segments in a GFA file"""
 
-    logger.info(f"Renaming segments in graph file {graph}")
+    logger.info(f"Renaming segments in graph file {graph[0]}")
     logger.info(f"Prefix used is {prefix}")
 
-    output_file = commands.rename(graph, prefix, output)
+    output_file = commands.rename(graph[0], prefix, output)
 
     logger.info(f"Renamed graph file is {output_file}")
 
@@ -117,7 +107,12 @@ def rename(graph, prefix, output):
 @_output
 def merge(graph, output):
     """Merge two or more GFA files"""
-    print("Merging GFA files")
+
+    logger.info(f"Merging graph files [{", ".join(graph)}]")
+    
+    output_file = commands.merge(graph, output)
+
+    logger.info(f"Merged graph file is {output_file}")
 
 
 @main.command(**_click_command_opts)
@@ -168,10 +163,10 @@ def component(graph, segment, output):
 def fastg2gfa(graph, ksize, output):
     """Convert FASTG file to GFA format"""
 
-    logger.info(f"Converting FASTG file {graph} to GFA format")
+    logger.info(f"Converting FASTG file {graph[0]} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
 
-    gfa_path = commands.fastg2gfa(graph, ksize, output)
+    gfa_path = commands.fastg2gfa(graph[0], ksize, output)
 
     logger.info(f"GFA file written to {gfa_path} with fixed overlap: {ksize}M")
 
@@ -182,9 +177,9 @@ def fastg2gfa(graph, ksize, output):
 def gfa2fastg(graph, output):
     """Convert GFA file to FASTG format"""
 
-    logger.info(f"Converting GFA file {graph} to FASTG format")
+    logger.info(f"Converting GFA file {graph[0]} to FASTG format")
 
-    fastg_path, overlap_value = commands.gfa2fastg(graph, output)
+    fastg_path, overlap_value = commands.gfa2fastg(graph[0], output)
 
     logger.info(f"The detected overlap value is {overlap_value}")
     logger.info(f"FASTG file written to {fastg_path}")
@@ -193,7 +188,7 @@ def gfa2fastg(graph, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2dot(graph, ksize, output):
+def gfa2dot(graph, output):
     """Convert GFA file to DOT format (Graphviz)"""
     print("Running gfa2dot")
 
@@ -204,9 +199,9 @@ def gfa2dot(graph, ksize, output):
 def gfa2fasta(graph, output):
     """Get segments in FASTA format"""
 
-    logger.info(f"Extracting segment sequences from {graph} file in to FASTA format")
+    logger.info(f"Extracting segment sequences from {graph[0]} file in to FASTA format")
 
-    fasta_path = commands.gfa2fasta(graph, output)
+    fasta_path = commands.gfa2fasta(graph[0], output)
 
     logger.info(f"FASTA file written to {fasta_path}")
 
