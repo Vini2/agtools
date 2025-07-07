@@ -109,7 +109,7 @@ def merge(graph, output):
     """Merge two or more GFA files"""
 
     logger.info(f"Merging graph files [{", ".join(graph)}]")
-    
+
     output_file = commands.merge(graph, output)
 
     logger.info(f"Merged graph file is {output_file}")

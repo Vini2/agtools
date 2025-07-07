@@ -4,8 +4,9 @@ import sys
 
 from agtools.log_config import logger
 
+
 def _combine_gfa_files(graph_files):
-    
+
     segments = {}
     segment_lines = []
     link_lines = []
@@ -39,6 +40,7 @@ def _combine_gfa_files(graph_files):
 
     return segment_lines, link_lines, path_lines, walk_lines
 
+
 def _write_gfa_elements(segments, links, paths, walks, output_path):
     output_file = f"{output_path}/merged_graph.gfa"
 
@@ -51,7 +53,7 @@ def _write_gfa_elements(segments, links, paths, walks, output_path):
         # Write links
         for line in links:
             file_out.write(line + "\n")
-        
+
         # Write paths
         for line in paths:
             file_out.write(line + "\n")

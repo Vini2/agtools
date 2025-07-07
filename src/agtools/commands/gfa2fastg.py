@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict
+
 from Bio.Seq import Seq
+
 
 def reverse_orientation(orient) -> str:
     """
@@ -14,6 +16,7 @@ def reverse_orientation(orient) -> str:
         str: The opposite orientation symbol.
     """
     return "+" if orient == "-" else "-"
+
 
 def reverse_complement(sequence) -> str:
     """
@@ -76,6 +79,7 @@ def _get_graph_sequences(gfa_file) -> tuple[defaultdict, dict, dict, int]:
 
     return graph_nodes, sequences, overlaps, overlap_value
 
+
 def _write_to_fastg(graph_nodes, sequences, output_path) -> str:
     """
     Writes the sequence graph to a FASTG file format.
@@ -112,6 +116,7 @@ def _write_to_fastg(graph_nodes, sequences, output_path) -> str:
                 out.write(f"{header}\n{seq}\n")
 
     return output_file
+
 
 def gfa2fastg(gfa_file, output_path) -> tuple[str, int]:
     """

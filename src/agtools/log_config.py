@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+
 from loguru import logger
 
 # Remove the default logger configuration
