@@ -206,7 +206,7 @@ def gfa2dot(graph, ksize, output):
 @_output
 def gfa2fasta(graph, output):
     """Get segments in FASTA format"""
-    
+
     logger.info(f"Extracting segment sequences from {graph} file in to FASTA format")
 
     fasta_path = commands.gfa2fasta(graph, output)

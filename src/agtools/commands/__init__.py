@@ -11,5 +11,5 @@ __status__ = "Alpha"
 
 
 from .fastg2gfa import fastg2gfa
-from .rename import rename
 from .gfa2fasta import gfa2fasta
+from .rename import rename
