@@ -178,19 +178,16 @@ def fastg2gfa(graph, ksize, output):
 
 @main.command(**_click_command_opts)
 @_graph
-@click.option(
-    "--ksize",
-    "-k",
-    help="k-mer size used for the assembly",
-    type=int,
-    default=141,
-    show_default=True,
-    required=True,
-)
 @_output
-def gfa2fastg(graph, ksize, output):
+def gfa2fastg(graph, output):
     """Convert GFA file to FASTG format"""
-    print("Running gfa2fastg")
+
+    logger.info(f"Converting GFA file {graph} to FASTG format")
+
+    fastg_path, overlap_value = commands.gfa2fastg(graph, output)
+
+    logger.info(f"The detected overlap value is {overlap_value}")
+    logger.info(f"FASTG file written to {fastg_path}")
 
 
 @main.command(**_click_command_opts)
