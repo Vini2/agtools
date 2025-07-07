@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+import pathlib
+import pytest
+
+from click.testing import CliRunner
+
+from agtools.cli import *
+
+__author__ = "Vijini Mallawaarachchi"
+__credits__ = ["Vijini Mallawaarachchi"]
+
+DATADIR = pathlib.Path(__file__).parent / "data"
+
+
+@pytest.fixture(scope="session")
+def tmp_dir(tmpdir_factory):
+    return tmpdir_factory.mktemp("tmp")
+
+
+@pytest.fixture(autouse=True)
+def workingdir(tmp_dir, monkeypatch):
+    """set the working directory for all tests"""
+    monkeypatch.chdir(tmp_dir)
+
+
+@pytest.fixture(scope="session")
+def runner():
+    """exportrc works correctly."""
+    return CliRunner()
+
+def test_agtools_rename(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    prefix = "test"
+    args = f"-g {graph} -p {prefix} -o {outpath}".split()
+    r = runner.invoke(rename, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+def test_agtools_fastg2gfa(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "final.contigs.fastg"
+    k = 141
+    args = f"-g {graph} -k {k} -o {outpath}".split()
+    r = runner.invoke(fastg2gfa, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+def test_agtools_gfa2fastg(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2fastg, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+def test_agtools_gfa2fasta(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
