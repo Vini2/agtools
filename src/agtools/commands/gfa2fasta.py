@@ -22,13 +22,10 @@ def _get_segment_sequences(gfa_file) -> list:
     Returns:
         list: A list of SeqRecord objects containing the cleaned segment sequences.
     """
-
     sequences = []
 
     with open(gfa_file) as file:
-        line = file.readline()
-
-        while line != "":
+        for line in file.readlines():
             if "S" in line:
                 strings = line.split("\t")
 
@@ -40,8 +37,6 @@ def _get_segment_sequences(gfa_file) -> list:
                 )
 
                 sequences.append(record)
-
-            line = file.readline()
 
     return sequences
 
