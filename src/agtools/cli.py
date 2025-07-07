@@ -108,7 +108,7 @@ def rename(graph, prefix, output):
 def merge(graph, output):
     """Merge two or more GFA files"""
 
-    logger.info(f"Merging graph files [{", ".join(graph)}]")
+    logger.info(f"Merging graph files [{', '.join(graph)}]")
 
     output_file = commands.merge(graph, output)
 
