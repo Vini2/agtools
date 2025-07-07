@@ -31,7 +31,7 @@ def runner():
 
 def test_agtools_rename(runner, tmp_dir):
     outpath = tmp_dir
-    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     prefix = "test"
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
@@ -47,14 +47,14 @@ def test_agtools_fastg2gfa(runner, tmp_dir):
 
 def test_agtools_gfa2fastg(runner, tmp_dir):
     outpath = tmp_dir
-    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fastg, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
 
 def test_agtools_gfa2fasta(runner, tmp_dir):
     outpath = tmp_dir
-    graph = DATADIR / "assembly_graph_with_scaffolds.gfa"
+    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
