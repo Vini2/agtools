@@ -124,16 +124,22 @@ def merge(graph, output):
 @click.option(
     "--min-length",
     "-l",
-    help="minimum length of segments to filter",
+    help="minimum length of segments to keep",
     type=int,
-    default=141,
+    default=100,
     show_default=True,
     required=True,
 )
 @_output
-def filter(graph, length, output):
+def filter(graph, min_length, output):
     """Filter segments from GFA file"""
-    print("Running filter")
+    
+    logger.info(f"Filtering segments in graph file {graph[0]}")
+    logger.info(f"Minimum length of segments to keep is {min_length} bp")
+    
+    filtered_ug = commands.filter(graph[0], min_length, output)
+
+    logger.info(f"Filtered graph file is {filtered_ug}")
 
 
 @main.command(**_click_command_opts)
