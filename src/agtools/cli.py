@@ -137,9 +137,9 @@ def filter(graph, min_length, output):
     logger.info(f"Filtering segments in graph file {graph[0]}")
     logger.info(f"Minimum length of segments to keep is {min_length} bp")
 
-    filtered_ug = commands.filter(graph[0], min_length, output)
+    filtered_gfa = commands.filter(graph[0], min_length, output)
 
-    logger.info(f"Filtered graph file is {filtered_ug}")
+    logger.info(f"Filtered graph file is {filtered_gfa}")
 
 
 @main.command(**_click_command_opts)
@@ -228,4 +228,9 @@ def gfa2fasta(graph, output):
 @_output
 def gfa2adj(graph, output):
     """Get adjacency matrix of the assembly graph"""
-    print("Running gfa2adj")
+
+    logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
+
+    adj_path = commands.gfa2adj(graph[0], output)
+
+    logger.info(f"Adjacency matrix is written to {adj_path}")
