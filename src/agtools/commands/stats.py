@@ -115,6 +115,36 @@ def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
 
 
 def stats(gfa_file, output_path) -> str:
+    """
+    Compute and write summary statistics for an assembly graph in GFA format.
+
+    This function parses the given GFA file using a UnitigGraph object,
+    calculates a variety of assembly and graph-level statistics, and writes
+    the results to a file in the specified output directory.
+
+    Parameters:
+    ----------
+    gfa_file : str
+        Path to the input GFA file representing the assembly graph.
+    output_path : str
+        Directory path where the output statistics file will be written.
+
+    Returns:
+    -------
+    str
+        Full path to the written statistics output file.
+
+    Statistics Calculated:
+    - Number of segments (nodes)
+    - Number of links (edges)
+    - Number of connected components
+    - Number of self-loops
+    - Average node degree
+    - Total segment sequence length
+    - Average segment length
+    - N50 and L50 contiguity metrics
+    - GC content across all segments
+    """
 
     ug = UnitigGraph.from_gfa(gfa_file)
 
