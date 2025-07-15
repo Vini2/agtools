@@ -3,13 +3,14 @@
 from agtools.core.graph import UnitigGraph
 from agtools.log_config import logger
 
+
 def _calculate_average_node_degree(graph) -> int:
     """
     Calculate the average node degree of the graph.
-    
+
     Args:
         graph (UnitigGraph): The unitig graph object.
-    
+
     Returns:
         int: Average node degree.
     """
@@ -21,10 +22,10 @@ def _calculate_average_node_degree(graph) -> int:
 def _calculate_total_length(segment_lengths: dict) -> int:
     """
     Calculate the total length of all segments in the graph.
-    
+
     Args:
         segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
-    
+
     Returns:
         int: Total length of segments.
     """
@@ -34,10 +35,10 @@ def _calculate_total_length(segment_lengths: dict) -> int:
 def _calculate_average_segment_length(segment_lengths: dict) -> int:
     """
     Calculate the average segment length.
-    
+
     Args:
         segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
-    
+
     Returns:
         int: Average segment length.
     """
@@ -75,7 +76,7 @@ def _get_gc_content(sequences: list, total_length: int) -> float:
         return 0.0
     elif total_length == 0:
         return 0.0
-    
+
     gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
     return gc_count / total_length
 
@@ -83,17 +84,17 @@ def _get_gc_content(sequences: list, total_length: int) -> float:
 def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     """
     Write the statistics to a file.
-    
+
     Args:
         gfa_file (str): Path to the input GFA file.
         stats (dict): Dictionary containing statistics.
         output_path (str): Path to the output file.
-    
+
     Returns:
         str: Path to the output file.
     """
     output_file = f"{output_path}/graph_stats.txt"
-    
+
     with open(output_file, "w") as f:
         # Write basic graph statistics
         f.write(f"Basic graph statistics for {gfa_file}:\n")
@@ -160,13 +161,17 @@ def stats(gfa_file, output_path) -> str:
         "l50": 0,
         "gc_content": 0.0,
     }
-    
-    stats['average_node_degree'] = _calculate_average_node_degree(ug)
-    stats['total_length'] = _calculate_total_length(ug.segment_lengths)
-    stats['average_segment_length'] = _calculate_average_segment_length(ug.segment_lengths)
-    stats['n50'], stats['l50'] = _calculate_n50_l50(ug.segment_lengths.values())
-    stats['gc_content'] = _get_gc_content(ug.segment_sequences.values(), stats['total_length'])
-    
+
+    stats["average_node_degree"] = _calculate_average_node_degree(ug)
+    stats["total_length"] = _calculate_total_length(ug.segment_lengths)
+    stats["average_segment_length"] = _calculate_average_segment_length(
+        ug.segment_lengths
+    )
+    stats["n50"], stats["l50"] = _calculate_n50_l50(ug.segment_lengths.values())
+    stats["gc_content"] = _get_gc_content(
+        ug.segment_sequences.values(), stats["total_length"]
+    )
+
     output_file = _write_stats_file(gfa_file, stats, output_path)
 
     # Log the statistics

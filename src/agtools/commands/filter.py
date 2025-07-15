@@ -5,6 +5,7 @@ import re
 from agtools.core.graph import UnitigGraph
 from agtools.log_config import logger
 
+
 def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
     """
     Write a filtered GFA file by excluding lines that involve specified segments.
@@ -32,8 +33,8 @@ def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
     """
 
     output_file = f"{output_path}/filtered_graph.gfa"
-    
-    with open(gfa_file, 'r') as gfa, open(output_file, 'w') as filtered_gfa:
+
+    with open(gfa_file, "r") as gfa, open(output_file, "w") as filtered_gfa:
         for line in gfa:
             if line.startswith("S"):
                 parts = line.strip().split("\t")
@@ -43,12 +44,18 @@ def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
             elif line.startswith("L") or line.startswith("J"):
                 parts = line.strip().split("\t")
                 from_seg, to_seg = parts[1], parts[3]
-                if from_seg not in segments_to_remove and to_seg not in segments_to_remove:
+                if (
+                    from_seg not in segments_to_remove
+                    and to_seg not in segments_to_remove
+                ):
                     filtered_gfa.write(line)
             elif line.startswith("C"):
                 parts = line.strip().split("\t")
                 container_seg, contained_seg = parts[1], parts[3]
-                if container_seg not in segments_to_remove and contained_seg not in segments_to_remove:
+                if (
+                    container_seg not in segments_to_remove
+                    and contained_seg not in segments_to_remove
+                ):
                     filtered_gfa.write(line)
             elif line.startswith("P"):
                 parts = line.strip().split("\t")
@@ -57,13 +64,14 @@ def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
                     filtered_gfa.write(line)
             elif line.startswith("W"):
                 parts = line.strip().split("\t")
-                seg_ids = re.split(r'[><]', parts[-1])
+                seg_ids = re.split(r"[><]", parts[-1])
                 if all(seg_id not in segments_to_remove for seg_id in seg_ids):
                     filtered_gfa.write(line)
             else:
                 filtered_gfa.write(line)
 
     return output_file
+
 
 def filter(gfa_file, min_length, output_path):
     """
@@ -90,10 +98,18 @@ def filter(gfa_file, min_length, output_path):
     """
 
     ug = UnitigGraph.from_gfa(gfa_file)
-    
-    segments_to_remove = set([seg_id for seg_id, seq in ug.segment_sequences.items() if len(seq) < min_length])
-    logger.info(f"Identified {len(segments_to_remove)} segments shorter than {min_length} bp to remove")
+
+    segments_to_remove = set(
+        [
+            seg_id
+            for seg_id, seq in ug.segment_sequences.items()
+            if len(seq) < min_length
+        ]
+    )
+    logger.info(
+        f"Identified {len(segments_to_remove)} segments shorter than {min_length} bp to remove"
+    )
 
     output_file = _write_filtered_graph(segments_to_remove, gfa_file, output_path)
-    
+
     return output_file

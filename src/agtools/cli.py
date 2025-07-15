@@ -133,10 +133,10 @@ def merge(graph, output):
 @_output
 def filter(graph, min_length, output):
     """Filter segments from GFA file"""
-    
+
     logger.info(f"Filtering segments in graph file {graph[0]}")
     logger.info(f"Minimum length of segments to keep is {min_length} bp")
-    
+
     filtered_ug = commands.filter(graph[0], min_length, output)
 
     logger.info(f"Filtered graph file is {filtered_ug}")
