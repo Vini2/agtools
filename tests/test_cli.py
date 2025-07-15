@@ -30,6 +30,14 @@ def runner():
     return CliRunner()
 
 
+def test_agtools_stats(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(rename, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
 def test_agtools_rename(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
