@@ -48,7 +48,7 @@ def test_agtools_merge(runner, tmp_dir):
 
 def test_agtools_fastg2gfa(runner, tmp_dir):
     outpath = tmp_dir
-    graph = DATADIR / "final.contigs.fastg"
+    graph = DATADIR / "final.graph.fastg"
     k = 141
     args = f"-g {graph} -k {k} -o {outpath}".split()
     r = runner.invoke(fastg2gfa, args, catch_exceptions=False)
