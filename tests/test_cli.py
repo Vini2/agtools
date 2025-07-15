@@ -51,9 +51,17 @@ def test_agtools_merge(runner, tmp_dir):
     outpath = tmp_dir
     graph_1 = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     graph_2 = DATADIR / "5G" / "assembly_graph_with_scaffolds.gfa"
-    prefix = "test"
     args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
     r = runner.invoke(merge, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
+def test_agtools_filter(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    min_length = 1000
+    args = f"-g {graph} -l {min_length} -o {outpath}".split()
+    r = runner.invoke(filter, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
 
 
