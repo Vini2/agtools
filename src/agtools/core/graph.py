@@ -11,29 +11,34 @@ from igraph import Graph
 class AssemblyGraph:
     def __init__(self):
         self.graph = Graph(directed=False)
+        self.path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = {}
-        self.segment_names = bidict()  # int → segment_id
-        self.segment_names_rev = None  # segment_id → int
-        self.segment_sequences = {}  # segment_id → Seq
-        self.segments_lengths = {}  # segment_id → int
-        self.self_looped_nodes = []
+        self.segment_names = None       # node_id → segment_id
+        self.segment_names_rev = None       # segment_id → node_id
+        self.segment_sequences = {}  # segment_id → sequence
+        self.segment_lengths = {}   # segment_id → length
+        self.self_loops = []
 
     @classmethod
     def from_gfa(cls, path: str) -> "AssemblyGraph":
         ag = cls()
         node_count = 0
         links = []
+        segment_names = {}
+
+        ag.path = path
 
         with open(path) as f:
             for line in f:
+                
                 if line.startswith("S"):
                     parts = line.strip().split("\t")
                     seg_id = parts[1]
                     seq = parts[2]
-                    ag.segment_names[node_count] = seg_id
+                    segment_names[node_count] = seg_id
                     ag.segment_sequences[seg_id] = Seq(seq)
-                    ag.segments_lengths[seg_id] = len(seq)
+                    ag.segment_lengths[seg_id] = len(seq)
                     node_count += 1
                 elif line.startswith("L"):
                     parts = line.strip().split("\t")
@@ -46,6 +51,7 @@ class AssemblyGraph:
                         from_seg, to_seg, from_orient, to_orient, overlap
                     )
 
+        ag.segment_names = bidict(segment_names)
         ag.segment_names_rev = ag.segment_names.inverse
         ag.graph.add_vertices(node_count)
 
@@ -55,8 +61,8 @@ class AssemblyGraph:
             ag.graph.vs[i]["name"] = seg_id
             ag.graph.vs[i]["label"] = f"{seg_id}\nID:{i}"
 
-        segment_list, ag.self_looped_nodes = ag._get_graph_segments(links)
-        ag.graph.add_segments(segment_list)
+        edge_list, ag.self_loops = ag._get_graph_edges(links)
+        ag.graph.add_edges(edge_list)
         ag.graph.simplify(multiple=True, loops=False)
         return ag
 
@@ -65,33 +71,31 @@ class AssemblyGraph:
         key2 = f"{to_seg}{to_orient}"
         self.oriented_links[from_seg][to_seg].append((from_orient, to_orient))
         self.link_overlap[(key1, key2)] = overlap
+        
         # Add symmetric reverse
         rev1 = "+" if from_orient == "-" else "-"
         rev2 = "+" if to_orient == "-" else "-"
         self.oriented_links[to_seg][from_seg].append((rev2, rev1))
         self.link_overlap[(f"{to_seg}{rev2}", f"{from_seg}{rev1}")] = overlap
 
-    def _get_graph_segments(self, links):
-        segments = []
+        print(self.oriented_links)
+
+    def _get_graph_edges(self, links):
+        edges = []
         loops = []
-        for from_seg, to_seg in links:
-            if from_seg == to_seg:
-                loops.append(from_seg)
+        for from_edge, to_edge in links:
+            if from_edge == to_edge:
+                loops.append(from_edge)
             else:
-                src = self.segment_names_rev[from_seg]
-                tgt = self.segment_names_rev[to_seg]
-                segments.append((src, tgt))
-        return segments, loops
+                src = self.segment_names_rev[from_edge]
+                tgt = self.segment_names_rev[to_edge]
+                edges.append((src, tgt))
+        return edges, loops
 
     def get_neighbors(self, seg_id: str) -> list:
         vid = self.segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
-
-    def to_fasta(self) -> str:
-        return "\n".join(
-            [f">{seg}\n{str(seq)}" for seg, seq in self.segment_sequences.items()]
-        )
 
     def filter_segments(self, min_length: int) -> "AssemblyGraph":
         keep_segs = {
@@ -107,7 +111,7 @@ class AssemblyGraph:
         )
         new_ag.segment_names_rev = new_ag.segment_names.inverse
         new_ag.segment_sequences = {s: self.segment_sequences[s] for s in keep_segs}
-        new_ag.segments_lengths = {
+        new_ag.segment_lengths = {
             s: len(seq) for s, seq in new_ag.segment_sequences.items()
         }
         return new_ag
