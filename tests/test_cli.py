@@ -58,7 +58,7 @@ def test_agtools_merge(runner, tmp_dir):
 
 def test_agtools_filter(runner, tmp_dir):
     outpath = tmp_dir
-    graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    graph = DATADIR / "test_graph.gfa"
     min_length = 1000
     args = f"-g {graph} -l {min_length} -o {outpath}".split()
     r = runner.invoke(filter, args, catch_exceptions=False)
