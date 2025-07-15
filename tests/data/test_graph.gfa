@@ -1,0 +1,25 @@
+# GFA file: 10 segments (20 bp) and 1 segment (10 bp: segX)
+H	VN:Z:1.0
+# Segments
+S	seg1	ATGCGTATGCGTATGCGTAA
+S	seg2	CGTACTGACTGACTGACTGA
+S	seg3	TGCATGCATGCATGCATGCA
+S	seg4	ACGTACGTACGTACGTACGT
+S	seg5	GTACGTACGTACGTACGTAC
+S	seg6	CGTACGTACGTACGTACGTA
+S	seg7	TACGTACGTACGTACGTACG
+S	seg8	ATCGATCGATCGATCGATCG
+S	seg9	GCGTGCGTGCGTGCGTGCGT
+S	seg10	TTGCTTGCTTGCTTGCTTGC
+S	segX	ACGTACGTAC
+L	segX	+	seg2	-	5M
+L	seg4	+	seg5	+	10M
+L	seg6	-	seg7	+	7M
+L	seg9	+	seg10	-	5M
+J	seg5	+	segX	-	*
+J	seg3	-	seg8	+	*
+J	seg7	+	seg2	+	*
+P	path1	seg1+,segX+,seg3-	20M,10M,20M
+P	path2	seg4+,seg5+,seg6+	20M,20M,20M
+W	read1	0	*	seg6+,segX-,seg9+	1500	3
+W	read2	0	*	seg1+,seg2+,seg3-	1800	3
