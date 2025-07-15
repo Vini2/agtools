@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import tempfile
 import os
+import tempfile
+
 from agtools.core.graph import AssemblyGraph
 
 

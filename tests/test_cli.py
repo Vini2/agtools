@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import pathlib
-import pytest
 
+import pytest
 from click.testing import CliRunner
 
 from agtools.cli import *
@@ -29,6 +29,7 @@ def runner():
     """exportrc works correctly."""
     return CliRunner()
 
+
 def test_agtools_rename(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
@@ -36,6 +37,7 @@ def test_agtools_rename(runner, tmp_dir):
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
 
 def test_agtools_merge(runner, tmp_dir):
     outpath = tmp_dir
@@ -46,6 +48,7 @@ def test_agtools_merge(runner, tmp_dir):
     r = runner.invoke(merge, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
 
+
 def test_agtools_fastg2gfa(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "final.graph.fastg"
@@ -54,12 +57,14 @@ def test_agtools_fastg2gfa(runner, tmp_dir):
     r = runner.invoke(fastg2gfa, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
 
+
 def test_agtools_gfa2fastg(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fastg, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
 
 def test_agtools_gfa2fasta(runner, tmp_dir):
     outpath = tmp_dir

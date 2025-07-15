@@ -1,6 +1,6 @@
-import pytest
 import subprocess
 
+import pytest
 
 __author__ = "Vijini Mallawaarachchi"
 __credits__ = ["Vijini Mallawaarachchi"]

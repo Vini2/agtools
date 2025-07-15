@@ -14,10 +14,10 @@ class AssemblyGraph:
         self.path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = {}
-        self.segment_names = None       # node_id → segment_id
-        self.segment_names_rev = None       # segment_id → node_id
+        self.segment_names = None  # node_id → segment_id
+        self.segment_names_rev = None  # segment_id → node_id
         self.segment_sequences = {}  # segment_id → sequence
-        self.segment_lengths = {}   # segment_id → length
+        self.segment_lengths = {}  # segment_id → length
         self.self_loops = []
 
     @classmethod
@@ -31,7 +31,7 @@ class AssemblyGraph:
 
         with open(path) as f:
             for line in f:
-                
+
                 if line.startswith("S"):
                     parts = line.strip().split("\t")
                     seg_id = parts[1]
@@ -71,7 +71,7 @@ class AssemblyGraph:
         key2 = f"{to_seg}{to_orient}"
         self.oriented_links[from_seg][to_seg].append((from_orient, to_orient))
         self.link_overlap[(key1, key2)] = overlap
-        
+
         # Add symmetric reverse
         rev1 = "+" if from_orient == "-" else "-"
         rev2 = "+" if to_orient == "-" else "-"
