@@ -20,3 +20,6 @@ def gfa2adj(gfa_file, output_path):
     adj_df.to_csv(output_file, sep="\t")
 
     return output_file
+
+
+# TODO: show isolated segments in the adjacency matrix

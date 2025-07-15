@@ -50,14 +50,25 @@ def _combine_gfa_files(graph_files):
 
                 elif line.startswith("H"):
                     header_lines.append(line.strip())
-                
+
                 elif line.startswith("#"):
                     comment_lines.append(line.strip())
 
-    return comment_lines, header_lines, segment_lines, link_lines, jump_lines, containment_lines, path_lines, walk_lines
+    return (
+        comment_lines,
+        header_lines,
+        segment_lines,
+        link_lines,
+        jump_lines,
+        containment_lines,
+        path_lines,
+        walk_lines,
+    )
 
 
-def _write_gfa_elements(comments, headers, segments, links, jumps, containments, paths, walks, output_path):
+def _write_gfa_elements(
+    comments, headers, segments, links, jumps, containments, paths, walks, output_path
+):
     output_file = f"{output_path}/merged_graph.gfa"
 
     with open(output_file, "w") as file_out:
@@ -98,6 +109,18 @@ def _write_gfa_elements(comments, headers, segments, links, jumps, containments,
 
 
 def merge(graph_files, output_path):
-    comments, headers, segments, links, jumps, containments, paths, walks = _combine_gfa_files(graph_files)
-    output_file = _write_gfa_elements(comments, headers, segments, links, jumps, containments, paths, walks, output_path)
+    comments, headers, segments, links, jumps, containments, paths, walks = (
+        _combine_gfa_files(graph_files)
+    )
+    output_file = _write_gfa_elements(
+        comments,
+        headers,
+        segments,
+        links,
+        jumps,
+        containments,
+        paths,
+        walks,
+        output_path,
+    )
     return output_file

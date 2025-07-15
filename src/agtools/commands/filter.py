@@ -113,3 +113,6 @@ def filter(gfa_file, min_length, output_path):
     output_file = _write_filtered_graph(segments_to_remove, gfa_file, output_path)
 
     return output_file
+
+
+# TODO: filter isolated segments
