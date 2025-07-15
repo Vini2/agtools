@@ -10,8 +10,9 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
+from .stats import stats
+from .rename import rename
+from .merge import merge
 from .fastg2gfa import fastg2gfa
 from .gfa2fasta import gfa2fasta
 from .gfa2fastg import gfa2fastg
-from .merge import merge
-from .rename import rename

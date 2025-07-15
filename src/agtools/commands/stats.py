@@ -1,1 +1,156 @@
 #!/usr/bin/env python3
+
+from agtools.core.graph import UnitigGraph
+from agtools.log_config import logger
+
+def _calculate_average_node_degree(graph) -> int:
+    """
+    Calculate the average node degree of the graph.
+    
+    Args:
+        graph (UnitigGraph): The unitig graph object.
+    
+    Returns:
+        int: Average node degree.
+    """
+    if graph.graph.vcount() == 0:
+        return 0
+    return int(sum(graph.graph.degree()) / graph.graph.vcount())
+
+
+def _calculate_total_length(segment_lengths: dict) -> int:
+    """
+    Calculate the total length of all segments in the graph.
+    
+    Args:
+        segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
+    
+    Returns:
+        int: Total length of segments.
+    """
+    return sum(segment_lengths.values())
+
+
+def _calculate_average_segment_length(segment_lengths: dict) -> int:
+    """
+    Calculate the average segment length.
+    
+    Args:
+        segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
+    
+    Returns:
+        int: Average segment length.
+    """
+    if not segment_lengths:
+        return 0
+    return int(sum(segment_lengths.values()) / len(segment_lengths))
+
+
+def _calculate_n50_l50(lengths: list[int]) -> tuple[int, int]:
+    """
+    Calculate N50 and L50 from a list of segment lengths.
+    :param lengths: list of segment lengths
+    :return: (N50, L50)
+    """
+    if not lengths:
+        return (0, 0)
+
+    sorted_lengths = sorted(lengths, reverse=True)
+    total_length = sum(sorted_lengths)
+    cum_sum = 0
+
+    for i, length in enumerate(sorted_lengths):
+        cum_sum += length
+        if cum_sum >= total_length / 2:
+            return length, i + 1
+
+
+def _get_gc_content(sequences: list, total_length: int) -> float:
+    """
+    Calculate the GC content of sequences.
+    :param sequence: list of nucleotide sequences
+    :return: GC content as a percentage
+    """
+    if not sequences:
+        return 0.0
+    elif total_length == 0:
+        return 0.0
+    
+    gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
+    return gc_count / total_length
+
+
+def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
+    """
+    Write the statistics to a file.
+    
+    Args:
+        gfa_file (str): Path to the input GFA file.
+        stats (dict): Dictionary containing statistics.
+        output_path (str): Path to the output file.
+    
+    Returns:
+        str: Path to the output file.
+    """
+    output_file = f"{output_path}/graph_stats.txt"
+    
+    with open(output_file, "w") as f:
+        # Write basic graph statistics
+        f.write(f"Basic graph statistics for {gfa_file}:\n")
+        f.write(f"Number of segments: {stats['nsegments']}\n")
+        f.write(f"Number of links: {stats['nlinks']}\n")
+        f.write(f"Number of self-loops: {stats['nloops']}\n")
+        f.write(f"Number of connected components: {stats['ncomponents']}\n")
+        f.write(f"Average node degree: {stats['average_node_degree']}\n")
+        f.write("\n")
+        # Write sequence-based statistics
+        f.write(f"Sequence-based statistics for {gfa_file}:\n")
+        f.write(f"Total length of segments: {stats['total_length']} bp\n")
+        f.write(f"Average segment length: {stats['average_segment_length']} bp\n")
+        f.write(f"N50: {stats['n50']} bp\n")
+        f.write(f"L50: {stats['l50']} segment(s)\n")
+        f.write(f"GC content: {stats['gc_content']:.2%}")
+
+    return output_file
+
+
+def stats(gfa_file, output_path) -> str:
+
+    ug = UnitigGraph.from_gfa(gfa_file)
+
+    stats = {
+        "nsegments": ug.graph.vcount(),
+        "nlinks": ug.graph.ecount(),
+        "ncomponents": len(ug.graph.components()),
+        "nloops": len(ug.self_loops),
+        "average_node_degree": 0,
+        "total_length": 0,
+        "average_segment_length": 0,
+        "n50": 0,
+        "l50": 0,
+        "gc_content": 0.0,
+    }
+    
+    stats['average_node_degree'] = _calculate_average_node_degree(ug)
+    stats['total_length'] = _calculate_total_length(ug.segment_lengths)
+    stats['average_segment_length'] = _calculate_average_segment_length(ug.segment_lengths)
+    stats['n50'], stats['l50'] = _calculate_n50_l50(ug.segment_lengths.values())
+    stats['gc_content'] = _get_gc_content(ug.segment_sequences.values(), stats['total_length'])
+    
+    output_file = _write_stats_file(gfa_file, stats, output_path)
+
+    # Log the statistics
+    logger.info(f"Basic graph statistics for {gfa_file}:")
+    logger.info(f"Number of segments: {stats['nsegments']}")
+    logger.info(f"Number of links: {stats['nlinks']}")
+    logger.info(f"Number of self-loops: {stats['nloops']}")
+    logger.info(f"Number of connected components: {stats['ncomponents']}")
+    logger.info(f"Average node degree: {stats['average_node_degree']}")
+    logger.info(f"Sequence-based statistics for {gfa_file}:")
+    logger.info(f"Total length of segments: {stats['total_length']} bp")
+    logger.info(f"Average segment length: {stats['average_segment_length']} bp")
+    logger.info(f"N50: {stats['n50']} bp")
+    logger.info(f"L50: {stats['l50']} segment(s)")
+    logger.info(f"GC content: {stats['gc_content']:.2%}")
+
+    return output_file

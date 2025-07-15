@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Mapping, Optional
 
 import click
-from loguru import logger
 
 from agtools import commands
 from agtools.log_config import logger
@@ -77,7 +76,12 @@ _click_command_opts = dict(
 @_output
 def stats(graph, output):
     """Compute statistics about the graph"""
-    print("Running stats")
+
+    logger.info(f"Computing statistics of the graph file {graph[0]}")
+
+    output_file = commands.stats(graph[0], output)
+
+    logger.info(f"Computed statistics can be found in {output_file}")
 
 
 @main.command(**_click_command_opts)
