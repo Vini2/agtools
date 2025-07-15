@@ -97,3 +97,11 @@ def test_agtools_gfa2fasta(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
+
+def test_agtools_gfa2adj(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2adj, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
