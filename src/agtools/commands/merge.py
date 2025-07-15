@@ -8,8 +8,12 @@ from agtools.log_config import logger
 def _combine_gfa_files(graph_files):
 
     segments = {}
+    comment_lines = []
+    header_lines = []
     segment_lines = []
     link_lines = []
+    jump_lines = []
+    containment_lines = []
     path_lines = []
     walk_lines = []
 
@@ -32,19 +36,39 @@ def _combine_gfa_files(graph_files):
                 elif line.startswith("L"):
                     link_lines.append(line.strip())
 
+                elif line.startswith("J"):
+                    jump_lines.append(line.strip())
+
+                elif line.startswith("C"):
+                    containment_lines.append(line.strip())
+
                 elif line.startswith("P"):
                     path_lines.append(line.strip())
 
                 elif line.startswith("W"):
                     walk_lines.append(line.strip())
 
-    return segment_lines, link_lines, path_lines, walk_lines
+                elif line.startswith("H"):
+                    header_lines.append(line.strip())
+                
+                elif line.startswith("#"):
+                    comment_lines.append(line.strip())
+
+    return comment_lines, header_lines, segment_lines, link_lines, jump_lines, containment_lines, path_lines, walk_lines
 
 
-def _write_gfa_elements(segments, links, paths, walks, output_path):
+def _write_gfa_elements(comments, headers, segments, links, jumps, containments, paths, walks, output_path):
     output_file = f"{output_path}/merged_graph.gfa"
 
     with open(output_file, "w") as file_out:
+
+        # Write comments
+        for line in comments:
+            file_out.write(line + "\n")
+
+        # Write headers
+        for line in headers:
+            file_out.write(line + "\n")
 
         # Write segments
         for line in segments:
@@ -52,6 +76,14 @@ def _write_gfa_elements(segments, links, paths, walks, output_path):
 
         # Write links
         for line in links:
+            file_out.write(line + "\n")
+
+        # Write jumps
+        for line in jumps:
+            file_out.write(line + "\n")
+
+        # Write containments
+        for line in containments:
             file_out.write(line + "\n")
 
         # Write paths
@@ -66,6 +98,6 @@ def _write_gfa_elements(segments, links, paths, walks, output_path):
 
 
 def merge(graph_files, output_path):
-    segments, links, paths, walks = _combine_gfa_files(graph_files)
-    output_file = _write_gfa_elements(segments, links, paths, walks, output_path)
+    comments, headers, segments, links, jumps, containments, paths, walks = _combine_gfa_files(graph_files)
+    output_file = _write_gfa_elements(comments, headers, segments, links, jumps, containments, paths, walks, output_path)
     return output_file
