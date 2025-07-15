@@ -19,6 +19,7 @@ def test_from_gfa_basic_segments_and_links():
     # Check segments
     assert "seg1" in ag.segment_sequences
     assert "seg2" in ag.segment_sequences
+    assert ag.graph.vcount() == len(ag.segment_sequences)
 
     # Check segment lengths
     assert ag.segment_lengths["seg1"] == 4

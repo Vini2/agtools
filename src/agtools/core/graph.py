@@ -78,8 +78,6 @@ class UnitigGraph:
         self.oriented_links[to_seg][from_seg].append((rev2, rev1))
         self.link_overlap[(f"{to_seg}{rev2}", f"{from_seg}{rev1}")] = overlap
 
-        print(self.oriented_links)
-
     def _get_graph_edges(self, links):
         edges = []
         loops = []
