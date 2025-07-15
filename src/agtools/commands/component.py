@@ -7,6 +7,29 @@ from agtools.log_config import logger
 
 
 def _write_component_graph(component_segments, gfa_file, output_path):
+    """
+    Write a subgraph of the assembly graph containing only the specified segments.
+
+    This function filters a GFA file and writes a new file containing only:
+    - Segments (`S`) that are part of the specified component
+    - Links (`L`), jumps (`J`), and containments (`C`) where both endpoints are in the component
+    - Paths (`P`) and walks (`W`) that reference only segments in the component
+    - Any other lines (headers, comments, etc.) are preserved
+
+    Parameters
+    ----------
+    component_segments : set or list of str
+        The segment IDs that make up the target component.
+    gfa_file : str
+        Path to the input GFA file.
+    output_path : str
+        Directory to write the filtered component GFA file.
+
+    Returns
+    -------
+    str
+        Path to the newly written GFA file containing only the specified component.
+    """
 
     output_file = f"{output_path}/component_graph.gfa"
 
@@ -47,6 +70,27 @@ def _write_component_graph(component_segments, gfa_file, output_path):
 
 
 def component(gfa_file, segment, output):
+    """
+    Extract and write the connected component containing a given segment.
+
+    This function identifies the connected component of the assembly graph that contains
+    the given segment. It then writes a filtered GFA file that includes only the segments
+    and edges belonging to that component.
+
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the input GFA file.
+    segment : str
+        Segment ID for which to extract the connected component.
+    output : str
+        Directory where the filtered GFA file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the component-specific GFA output file.
+    """
 
     ug = UnitigGraph.from_gfa(gfa_file)
 
