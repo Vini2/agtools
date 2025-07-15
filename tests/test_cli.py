@@ -65,6 +65,15 @@ def test_agtools_filter(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_component(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    segment = "seg4"
+    args = f"-g {graph} -s {segment} -o {outpath}".split()
+    r = runner.invoke(component, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
 def test_agtools_fastg2gfa(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "final.graph.fastg"
