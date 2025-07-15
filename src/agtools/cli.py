@@ -155,7 +155,14 @@ def filter(graph, min_length, output):
 @_output
 def component(graph, segment, output):
     """Extract a component containing a given segment"""
-    print("Extracting a component given a segment")
+
+    logger.info(
+        f"Extracting from file {graph[0]} the component containing segment {segment}"
+    )
+
+    gfa_path = commands.component(graph[0], segment, output)
+
+    logger.info(f"GFA file of the component is written to {gfa_path}")
 
 
 @main.command(**_click_command_opts)
@@ -178,7 +185,7 @@ def fastg2gfa(graph, ksize, output):
 
     gfa_path = commands.fastg2gfa(graph[0], ksize, output)
 
-    logger.info(f"GFA file written to {gfa_path} with fixed overlap: {ksize}M")
+    logger.info(f"GFA file is written to {gfa_path} with fixed overlap: {ksize}M")
 
 
 @main.command(**_click_command_opts)
