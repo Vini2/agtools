@@ -3,7 +3,7 @@
 import os
 import tempfile
 
-from agtools.core.graph import AssemblyGraph
+from agtools.core.graph import UnitigGraph
 
 
 def test_from_gfa_basic_segments_and_links():
@@ -13,7 +13,7 @@ def test_from_gfa_basic_segments_and_links():
         f.write(gfa_content)
         f_path = f.name
 
-    ag = AssemblyGraph.from_gfa(f_path)
+    ag = UnitigGraph.from_gfa(f_path)
     os.unlink(f_path)
 
     # Check segments
@@ -40,7 +40,7 @@ def test_oriented_links_and_overlap():
         f.write(gfa_content)
         f_path = f.name
 
-    ag = AssemblyGraph.from_gfa(f_path)
+    ag = UnitigGraph.from_gfa(f_path)
     os.unlink(f_path)
 
     # Oriented links should be symmetric
@@ -59,7 +59,7 @@ def test_self_loops_are_recorded():
         f.write(gfa_content)
         f_path = f.name
 
-    ag = AssemblyGraph.from_gfa(f_path)
+    ag = UnitigGraph.from_gfa(f_path)
     os.unlink(f_path)
 
     assert "segX" in ag.self_loops

@@ -8,7 +8,7 @@ from Bio.Seq import Seq
 from igraph import Graph
 
 
-class AssemblyGraph:
+class UnitigGraph:
     def __init__(self):
         self.graph = Graph(directed=False)
         self.path = None
@@ -21,7 +21,7 @@ class AssemblyGraph:
         self.self_loops = []
 
     @classmethod
-    def from_gfa(cls, path: str) -> "AssemblyGraph":
+    def from_gfa(cls, path: str) -> "UnitigGraph":
         ag = cls()
         node_count = 0
         links = []
@@ -97,14 +97,14 @@ class AssemblyGraph:
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
 
-    def filter_segments(self, min_length: int) -> "AssemblyGraph":
+    def filter_segments(self, min_length: int) -> "UnitigGraph":
         keep_segs = {
             s for s, seq in self.segment_sequences.items() if len(seq) >= min_length
         }
         keep_ids = [self.segment_names_rev[s] for s in keep_segs]
         subgraph = self.graph.subgraph(keep_ids)
 
-        new_ag = AssemblyGraph()
+        new_ag = UnitigGraph()
         new_ag.graph = subgraph
         new_ag.segment_names = bidict(
             {i: self.segment_names[v.index] for i, v in enumerate(subgraph.vs)}
