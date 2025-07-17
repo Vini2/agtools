@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+from collections import defaultdict
+
 from bidict import bidict
 from Bio import SeqIO
-from collections import defaultdict
 from igraph import Graph
 
 from agtools.core.graph import ContigGraph
@@ -199,7 +200,10 @@ def _get_graph_edges(graph_file: str, paths: dict, segment_contigs: dict) -> lis
 
     return edge_list
 
-def get_contig_graph(graph_file: str, contigs_file: str, contig_paths_file: str) -> ContigGraph:
+
+def get_contig_graph(
+    graph_file: str, contigs_file: str, contig_paths_file: str
+) -> ContigGraph:
     """
     Build a contig-level graph from an assembly GFA file and contig path mappings.
 
@@ -237,18 +241,18 @@ def get_contig_graph(graph_file: str, contigs_file: str, contig_paths_file: str)
 
     # Add vertices
     graph.add_vertices(node_count)
-    
+
     # Name vertices with contig identifiers
     for i in range(node_count):
         graph.vs[i]["id"] = i
         graph.vs[i]["label"] = contig_names[i]
 
     edge_list = _get_graph_edges(
-            graph_file=graph_file,
-            paths=paths,
-            segment_contigs=segment_contigs,
-        )
-    
+        graph_file=graph_file,
+        paths=paths,
+        segment_contigs=segment_contigs,
+    )
+
     # Add edges to the graph
     graph.add_edges(edge_list)
 

@@ -9,6 +9,7 @@ __credits__ = ["Vijini Mallawaarachchi"]
 
 DATADIR = pathlib.Path(__file__).parent / "data"
 
+
 def test_get_contig_graph():
 
     graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"

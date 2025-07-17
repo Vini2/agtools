@@ -10,8 +10,8 @@ def gfa2adj(gfa_file: str, output_path: str) -> str:
     """
     Convert a GFA file into an adjacency matrix and save it as a TSV file.
 
-    This function parses a GFA file to build an undirected graph representation of the 
-    assembly, computes its adjacency matrix, and writes the matrix to a tab-separated 
+    This function parses a GFA file to build an undirected graph representation of the
+    assembly, computes its adjacency matrix, and writes the matrix to a tab-separated
     file with segment IDs as row and column headers.
 
     Parameters
@@ -41,4 +41,5 @@ def gfa2adj(gfa_file: str, output_path: str) -> str:
     return output_file
 
 
+# TODO: give option to change delimiter of the saved file
 # TODO: show isolated segments in the adjacency matrix

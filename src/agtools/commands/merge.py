@@ -86,15 +86,15 @@ def _combine_gfa_files(graph_files: list) -> tuple:
 
 
 def _write_gfa_elements(
-    comments: list, 
-    headers: list, 
-    segments: list, 
-    links: list, 
-    jumps: list, 
-    containments: list, 
-    paths: list, 
-    walks: list, 
-    output_path: str
+    comments: list,
+    headers: list,
+    segments: list,
+    links: list,
+    jumps: list,
+    containments: list,
+    paths: list,
+    walks: list,
+    output_path: str,
 ) -> str:
     """
     Write categorized GFA lines to a new merged GFA file.
@@ -187,7 +187,7 @@ def merge(graph_files: str, output_path: str) -> str:
     str
         Path to the final merged GFA file.
     """
-    
+
     comments, headers, segments, links, jumps, containments, paths, walks = (
         _combine_gfa_files(graph_files)
     )
