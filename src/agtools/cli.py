@@ -205,14 +205,6 @@ def gfa2fastg(graph, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2dot(graph, output):
-    """Convert GFA file to DOT format (Graphviz)"""
-    print("Running gfa2dot")
-
-
-@main.command(**_click_command_opts)
-@_graph
-@_output
 def gfa2fasta(graph, output):
     """Get segments in FASTA format"""
 
