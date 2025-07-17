@@ -4,7 +4,7 @@ from agtools.core.graph import UnitigGraph
 from agtools.log_config import logger
 
 
-def _calculate_average_node_degree(graph) -> int:
+def _calculate_average_node_degree(graph: UnitigGraph) -> int:
     """
     Calculate the average node degree of the graph.
 
@@ -115,7 +115,7 @@ def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     return output_file
 
 
-def stats(gfa_file, output_path) -> str:
+def stats(gfa_file: str, output_path: str) -> str:
     """
     Compute and write summary statistics for an assembly graph in GFA format.
 

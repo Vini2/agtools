@@ -3,7 +3,7 @@
 from agtools.core.graph import parse_fastg
 
 
-def _extract_links(edges, fixed_overlap) -> list:
+def _extract_links(edges: dict, fixed_overlap: int) -> list:
     """
     Convert a edges adjacency dictionary into GFA-style links.
 
@@ -35,7 +35,7 @@ def _extract_links(edges, fixed_overlap) -> list:
     return links
 
 
-def _write_gfa(segments, links, output_path) -> str:
+def _write_gfa(segments: dict, links: list, output_path: str) -> str:
     """
     Write segments and links to a GFA file.
 
@@ -59,7 +59,7 @@ def _write_gfa(segments, links, output_path) -> str:
     return output_file
 
 
-def fastg2gfa(fastg_path, k_overlap, gfa_path) -> str:
+def fastg2gfa(fastg_path: str, k_overlap: int, gfa_path: str) -> str:
     """
     Convert a FASTG file to a GFA file format with fixed k-mer overlap.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-def _remap_segment(seg_id, segment_map) -> str:
+def _remap_segment(seg_id: str, segment_map: dict) -> str:
     """
     Remap a segment ID using the provided mapping.
 
@@ -16,7 +16,7 @@ def _remap_segment(seg_id, segment_map) -> str:
     return segment_map.get(seg_id, seg_id)
 
 
-def _build_map_segments(input_gfa, prefix) -> dict:
+def _build_map_segments(input_gfa: str, prefix: str) -> dict:
     """
     Create a mapping of segment IDs from an input GFA file, applying a prefix to each segment ID.
 
@@ -42,7 +42,7 @@ def _build_map_segments(input_gfa, prefix) -> dict:
     return segment_map
 
 
-def _write_renamed_file(input_gfa, segment_map, output_path) -> str:
+def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> str:
     """
     Write a new GFA file with segment IDs renamed based on the provided segment map.
 
@@ -97,7 +97,7 @@ def _write_renamed_file(input_gfa, segment_map, output_path) -> str:
     return output_file
 
 
-def rename(gfa_file, prefix, output_path) -> str:
+def rename(gfa_file: str, prefix: str, output_path: str) -> str:
     """
     Rename segment IDs in a GFA file by applying a prefix and save the modified file.
 

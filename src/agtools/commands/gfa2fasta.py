@@ -7,7 +7,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 
-def _get_segment_sequences(gfa_file) -> list:
+def _get_segment_sequences(gfa_file: str) -> list:
     """
     Extracts segment sequences from a GFA (Graphical Fragment Assembly) file.
 
@@ -41,7 +41,7 @@ def _get_segment_sequences(gfa_file) -> list:
     return sequences
 
 
-def _write_segment_sequences(sequences, output_path):
+def _write_segment_sequences(sequences: list, output_path: str) -> str:
     """
     Writes segment sequences to a FASTA file.
 
@@ -60,7 +60,7 @@ def _write_segment_sequences(sequences, output_path):
         SeqIO.write(sequences, output_handle, "fasta")
 
 
-def gfa2fasta(gfa_file, output_path) -> str:
+def gfa2fasta(gfa_file: str, output_path: str) -> str:
     """
     Converts a GFA file to a FASTA file containing segment sequences.
 

@@ -5,7 +5,26 @@ import sys
 from agtools.log_config import logger
 
 
-def _combine_gfa_files(graph_files):
+def _combine_gfa_files(graph_files: list) -> tuple:
+    """
+    Read and merge the components of multiple GFA files.
+
+    This function parses a list of GFA files and categorizes each line by type
+    (e.g., segment, link, path), ensuring segment IDs are unique across all files.
+    If duplicate segment IDs are found, the program exits with an error.
+
+    Parameters
+    ----------
+    graph_files : list of str
+        List of paths to GFA files to be merged.
+
+    Returns
+    -------
+    tuple
+        Eight lists containing lines from the input GFA files, grouped as:
+        (comment_lines, header_lines, segment_lines, link_lines,
+         jump_lines, containment_lines, path_lines, walk_lines)
+    """
 
     segments = {}
     comment_lines = []
@@ -67,8 +86,49 @@ def _combine_gfa_files(graph_files):
 
 
 def _write_gfa_elements(
-    comments, headers, segments, links, jumps, containments, paths, walks, output_path
-):
+    comments: list, 
+    headers: list, 
+    segments: list, 
+    links: list, 
+    jumps: list, 
+    containments: list, 
+    paths: list, 
+    walks: list, 
+    output_path: str
+) -> str:
+    """
+    Write categorized GFA lines to a new merged GFA file.
+
+    This function writes the collected GFA components (e.g., segments, links, paths)
+    to a single output file in the correct GFA format and order.
+
+    Parameters
+    ----------
+    comments : list
+        Comment lines beginning with '#'.
+    headers : list
+        Header lines beginning with 'H'.
+    segments : list
+        Segment lines beginning with 'S'.
+    links : list
+        Link lines beginning with 'L'.
+    jumps : list
+        Jump lines beginning with 'J'.
+    containments : list
+        Containment lines beginning with 'C'.
+    paths : list
+        Path lines beginning with 'P'.
+    walks : list
+        Walk lines beginning with 'W'.
+    output_path : str
+        Directory where the merged GFA file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the written merged GFA file.
+    """
+
     output_file = f"{output_path}/merged_graph.gfa"
 
     with open(output_file, "w") as file_out:
@@ -108,7 +168,26 @@ def _write_gfa_elements(
     return output_file
 
 
-def merge(graph_files, output_path):
+def merge(graph_files: str, output_path: str) -> str:
+    """
+    Merge multiple GFA files into a single output GFA file.
+
+    This is the main function that coordinates reading multiple GFA files,
+    verifying uniqueness of segments, and writing the merged result.
+
+    Parameters
+    ----------
+    graph_files : list of str
+        Paths to the GFA files to merge.
+    output_path : str
+        Directory where the merged GFA file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the final merged GFA file.
+    """
+    
     comments, headers, segments, links, jumps, containments, paths, walks = (
         _combine_gfa_files(graph_files)
     )

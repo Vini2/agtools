@@ -6,7 +6,7 @@ from agtools.core.graph import UnitigGraph
 from agtools.log_config import logger
 
 
-def _write_component_graph(component_segments, gfa_file, output_path):
+def _write_component_graph(component_segments: set, gfa_file: str, output_path: str) -> str:
     """
     Write a subgraph of the assembly graph containing only the specified segments.
 
@@ -18,7 +18,7 @@ def _write_component_graph(component_segments, gfa_file, output_path):
 
     Parameters
     ----------
-    component_segments : set or list of str
+    component_segments : set of str
         The segment IDs that make up the target component.
     gfa_file : str
         Path to the input GFA file.
@@ -69,7 +69,7 @@ def _write_component_graph(component_segments, gfa_file, output_path):
     return output_file
 
 
-def component(gfa_file, segment, output):
+def component(gfa_file: str, segment: str, output_path: str) -> str:
     """
     Extract and write the connected component containing a given segment.
 
@@ -98,13 +98,13 @@ def component(gfa_file, segment, output):
 
     segment_id = ug.segment_names_rev[segment]
 
-    component_segments = []
+    component_segments = set()
 
     for component in connected_components:
         if segment_id in component:
-            component_segments = [ug.segment_names[node_id] for node_id in component]
+            component_segments = set([ug.segment_names[node_id] for node_id in component])
             break
 
-    output_file = _write_component_graph(component_segments, gfa_file, output)
+    output_file = _write_component_graph(component_segments, gfa_file, output_path)
 
     return output_file

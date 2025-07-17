@@ -242,7 +242,7 @@ class ContigGraph:
         self.self_loops = self_loops
 
 
-def parse_fastg(fastg_file):
+def parse_fastg(fastg_file: str) -> tuple:
     """
     Parse a FASTG file and extract segment sequences and edges.
 

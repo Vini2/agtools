@@ -6,7 +6,7 @@ from agtools.core.graph import UnitigGraph
 from agtools.log_config import logger
 
 
-def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
+def _write_filtered_graph(segments_to_remove: set, gfa_file: str, output_path: str) -> str:
     """
     Write a filtered GFA file by excluding lines that involve specified segments.
 
@@ -73,7 +73,7 @@ def _write_filtered_graph(segments_to_remove, gfa_file, output_path):
     return output_file
 
 
-def filter(gfa_file, min_length, output_path):
+def filter(gfa_file: str, min_length: int, output_path: str) -> str:
     """
     Filter segments from a GFA file based on minimum sequence length.
 

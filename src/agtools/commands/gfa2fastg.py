@@ -5,7 +5,7 @@ from collections import defaultdict
 from Bio.Seq import Seq
 
 
-def reverse_orientation(orient) -> str:
+def reverse_orientation(orient: str) -> str:
     """
     Reverses the orientation symbol used in GFA links.
 
@@ -18,7 +18,7 @@ def reverse_orientation(orient) -> str:
     return "+" if orient == "-" else "-"
 
 
-def reverse_complement(sequence) -> str:
+def reverse_complement(sequence: str) -> str:
     """
     Obtains the reverse complement of a DNA sequence.
 
@@ -31,7 +31,7 @@ def reverse_complement(sequence) -> str:
     return str(Seq(sequence).reverse_complement())
 
 
-def _get_graph_sequences(gfa_file) -> tuple[defaultdict, dict, dict, int]:
+def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict, dict, dict, int]:
     """
     Parses a GFA file to extract sequence and graph structure information.
 
@@ -80,7 +80,7 @@ def _get_graph_sequences(gfa_file) -> tuple[defaultdict, dict, dict, int]:
     return graph_nodes, sequences, overlaps, overlap_value
 
 
-def _write_to_fastg(graph_nodes, sequences, output_path) -> str:
+def _write_to_fastg(graph_nodes: dict, sequences: dict, output_path: str) -> str:
     """
     Writes the sequence graph to a FASTG file format.
 
@@ -118,7 +118,7 @@ def _write_to_fastg(graph_nodes, sequences, output_path) -> str:
     return output_file
 
 
-def gfa2fastg(gfa_file, output_path) -> tuple[str, int]:
+def gfa2fastg(gfa_file: str, output_path: str) -> tuple[str, int]:
     """
     Converts a GFA file to a FASTG file representing the sequence graph.
 
