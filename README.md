@@ -64,7 +64,6 @@ Commands:
   component  Extract a component containing a given segment
   fastg2gfa  Convert FASTG file to GFA format
   gfa2fastg  Convert GFA file to FASTG format
-  gfa2dot    Convert GFA file to DOT format (Graphviz)
   gfa2fasta  Get segments in FASTA format
   gfa2adj    Get adjacency matrix of the assembly graph
 ```
