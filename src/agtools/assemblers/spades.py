@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 import re
 from collections import defaultdict
+from agtools.core.graph import UnitigGraph, ContigGraph
 
+from bidict import bidict
 from igraph import Graph
 
-from agtools.utils.bidirectionalmap import BidirectionalMap
 
-
-def get_segment_paths_spades(contig_paths):
+def _get_segment_paths(contig_paths):
     paths = {}
     segment_contigs = {}
     node_count = 0
 
-    my_map = BidirectionalMap()
-
-    contig_names = BidirectionalMap()
+    id_map = bidict()       # id → contig_num
+    contig_names = bidict() # id → contig_name
 
     current_contig_num = ""
 
@@ -33,7 +32,7 @@ def get_segment_paths_spades(contig_paths):
             segments = path.rstrip().split(",")
 
             if current_contig_num != contig_num:
-                my_map[node_count] = int(contig_num)
+                id_map[node_count] = int(contig_num)
                 contig_names[node_count] = name.strip()
                 current_contig_num = contig_num
                 node_count += 1
@@ -50,17 +49,17 @@ def get_segment_paths_spades(contig_paths):
             name = file.readline().strip()
             path = file.readline().strip()
 
-    return paths, segment_contigs, node_count, my_map, contig_names
+    return paths, segment_contigs, node_count, id_map, contig_names
 
 
-def get_graph_edges_spades(
-    assembly_graph_file, contigs_map, contigs_map_rev, paths, segment_contigs
+def _get_graph_edges(
+    graph_file, contigs_map, contigs_map_rev, paths, segment_contigs
 ):
     links = []
     links_map = defaultdict(set)
 
     # Get links from assembly_graph_with_scaffolds.gfa
-    with open(assembly_graph_file) as file:
+    with open(graph_file) as file:
         line = file.readline()
 
         while line != "":
@@ -119,46 +118,53 @@ def get_graph_edges_spades(
     return edge_list
 
 
-def get_graph(assembly_graph_file, contig_paths_file):
+def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
     # Get paths, segments, links and contigs of the assembly graph
     (
-        paths,
+        contig_paths,
         segment_contigs,
         node_count,
         contigs_map,
         contig_names,
-    ) = get_segment_paths_spades(contig_paths_file)
-
-    # Get reverse mapping of contig map
-    contigs_map_rev = contigs_map.inverse
-
-    # Get reverse mapping of contig identifiers
-    contig_names_rev = contig_names.inverse
+    ) = _get_segment_paths(contig_paths_file)
 
     # Create graph
-    assembly_graph = Graph()
+    graph = Graph()
 
     # Add vertices
-    assembly_graph.add_vertices(node_count)
+    graph.add_vertices(node_count)
 
     # Name vertices with contig identifiers
     for i in range(node_count):
-        assembly_graph.vs[i]["id"] = i
-        assembly_graph.vs[i]["label"] = contig_names[i]
+        graph.vs[i]["id"] = i
+        graph.vs[i]["label"] = contig_names[i]
 
     # Get list of edges
-    edge_list = get_graph_edges_spades(
-        assembly_graph_file=assembly_graph_file,
+    edge_list = _get_graph_edges(
+        graph_file=graph_file,
         contigs_map=contigs_map,
-        contigs_map_rev=contigs_map_rev,
-        paths=paths,
+        contigs_map_rev=contigs_map.inverse,
+        paths=contig_paths,
         segment_contigs=segment_contigs,
     )
 
     # Add edges to the graph
-    assembly_graph.add_edges(edge_list)
+    graph.add_edges(edge_list)
 
     # Simplify the graph
-    assembly_graph.simplify(multiple=True, loops=False, combine_edges=None)
+    graph.simplify(multiple=True, loops=False, combine_edges=None)
 
-    return (assembly_graph, contigs_map, contig_names)
+    contig_graph = ContigGraph(
+        graph = graph,
+        path = graph_file,
+        contig_ids = contigs_map,
+        contig_names = contig_names,
+        graph_to_contig_map = None,
+    )
+
+    return contig_graph
+
+
+def get_unitig_graph(graph_file) -> UnitigGraph:
+    ug = UnitigGraph.from_gfa(graph_file)
+    return ug

@@ -13,11 +13,11 @@ class UnitigGraph:
         self.graph = Graph(directed=False)
         self.path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
-        self.link_overlap = {}
-        self.segment_names = None  # node_id → segment_id
-        self.segment_names_rev = None  # segment_id → node_id
-        self.segment_sequences = {}  # segment_id → sequence
-        self.segment_lengths = {}  # segment_id → length
+        self.link_overlap = dict()
+        self.segment_names = bidict()   # node_id → segment_id
+        self.segment_names_rev = None   # segment_id → node_id
+        self.segment_sequences = dict() # segment_id → sequence
+        self.segment_lengths = dict()   # segment_id → length
         self.self_loops = []
 
     @classmethod
@@ -25,7 +25,6 @@ class UnitigGraph:
         ug = cls()
         node_count = 0
         links = []
-        segment_names = {}
 
         ug.path = path
 
@@ -36,7 +35,7 @@ class UnitigGraph:
                     parts = line.strip().split("\t")
                     seg_id = parts[1]
                     seq = parts[2]
-                    segment_names[node_count] = seg_id
+                    ug.segment_names[node_count] = seg_id
                     ug.segment_sequences[seg_id] = Seq(seq)
                     ug.segment_lengths[seg_id] = len(seq)
                     node_count += 1
@@ -51,19 +50,18 @@ class UnitigGraph:
                         from_seg, to_seg, from_orient, to_orient, overlap
                     )
 
-        ug.segment_names = bidict(segment_names)
         ug.segment_names_rev = ug.segment_names.inverse
         ug.graph.add_vertices(node_count)
 
         for i in range(node_count):
-            seg_id = ug.segment_names[i]
+            seg_name = ug.segment_names[i]
             ug.graph.vs[i]["id"] = i
-            ug.graph.vs[i]["name"] = seg_id
-            ug.graph.vs[i]["label"] = f"{seg_id}\nID:{i}"
+            ug.graph.vs[i]["name"] = seg_name
+            ug.graph.vs[i]["label"] = f"{seg_name}\nID:{i}"
 
         edge_list, ug.self_loops = ug._get_graph_edges(links)
         ug.graph.add_edges(edge_list)
-        ug.graph.simplify(multiple=True, loops=False)
+        ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
         return ug
 
     def _add_oriented_links(self, from_seg, to_seg, from_orient, to_orient, overlap):
@@ -95,24 +93,21 @@ class UnitigGraph:
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
 
-    def filter_segments(self, min_length: int) -> "UnitigGraph":
-        keep_segs = {
-            s for s, seq in self.segment_sequences.items() if len(seq) >= min_length
-        }
-        keep_ids = [self.segment_names_rev[s] for s in keep_segs]
-        subgraph = self.graph.subgraph(keep_ids)
 
-        new_ug = UnitigGraph()
-        new_ug.graph = subgraph
-        new_ug.segment_names = bidict(
-            {i: self.segment_names[v.index] for i, v in enumerate(subgraph.vs)}
-        )
-        new_ug.segment_names_rev = new_ug.segment_names.inverse
-        new_ug.segment_sequences = {s: self.segment_sequences[s] for s in keep_segs}
-        new_ug.segment_lengths = {
-            s: len(seq) for s, seq in new_ug.segment_sequences.items()
-        }
-        return new_ug
+class ContigGraph:
+    def __init__(self, 
+                    graph,
+                    path,
+                    contig_ids,
+                    contig_names,
+                    graph_to_contig_map=None,
+                 ):
+        self.graph = graph
+        self.path = path
+        self.contig_ids = contig_ids                    # node_id → contig_i
+        self.contig_names = contig_names                # node_id → segment_id
+        self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
+
 
 
 def parse_fastg(fastg_file):
