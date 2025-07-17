@@ -24,10 +24,11 @@ Functions:
 
 import re
 from collections import defaultdict
-from agtools.core.graph import UnitigGraph, ContigGraph
 
 from bidict import bidict
 from igraph import Graph
+
+from agtools.core.graph import ContigGraph, UnitigGraph
 
 
 def _get_segment_paths(contig_paths):
@@ -59,8 +60,8 @@ def _get_segment_paths(contig_paths):
     segment_contigs = {}
     node_count = 0
 
-    id_map = bidict()       # id → contig_num
-    contig_names = bidict() # id → contig_name
+    id_map = bidict()  # id → contig_num
+    contig_names = bidict()  # id → contig_name
 
     current_contig_num = ""
 
@@ -99,9 +100,7 @@ def _get_segment_paths(contig_paths):
     return paths, segment_contigs, node_count, id_map, contig_names
 
 
-def _get_graph_edges(
-    graph_file, contigs_map, contigs_map_rev, paths, segment_contigs
-):
+def _get_graph_edges(graph_file, contigs_map, contigs_map_rev, paths, segment_contigs):
     """
     Construct edges between contigs based on shared segment links in the GFA file.
 
@@ -240,11 +239,11 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
     graph.simplify(multiple=True, loops=False, combine_edges=None)
 
     contig_graph = ContigGraph(
-        graph = graph,
-        path = graph_file,
-        contig_ids = contigs_map,
-        contig_names = contig_names,
-        graph_to_contig_map = None,
+        graph=graph,
+        path=graph_file,
+        contig_ids=contigs_map,
+        contig_names=contig_names,
+        graph_to_contig_map=None,
     )
 
     return contig_graph

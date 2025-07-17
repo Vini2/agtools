@@ -53,10 +53,10 @@ class UnitigGraph:
         self.path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.segment_names = bidict()   # node_id → segment_id
-        self.segment_names_rev = None   # segment_id → node_id
-        self.segment_sequences = dict() # segment_id → sequence
-        self.segment_lengths = dict()   # segment_id → length
+        self.segment_names = bidict()  # node_id → segment_id
+        self.segment_names_rev = None  # segment_id → node_id
+        self.segment_sequences = dict()  # segment_id → sequence
+        self.segment_lengths = dict()  # segment_id → length
         self.self_loops = []
 
     @classmethod
@@ -211,17 +211,18 @@ class ContigGraph:
         Optional mapping from unitig-level node IDs to contigs (used by some assemblers).
     """
 
-    def __init__(self, 
-                    graph,
-                    path,
-                    contig_ids,
-                    contig_names,
-                    graph_to_contig_map=None,
-                 ):
+    def __init__(
+        self,
+        graph,
+        path,
+        contig_ids,
+        contig_names,
+        graph_to_contig_map=None,
+    ):
         self.graph = graph
         self.path = path
-        self.contig_ids = contig_ids                    # node_id → contig_i
-        self.contig_names = contig_names                # node_id → segment_id
+        self.contig_ids = contig_ids  # node_id → contig_i
+        self.contig_names = contig_names  # node_id → segment_id
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
 
 

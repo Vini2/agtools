@@ -26,7 +26,6 @@ def test_get_contig_graph():
     assert "NODE_1_length_488682_cov_86.190505" in contig_graph.contig_names.values()
 
 
-
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
