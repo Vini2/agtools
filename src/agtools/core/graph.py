@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+"""
+Graph utility classes and functions for parsing and manipulating assembly graphs.
+
+Includes:
+- `UnitigGraph`: Represents unitig-level assembly graphs from GFA format.
+- `ContigGraph`: Represents contig-level graphs with optional mappings.
+- `parse_fastg`: Parses FASTG files into segments and adjacency data.
+
+Dependencies:
+- `igraph` for graph structures
+- `bidict` for bidirectional maps
+- `Bio.Seq.Seq` for sequence storage
+"""
+
 import re
 from collections import defaultdict
 
@@ -9,6 +23,31 @@ from igraph import Graph
 
 
 class UnitigGraph:
+    """
+    Represents an assembly graph parsed from a GFA file.
+
+    Attributes
+    ----------
+    graph : igraph.Graph
+        The undirected graph representing the unitig-level assembly graph.
+    path : str
+        Path to the original GFA file.
+    oriented_links : dict
+        Mapping from (from_seg, to_seg) → list of (from_orient, to_orient).
+    link_overlap : dict
+        Mapping from oriented segment pair to overlap length.
+    segment_names : bidict
+        Maps internal node IDs to Segment IDs.
+    segment_names_rev : bidict
+        Reverse mapping of segment names to node IDs.
+    segment_sequences : dict
+        Segment ID → sequence (as Bio.Seq.Seq).
+    segment_lengths : dict
+        Segment ID → length of sequence.
+    self_loops : list
+        List of segment IDs that form self-loops.
+    """
+
     def __init__(self):
         self.graph = Graph(directed=False)
         self.path = None
@@ -22,6 +61,20 @@ class UnitigGraph:
 
     @classmethod
     def from_gfa(cls, path: str) -> "UnitigGraph":
+        """
+        Parse a GFA file into a UnitigGraph object.
+
+        Parameters
+        ----------
+        path : str
+            Path to the GFA file.
+
+        Returns
+        -------
+        UnitigGraph
+            The constructed graph object with segments, links, and metadata.
+        """
+
         ug = cls()
         node_count = 0
         links = []
@@ -65,6 +118,23 @@ class UnitigGraph:
         return ug
 
     def _add_oriented_links(self, from_seg, to_seg, from_orient, to_orient, overlap):
+        """
+        Store oriented link and its overlap, along with its symmetric reverse.
+
+        Parameters
+        ----------
+        from_seg : str
+            Source segment ID.
+        to_seg : str
+            Destination segment ID.
+        from_orient : str
+            Orientation of source ('+' or '-').
+        to_orient : str
+            Orientation of destination.
+        overlap : int
+            Overlap length in base pairs.
+        """
+
         key1 = f"{from_seg}{from_orient}"
         key2 = f"{to_seg}{to_orient}"
         self.oriented_links[from_seg][to_seg].append((from_orient, to_orient))
@@ -77,6 +147,21 @@ class UnitigGraph:
         self.link_overlap[(f"{to_seg}{rev2}", f"{from_seg}{rev1}")] = overlap
 
     def _get_graph_edges(self, links):
+        """
+        Convert parsed segment links into edge list for igraph.
+
+        Parameters
+        ----------
+        links : list of tuple
+            Pairs of segment IDs representing links.
+
+        Returns
+        -------
+        tuple
+            (edges, self_loops) where edges is a list of (src_id, tgt_id),
+            and self_loops is a list of segment IDs forming loops.
+        """
+
         edges = []
         loops = []
         for from_edge, to_edge in links:
@@ -89,12 +174,43 @@ class UnitigGraph:
         return edges, loops
 
     def get_neighbors(self, seg_id: str) -> list:
+        """
+        Get neighbor segment IDs connected to the given segment.
+
+        Parameters
+        ----------
+        seg_id : str
+            The segment ID.
+
+        Returns
+        -------
+        list of str
+            List of neighboring segment IDs.
+        """
+
         vid = self.segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
 
 
 class ContigGraph:
+    """
+    Represents a contig-level graph optionally derived from assembly graphs.
+
+    Attributes
+    ----------
+    graph : igraph.Graph
+        The igraph object representing the contig graph.
+    path : str
+        Path to the source data.
+    contig_ids : bidict
+        Mapping of node ID → contig number.
+    contig_names : bidict
+        Mapping of node ID → contig name.
+    graph_to_contig_map : dict or None
+        Optional mapping from unitig-level node IDs to contigs (used by some assemblers).
+    """
+
     def __init__(self, 
                     graph,
                     path,
@@ -109,8 +225,24 @@ class ContigGraph:
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
 
 
-
 def parse_fastg(fastg_file):
+    """
+    Parse a FASTG file and extract segment sequences and edges.
+
+    Parameters
+    ----------
+    fastg_file : str
+        Path to the FASTG file.
+
+    Returns
+    -------
+    tuple
+        segments : dict
+            Mapping from node ID to DNA sequence.
+        edges : dict
+            Mapping from node ID to list of adjacent node IDs.
+    """
+
     segments = {}
     edges = {}
 

@@ -1,4 +1,27 @@
 #!/usr/bin/env python3
+
+"""
+Utility functions for constructing contig and unitig graphs from GFA files and contig path mappings from SPAdes assembler.
+
+This module includes:
+- Parsing contig path mappings to segment associations.
+- Building contig-level graphs from assembly graphs.
+- Creating unitig-level graphs from assembly graphs.
+
+Classes:
+--------
+- UnitigGraph
+- ContigGraph
+
+Functions:
+----------
+- _get_segment_paths
+- _get_graph_edges
+- get_contig_graph
+- get_unitig_graph
+"""
+
+
 import re
 from collections import defaultdict
 from agtools.core.graph import UnitigGraph, ContigGraph
@@ -8,6 +31,30 @@ from igraph import Graph
 
 
 def _get_segment_paths(contig_paths):
+    """
+    Parse a contig paths file and extract segment-contig relationships.
+
+    Parameters
+    ----------
+    contig_paths : str
+        Path to the contig paths file (e.g. contigs.paths of scaffolds.paths).
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - paths : dict[str, list[str]]
+            Mapping from contig number (as str) to list of segment identifiers.
+        - segment_contigs : dict[str, set[str]]
+            Mapping from segment ID to the set of contig numbers it appears in.
+        - node_count : int
+            Number of distinct contigs parsed.
+        - id_map : bidict[int, int]
+            Mapping from internal node ID to contig number.
+        - contig_names : bidict[int, str]
+            Mapping from node ID to contig name string.
+    """
+
     paths = {}
     segment_contigs = {}
     node_count = 0
@@ -55,6 +102,28 @@ def _get_segment_paths(contig_paths):
 def _get_graph_edges(
     graph_file, contigs_map, contigs_map_rev, paths, segment_contigs
 ):
+    """
+    Construct edges between contigs based on shared segment links in the GFA file.
+
+    Parameters
+    ----------
+    graph_file : str
+        Path to the GFA file.
+    contigs_map : bidict[int, int]
+        Mapping from internal node ID to contig number.
+    contigs_map_rev : bidict[int, int]
+        Reverse mapping from contig number to node ID.
+    paths : dict[str, list[str]]
+        Mapping from contig number to list of segments.
+    segment_contigs : dict[str, set[str]]
+        Mapping from segment ID to contigs containing them.
+
+    Returns
+    -------
+    list of tuple[int, int]
+        List of edges as (source_node_id, target_node_id).
+    """
+
     links = []
     links_map = defaultdict(set)
 
@@ -119,6 +188,22 @@ def _get_graph_edges(
 
 
 def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
+    """
+    Build a contig-level graph from a GFA file and a contig paths mapping file.
+
+    Parameters
+    ----------
+    graph_file : str
+        Path to the GFA file.
+    contig_paths_file : str
+        Path to the contigs.paths or scaffolds.paths file.
+
+    Returns
+    -------
+    ContigGraph
+        Parsed contig graph object.
+    """
+
     # Get paths, segments, links and contigs of the assembly graph
     (
         contig_paths,
@@ -166,5 +251,19 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
 
 
 def get_unitig_graph(graph_file) -> UnitigGraph:
+    """
+    Build a unitig-level assembly graph from a GFA file.
+
+    Parameters
+    ----------
+    graph_file : str
+        Path to the GFA file.
+
+    Returns
+    -------
+    UnitigGraph
+        Parsed unitig graph object.
+    """
+
     ug = UnitigGraph.from_gfa(graph_file)
     return ug
