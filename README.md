@@ -14,8 +14,11 @@ You should have Python and the following packages installed.
 
 * [flit](https://flit.pypa.io/en/stable/)
 * [click](https://click.palletsprojects.com/en/stable/)
+* [loguru](https://loguru.readthedocs.io/en/stable/)
+* [bidict](https://bidict.readthedocs.io/en/main/intro.html)
 * [python-igraph](https://python.igraph.org/en/stable/index.html)
 * [biopython](https://biopython.org/)
+* [pandas](https://pandas.pydata.org/)
 * [collections](https://docs.python.org/3/library/collections.html) - Usually installed by default with Python
 * [re](https://docs.python.org/3/library/re.html) - Usually installed by default with Python
 
