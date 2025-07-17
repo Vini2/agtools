@@ -245,7 +245,7 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
         contig_ids=contigs_map,
         contig_descriptions=None,
         graph_to_contig_map=None,
-        self_loops=None
+        self_loops=None,
     )
 
     return contig_graph

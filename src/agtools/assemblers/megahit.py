@@ -6,10 +6,11 @@ from igraph import Graph
 
 from agtools.core.graph import ContigGraph
 
+
 def _get_links_megahit(gfa_file):
     node_count = 0
 
-    graph_contigs = {}
+    graph_contig_seqs = {}
 
     links = []
 
@@ -38,14 +39,14 @@ def _get_links_megahit(gfa_file):
 
                 contig_names[node_count] = strings[1]
 
-                graph_contigs[strings[1]] = strings[2]
+                graph_contig_seqs[strings[1]] = strings[2]
 
                 node_count += 1
 
             line = file.readline()
 
-    return node_count, graph_contigs, links, contig_names
-    
+    return node_count, graph_contig_seqs, links, contig_names
+
 
 def _get_graph_edges_megahit(links, contig_names_rev):
     edge_list = []
@@ -65,20 +66,20 @@ def _get_graph_edges_megahit(links, contig_names_rev):
 
 def get_contig_graph(gfa_file, contigs_file):
 
-    original_contigs = {}
+    graph_contig_seqs = {}
     contig_descriptions = {}
     contig_sequences = {}
-    
+
     # Get mapping of original contig identifiers with descriptions
     for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
         contig_sequences[record.id] = record.seq
-        original_contigs[record.id] = str(record.seq)
+        graph_contig_seqs[record.id] = str(record.seq)
         contig_descriptions[record.id] = record.description
 
     # Get links and contigs of the assembly graph
     (
         node_count,
-        graph_contigs,
+        graph_contig_seqs,
         links,
         contig_names,
     ) = _get_links_megahit(gfa_file)
@@ -98,7 +99,7 @@ def get_contig_graph(gfa_file, contigs_file):
     for i in range(node_count):
         graph.vs[i]["id"] = i
         graph.vs[i]["label"] = contig_names[i]
-    
+
     # Add edges to the graph
     graph.add_edges(edge_list)
 
@@ -108,7 +109,7 @@ def get_contig_graph(gfa_file, contigs_file):
     # Map original contig identifiers to contig identifiers of MEGAHIT assembly graph
     graph_to_contig_map = bidict()
 
-    for (n, m), (n2, m2) in zip(graph_contigs.items(), original_contigs.items()):
+    for (n, m), (n2, m2) in zip(graph_contig_seqs.items(), graph_contig_seqs.items()):
         if m == m2:
             graph_to_contig_map[n] = n2
 
