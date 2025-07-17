@@ -8,6 +8,26 @@ from agtools.core.graph import ContigGraph
 
 
 def _get_links_megahit(gfa_file):
+    """
+    Parse a GFA file to extract segment sequences and connectivity (links) between segments.
+
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the MEGAHIT-style GFA file.
+
+    Returns
+    -------
+    node_count : int
+        Number of unique segments.
+    graph_contig_seqs : dict
+        Mapping of segment ID → sequence.
+    links : list of list
+        List of 2-element lists representing linked segment IDs.
+    contig_names : bidict
+        Mapping of numeric node ID → segment ID.
+    """
+
     node_count = 0
 
     graph_contig_seqs = {}
@@ -49,6 +69,24 @@ def _get_links_megahit(gfa_file):
 
 
 def _get_graph_edges_megahit(links, contig_names_rev):
+    """
+    Convert a list of segment links into igraph-compatible edges.
+
+    Parameters
+    ----------
+    links : list of list
+        Pairs of linked segment IDs.
+    contig_names_rev : bidict
+        Mapping of segment ID → numeric node ID.
+
+    Returns
+    -------
+    edge_list : list of tuple
+        List of edges as tuples of node IDs.
+    self_loops : list of int
+        List of node IDs that form self-loops.
+    """
+
     edge_list = []
     self_loops = []
 
@@ -65,15 +103,33 @@ def _get_graph_edges_megahit(links, contig_names_rev):
 
 
 def get_contig_graph(gfa_file, contigs_file):
+    """
+    Build a contig-level graph from a MEGAHIT GFA file and a contig FASTA file.
 
-    graph_contig_seqs = {}
+    Matches sequences between GFA and FASTA to map contig IDs, constructs an igraph
+    representation of the graph, and packages it in a ContigGraph object.
+
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the GFA file.
+    contigs_file : str
+        Path to the contigs FASTA file.
+
+    Returns
+    -------
+    ContigGraph
+        Parsed contig graph object.
+    """
+
+    original_contig_seqs = {}
     contig_descriptions = {}
     contig_sequences = {}
 
     # Get mapping of original contig identifiers with descriptions
     for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
         contig_sequences[record.id] = record.seq
-        graph_contig_seqs[record.id] = str(record.seq)
+        original_contig_seqs[record.id] = str(record.seq)
         contig_descriptions[record.id] = record.description
 
     # Get links and contigs of the assembly graph
@@ -109,9 +165,15 @@ def get_contig_graph(gfa_file, contigs_file):
     # Map original contig identifiers to contig identifiers of MEGAHIT assembly graph
     graph_to_contig_map = bidict()
 
-    for (n, m), (n2, m2) in zip(graph_contig_seqs.items(), graph_contig_seqs.items()):
+    for (n, m), (n2, m2) in zip(
+        graph_contig_seqs.items(), original_contig_seqs.items()
+    ):
         if m == m2:
             graph_to_contig_map[n] = n2
+
+    # Clean up temporary sequence maps
+    del graph_contig_seqs
+    del original_contig_seqs
 
     contig_graph = ContigGraph(
         graph=graph,
