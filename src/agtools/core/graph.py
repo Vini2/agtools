@@ -195,35 +195,51 @@ class UnitigGraph:
 
 class ContigGraph:
     """
-    Represents a contig-level graph optionally derived from assembly graphs.
+    Represents a contig-level graph derived from an assembly graph.
+
+    This class encapsulates structural and sequence metadata for contigs constructed
+    from GFA segment links, and optionally includes sequence, description, and
+    graph-contig mappings.
 
     Attributes
     ----------
     graph : igraph.Graph
-        The igraph object representing the contig graph.
+        The igraph object representing the contig-level graph structure.
     path : str
-        Path to the source data.
-    contig_ids : bidict
-        Mapping of node ID → contig number.
+        Path to the GFA file.
     contig_names : bidict
-        Mapping of node ID → contig name.
-    graph_to_contig_map : dict or None
-        Optional mapping from unitig-level node IDs to contigs (used by some assemblers).
+        Mapping from node ID to contig name string.
+    contig_ids : bidict, optional
+        Mapping from node ID to internal or external contig number.
+    contig_sequences : dict[str, str], optional
+        Dictionary mapping contig names to DNA sequences.
+    contig_descriptions : dict[str, str], optional
+        Dictionary mapping contig names to additional descriptions in FASTA file.
+    graph_to_contig_map : dict[int, str], optional
+        Dictionary mapping from unitig-level node IDs to contig identifiers
+    self_loops : list[str], optional
+        List of contig names that form self-loops in the graph.
     """
 
     def __init__(
         self,
         graph,
         path,
-        contig_ids,
         contig_names,
+        contig_ids=None,
+        contig_sequences=None,
+        contig_descriptions=None,
         graph_to_contig_map=None,
+        self_loops=None,
     ):
         self.graph = graph
         self.path = path
-        self.contig_ids = contig_ids  # node_id → contig_i
         self.contig_names = contig_names  # node_id → segment_id
+        self.contig_ids = contig_ids  # node_id → contig_i
+        self.contig_sequences = contig_sequences
+        self.contig_descriptions = contig_descriptions
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
+        self.self_loops = self_loops
 
 
 def parse_fastg(fastg_file):
