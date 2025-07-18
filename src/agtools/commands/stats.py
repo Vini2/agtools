@@ -17,12 +17,17 @@ def _calculate_average_node_degree(graph: UnitigGraph) -> int:
     """
     Calculate the average node degree of the graph.
 
-    Args:
-        graph (UnitigGraph): The unitig graph object.
+    Parameters
+    ----------
+    graph : UnitigGraph
+        The unitig graph object containing the assembly graph.
 
-    Returns:
-        int: Average node degree.
+    Returns
+    -------
+    int
+        Average node degree of the graph.
     """
+
     if graph.graph.vcount() == 0:
         return 0
     return int(sum(graph.graph.degree()) / graph.graph.vcount())
@@ -32,11 +37,15 @@ def _calculate_total_length(segment_lengths: dict) -> int:
     """
     Calculate the total length of all segments in the graph.
 
-    Args:
-        segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
+    Parameters
+    ----------
+    segment_lengths : dict
+        Dictionary mapping segment IDs to their lengths.
 
-    Returns:
-        int: Total length of segments.
+    Returns
+    -------
+    int
+        Total length of all segments.
     """
     return sum(segment_lengths.values())
 
@@ -45,11 +54,15 @@ def _calculate_average_segment_length(segment_lengths: dict) -> int:
     """
     Calculate the average segment length.
 
-    Args:
-        segment_lengths (dict): Dictionary mapping segment IDs to their lengths.
+    Parameters
+    ----------
+    segment_lengths : dict
+        Dictionary mapping segment IDs to their lengths.
 
-    Returns:
-        int: Average segment length.
+    Returns
+    -------
+    int
+        Average segment length.
     """
     if not segment_lengths:
         return 0
@@ -59,8 +72,20 @@ def _calculate_average_segment_length(segment_lengths: dict) -> int:
 def _calculate_n50_l50(lengths: list[int]) -> tuple[int, int]:
     """
     Calculate N50 and L50 from a list of segment lengths.
-    :param lengths: list of segment lengths
-    :return: (N50, L50)
+
+    Parameters
+    ----------
+    lengths : list of int
+        List of segment lengths.
+
+    Returns
+    -------
+    tuple of (int, int)
+        A tuple containing:
+        - N50 : int
+            The length N such that 50% of the total length is contained in segments of length ≥ N.
+        - L50 : int
+            The minimum number of segments whose summed length ≥ 50% of the total.
     """
     if not lengths:
         return (0, 0)
@@ -78,8 +103,16 @@ def _calculate_n50_l50(lengths: list[int]) -> tuple[int, int]:
 def _get_gc_content(sequences: list, total_length: int) -> float:
     """
     Calculate the GC content of sequences.
-    :param sequence: list of nucleotide sequences
-    :return: GC content as a percentage
+
+    Parameters
+    ----------
+    sequence : list of str
+        A list of nucleotide sequences (A, T, G, C).
+
+    Returns
+    -------
+    float
+        GC content as a percentage of total base pairs.
     """
     if not sequences:
         return 0.0
@@ -94,13 +127,19 @@ def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     """
     Write the statistics to a file.
 
-    Args:
-        gfa_file (str): Path to the input GFA file.
-        stats (dict): Dictionary containing statistics.
-        output_path (str): Path to the output file.
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the input GFA file.
+    stats : dict
+        Dictionary containing various computed graph statistics.
+    output_path : str
+        Directory path where the output statistics file will be saved.
 
-    Returns:
-        str: Path to the output file.
+    Returns
+    -------
+    str
+        Path to the written statistics file.
     """
     output_file = f"{output_path}/graph_stats.txt"
 

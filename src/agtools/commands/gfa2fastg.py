@@ -16,47 +16,70 @@ __status__ = "Alpha"
 
 def reverse_orientation(orient: str) -> str:
     """
-    Reverses the orientation symbol used in GFA links.
+    Reverse the orientation symbol used in GFA links.
 
-    Args:
-        orient (str): Orientation symbol, either '+' or '-'.
+    Parameters
+    ----------
+    orient : str
+        Orientation symbol, either '+' or '-'.
 
-    Returns:
-        str: The opposite orientation symbol.
+    Returns
+    -------
+    str
+        The opposite orientation symbol ('-' if input is '+', and vice versa).
     """
+
     return "+" if orient == "-" else "-"
 
 
 def reverse_complement(sequence: str) -> str:
     """
-    Obtains the reverse complement of a DNA sequence.
+    Obtain the reverse complement of a DNA sequence.
 
-    Args:
-        seq (str): DNA sequence.
+    Parameters
+    ----------
+    seq : str
+        DNA sequence consisting of A, T, G, and C characters.
 
-    Returns:
-        str: Reverse complement of the input sequence.
+    Returns
+    -------
+    str
+        Reverse complement of the input DNA sequence.
     """
+
     return str(Seq(sequence).reverse_complement())
 
 
 def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict, dict, dict, int]:
     """
-    Parses a GFA file to extract sequence and graph structure information.
+    Parse a GFA file to extract sequence and graph structure information.
 
-    This function builds a directed graph from the GFA's 'L' (link) lines,
-    stores sequences from 'S' (segment) lines, and computes overlaps between nodes.
+    This function reads a GFA file and constructs a directed graph from 'L' (link) lines,
+    stores sequences from 'S' (segment) lines, and extracts overlap information for each link.
 
-    Args:
-        gfa_file (str): Path to the GFA file.
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the input GFA file.
 
-    Returns:
-        tuple: A tuple of:
-            - graph_nodes (dict): Mapping of each oriented node to its neighbors.
-            - sequences (dict): Mapping of segment IDs to their sequences.
-            - overlaps (int): Overlap length of each link.
-            - overlap_value (int): Overlap value
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        
+        - graph_nodes : dict
+            Dictionary mapping each oriented node (e.g., '1+', '2-') to a list of neighboring nodes.
+        
+        - sequences : dict
+            Dictionary mapping segment IDs to their nucleotide sequences.
+        
+        - overlaps : int
+            Overlap length extracted from the GFA links.
+        
+        - overlap_value : int
+            The fixed or computed overlap value.
     """
+
     sequences = {}  # segment_id → sequence
     graph_nodes = defaultdict(set)  # oriented node → set of oriented neighbors
     overlaps = {}  # (from_node, to_node) → int
@@ -91,17 +114,26 @@ def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict, dict, dict, int]:
 
 def _write_to_fastg(graph_nodes: dict, sequences: dict, output_path: str) -> str:
     """
-    Writes the sequence graph to a FASTG file format.
+    Write the sequence graph to a FASTG file format.
 
-    Each node is written with its sequence and connections to neighboring nodes.
+    Each node is written along with its sequence and a list of connections
+    to its neighboring nodes.
 
-    Args:
-        graph_nodes (dict): Mapping of each oriented node to its neighbors.
-        sequences (dict): Mapping of segment IDs to their sequences.
-        output_path (str): Directory to write the FASTG file.
+    Parameters
+    ----------
+    graph_nodes : dict
+        Dictionary mapping each oriented node (e.g., '1+', '2-') to its neighboring nodes.
 
-    Returns:
-        str: Path to the generated FASTG file.
+    sequences : dict
+        Dictionary mapping segment IDs to their nucleotide sequences.
+
+    output_path : str
+        Directory path where the FASTG file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the generated FASTG file.
     """
     output_file = f"{output_path}/converted_graph.fastg"
     with open(output_file, "w") as out:
@@ -129,17 +161,23 @@ def _write_to_fastg(graph_nodes: dict, sequences: dict, output_path: str) -> str
 
 def gfa2fastg(gfa_file: str, output_path: str) -> tuple[str, int]:
     """
-    Converts a GFA file to a FASTG file representing the sequence graph.
+    Convert a GFA file to a FASTG file representing the sequence graph.
 
-    Parses the GFA file, extracts sequences and graph structure, and writes
-    them into FASTG format.
+    This function parses the GFA file to extract sequences and the graph structure,
+    then writes the graph into FASTG format.
 
-    Args:
-        gfa_file (str): Path to the GFA file.
-        output_path (str): Directory where the FASTG file will be saved.
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the input GFA file.
 
-    Returns:
-        str: Path to the created FASTG file.
+    output_path : str
+        Directory path where the FASTG file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the generated FASTG file.
     """
     graph_nodes, sequences, overlaps, overlap_value = _get_graph_sequences(gfa_file)
     output_file = _write_to_fastg(graph_nodes, sequences, output_path)

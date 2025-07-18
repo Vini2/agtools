@@ -14,12 +14,18 @@ def _remap_segment(seg_id: str, segment_map: dict) -> str:
     """
     Remap a segment ID using the provided mapping.
 
-    Args:
-        seg_id (str): The original segment ID.
-        segment_map (dict): A mapping from original segment IDs to new IDs.
+    Parameters
+    ----------
+    seg_id : str
+        The original segment ID to be remapped.
 
-    Returns:
-        str: The remapped segment ID if found in the map, otherwise the original ID.
+    segment_map : dict
+        Dictionary mapping original segment IDs to new segment IDs.
+
+    Returns
+    -------
+    str
+        The remapped segment ID if found in the mapping, otherwise the original ID.
     """
 
     return segment_map.get(seg_id, seg_id)
@@ -29,12 +35,18 @@ def _build_map_segments(input_gfa: str, prefix: str) -> dict:
     """
     Create a mapping of segment IDs from an input GFA file, applying a prefix to each segment ID.
 
-    Args:
-        input_gfa (str): Path to the input GFA file.
-        prefix (str): Prefix to prepend to each segment ID.
+    Parameters
+    ----------
+    input_gfa : str
+        Path to the input GFA file.
 
-    Returns:
-        dict: A dictionary mapping original segment IDs to prefixed segment IDs.
+    prefix : str
+        Prefix to prepend to each segment ID.
+
+    Returns
+    -------
+    dict
+        A dictionary mapping original segment IDs to prefixed segment IDs.
     """
 
     segment_map = {}
@@ -55,13 +67,21 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
     """
     Write a new GFA file with segment IDs renamed based on the provided segment map.
 
-    Args:
-        input_gfa (str): Path to the original GFA file.
-        segment_map (dict): Mapping of old segment IDs to new IDs.
-        output_path (str): Directory path where the renamed GFA file will be saved.
+    Parameters
+    ----------
+    input_gfa : str
+        Path to the original GFA file.
 
-    Returns:
-        str: Path to the renamed GFA file.
+    segment_map : dict
+        Mapping of old segment IDs to new IDs.
+
+    output_path : str
+        Directory path where the renamed GFA file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the renamed GFA file.
     """
 
     output_file = f"{output_path}renamed_graph.gfa"
@@ -110,13 +130,21 @@ def rename(gfa_file: str, prefix: str, output_path: str) -> str:
     """
     Rename segment IDs in a GFA file by applying a prefix and save the modified file.
 
-    Args:
-        gfa_file (str): Path to the input GFA file.
-        prefix (str): Prefix to prepend to each segment ID.
-        output_path (str): Directory path where the renamed GFA file will be saved.
+    Parameters
+    ----------
+    gfa_file : str
+        Path to the input GFA file.
 
-    Returns:
-        str: Path to the renamed GFA file.
+    prefix : str
+        Prefix to prepend to each segment ID.
+
+    output_path : str
+        Directory path where the renamed GFA file will be saved.
+
+    Returns
+    -------
+    str
+        Path to the renamed GFA file.
     """
 
     segment_map = _build_map_segments(gfa_file, prefix)
