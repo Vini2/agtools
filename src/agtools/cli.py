@@ -215,6 +215,28 @@ def gfa2fastg(graph, output):
 
 @main.command(**_click_command_opts)
 @_graph
+@click.option(
+    "--abyss",
+    "-ab",
+    help="use the ABySS DOT format for the output",
+    is_flag=True,
+    default=False,
+    show_default=True,
+    required=False,
+)
+@_output
+def gfa2dot(graph, abyss, output):
+    """Convert GFA file to DOT format (GraphViz)"""
+
+    logger.info(f"Converting GFA file {graph[0]} to DOT format")
+
+    dot_path = commands.gfa2dot(graph[0], abyss, output)
+
+    logger.info(f"DOT file written to {dot_path}")
+
+
+@main.command(**_click_command_opts)
+@_graph
 @_output
 def gfa2fasta(graph, output):
     """Get segments in FASTA format"""

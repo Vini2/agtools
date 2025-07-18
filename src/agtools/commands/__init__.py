@@ -15,6 +15,7 @@ from .component import component
 from .fastg2gfa import fastg2gfa
 from .filter import filter
 from .gfa2adj import gfa2adj
+from .gfa2dot import gfa2dot
 from .gfa2fasta import gfa2fasta
 from .gfa2fastg import gfa2fastg
 from .merge import merge

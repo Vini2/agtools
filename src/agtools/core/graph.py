@@ -111,7 +111,6 @@ class UnitigGraph:
             seg_name = ug.segment_names[i]
             ug.graph.vs[i]["id"] = i
             ug.graph.vs[i]["name"] = seg_name
-            ug.graph.vs[i]["label"] = f"{seg_name}\nID:{i}"
 
         edge_list, ug.self_loops = ug._get_graph_edges(links)
         ug.graph.add_edges(edge_list)
