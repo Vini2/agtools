@@ -74,6 +74,17 @@ Commands:
 
 ## Loading graphs from the Python package interface
 
+### Loading a GFA file
+
+```python
+from agtools.core.graph import UnitigGraph
+
+unitig_graph = UnitigGraph.from_gfa(graph_file)
+
+print(f"Number of segments: {unitig_graph.graph.vcount()}")
+print(f"Number of links: {unitig_graph.graph.ecount()}")
+```
+
 ### SPAdes
 
 ```python
