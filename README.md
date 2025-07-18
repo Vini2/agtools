@@ -85,7 +85,7 @@ print(f"Number of segments: {unitig_graph.graph.vcount()}")
 print(f"Number of links: {unitig_graph.graph.ecount()}")
 ```
 
-### SPAdes
+### Loading a SPAdes graph
 
 ```python
 from agtools.assemblers import spades
@@ -97,7 +97,7 @@ contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
 unitig_graph = spades.get_unitig_graph(graph_file)
 ```
 
-### MEGAHIT
+### Loading a MEGAHIT graph
 
 ```python
 from agtools.assemblers import megahit
@@ -108,7 +108,7 @@ contig_file = "tests/data/5G/final.contigs.fa"
 contig_graph = megahit.get_contig_graph(graph_file, contig_file)
 ```
 
-### Flye
+### Loading a Flye graph
 
 ```python
 from agtools.assemblers import flye
