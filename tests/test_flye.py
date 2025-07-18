@@ -24,3 +24,13 @@ def test_get_contig_graph():
     assert len(contig_graph.contig_names) == 67
 
     assert "contig_6" in contig_graph.contig_names.values()
+
+
+def test_get_unitig_graph():
+
+    graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"
+
+    unitig_graph = flye.get_unitig_graph(graph_file)
+
+    assert unitig_graph.graph.vcount() == 69
+    assert unitig_graph.graph.ecount() == 4
