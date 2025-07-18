@@ -6,7 +6,7 @@ from bidict import bidict
 from Bio import SeqIO
 from igraph import Graph
 
-from agtools.core.graph import ContigGraph
+from agtools.core.graph import ContigGraph, UnitigGraph
 
 
 def _get_contig_map(contigs_file: str) -> dict:
@@ -266,3 +266,22 @@ def get_contig_graph(
     )
 
     return contig_graph
+
+
+def get_unitig_graph(graph_file) -> UnitigGraph:
+    """
+    Build a unitig-level assembly graph from a GFA file.
+
+    Parameters
+    ----------
+    graph_file : str
+        Path to the GFA file.
+
+    Returns
+    -------
+    UnitigGraph
+        Parsed unitig graph object.
+    """
+
+    ug = UnitigGraph.from_gfa(graph_file)
+    return ug
