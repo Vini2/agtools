@@ -44,6 +44,11 @@ class UnitigGraph:
         Segment ID → length of sequence.
     self_loops : list
         List of segment IDs that form self-loops.
+    
+    References
+    ----------
+    GFA: Graphical Fragment Assembly (GFA) Format Specification
+    https://github.com/GFA-spec/GFA-spec
     """
 
     def __init__(self):
