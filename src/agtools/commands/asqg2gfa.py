@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def _get_segments_and_links(asqg_file: str) -> tuple:
     """
     Parses an ASQG (Assembly String Graph) file to extract segments and links.
@@ -14,15 +15,15 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
     tuple
         A tuple containing:
         - segments (dict): Mapping of segment ID to sequence string.
-        - links (list): List of links, each represented as 
+        - links (list): List of links, each represented as
           [from_segment, from_orientation, to_segment, to_orientation, overlap_length].
-    
+
     References
     ----------
     ASQG Format
     https://github.com/jts/sga/wiki/ASQG-Format
     """
-    
+
     segments = {}
     links = []
 
@@ -47,7 +48,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                 seq2_orient = int(parts[8])
 
                 if seq1_overlap == seq2_overlap:
-                    
+
                     # seq2 is reversed with respect to seq1
                     if seq2_orient == 1:
                         links.append([seq1_name, "+", seq2_name, "-", seq1_overlap])
@@ -66,7 +67,7 @@ def _write_gfa(segments, links, output_path):
     segments : dict
         Dictionary of segment IDs to sequences.
     links : list
-        List of link definitions in the form 
+        List of link definitions in the form
         [from_segment, from_orientation, to_segment, to_orientation, overlap_length].
     output_path : str
         Directory path where the output GFA file will be saved.
@@ -89,7 +90,9 @@ def _write_gfa(segments, links, output_path):
         for link in links:
             from_seg, from_orient, to_seg, to_orient, overlap = link
             orient_str = "+" if from_orient == "+" else "-"
-            gfa_file.write(f"L\t{from_seg}\t{orient_str}\t{to_seg}\t{to_orient}\t{overlap}M\n")
+            gfa_file.write(
+                f"L\t{from_seg}\t{orient_str}\t{to_seg}\t{to_orient}\t{overlap}M\n"
+            )
 
     return output_file
 
