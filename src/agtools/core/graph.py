@@ -38,8 +38,6 @@ class UnitigGraph:
         Mapping from oriented segment pair to overlap length.
     segment_names : bidict
         Maps internal node IDs to Segment IDs.
-    segment_names_rev : bidict
-        Reverse mapping of segment names to node IDs.
     segment_sequences : dict
         Segment ID → sequence (as Bio.Seq.Seq).
     segment_lengths : dict
@@ -54,7 +52,6 @@ class UnitigGraph:
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
         self.segment_names = bidict()  # node_id → segment_id
-        self.segment_names_rev = None  # segment_id → node_id
         self.segment_sequences = dict()  # segment_id → sequence
         self.segment_lengths = dict()  # segment_id → length
         self.self_loops = []
@@ -103,7 +100,6 @@ class UnitigGraph:
                         from_seg, to_seg, from_orient, to_orient, overlap
                     )
 
-        ug.segment_names_rev = ug.segment_names.inverse
         ug.graph.add_vertices(node_count)
 
         for i in range(node_count):
@@ -164,12 +160,13 @@ class UnitigGraph:
 
         edges = []
         loops = []
+        segment_names_rev = self.segment_names.inverse
         for from_edge, to_edge in links:
             if from_edge == to_edge:
                 loops.append(from_edge)
             else:
-                src = self.segment_names_rev[from_edge]
-                tgt = self.segment_names_rev[to_edge]
+                src = segment_names_rev[from_edge]
+                tgt = segment_names_rev[to_edge]
                 edges.append((src, tgt))
         return edges, loops
 
@@ -187,8 +184,8 @@ class UnitigGraph:
         list of str
             List of neighboring segment IDs.
         """
-
-        vid = self.segment_names_rev[seg_id]
+        segment_names_rev = self.segment_names.inverse
+        vid = segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
 
