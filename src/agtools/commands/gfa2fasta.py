@@ -6,6 +6,15 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
+__author__ = "Vijini Mallawaarachchi"
+__copyright__ = "Copyright 2025, agtools Project"
+__credits__ = ["Vijini Mallawaarachchi"]
+__license__ = "MIT"
+__version__ = "0.0.1"
+__maintainer__ = "Vijini Mallawaarachchi"
+__email__ = "viji.mallawaarachchi@gmail.com"
+__status__ = "Alpha"
+
 
 def _get_segment_sequences(gfa_file: str) -> list:
     """

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Graph utility classes and functions for parsing and manipulating assembly graphs.
+graph.py: Graph utility classes and functions for parsing and manipulating assembly graphs.
 
 Includes:
 - `UnitigGraph`: Represents unitig-level assembly graphs from GFA format.
