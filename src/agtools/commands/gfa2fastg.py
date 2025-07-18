@@ -66,16 +66,16 @@ def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict, dict, dict, int]:
     -------
     tuple
         A tuple containing:
-        
+
         - graph_nodes : dict
             Dictionary mapping each oriented node (e.g., '1+', '2-') to a list of neighboring nodes.
-        
+
         - sequences : dict
             Dictionary mapping segment IDs to their nucleotide sequences.
-        
+
         - overlaps : int
             Overlap length extracted from the GFA links.
-        
+
         - overlap_value : int
             The fixed or computed overlap value.
     """

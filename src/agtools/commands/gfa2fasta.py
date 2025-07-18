@@ -35,7 +35,7 @@ def _get_segment_sequences(gfa_file: str) -> list:
     list of Bio.SeqRecord.SeqRecord
         A list of SeqRecord objects containing the cleaned segment sequences.
     """
-    
+
     sequences = []
 
     with open(gfa_file) as file:

@@ -37,7 +37,7 @@ def _calculate_average_node_degree(graph: UnitigGraph) -> int:
         raise ValueError(
             "Graph does not have any segments, cannot calculate average node degree"
         )
-    
+
     return int(sum(graph.graph.degree()) / graph.graph.vcount())
 
 
@@ -128,7 +128,7 @@ def _get_gc_content(sequences: list, total_length: int) -> float:
     -------
     float
         GC content as a percentage of total base pairs.
-    
+
     Raises
     ------
     ValueError
