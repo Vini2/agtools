@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/Vini2/agtools/graph/badge.svg?token=nYzx0Pd0h6)](https://codecov.io/gh/Vini2/agtools)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-`agtools` is a toolkit for manipulating assembly graphs, with a focus on metagenomic applications. It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
+`agtools` is a toolkit for manipulating assembly graphs, with a focus on the [Graphical Fragment Assembly (GFA) format](https://github.com/GFA-spec/GFA-spec). It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration.
 
 ## Requirements
 
