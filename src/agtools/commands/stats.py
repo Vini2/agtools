@@ -26,10 +26,18 @@ def _calculate_average_node_degree(graph: UnitigGraph) -> int:
     -------
     int
         Average node degree of the graph.
+
+    Raises
+    ------
+    ValueError
+        If the graph does not have any segments.
     """
 
     if graph.graph.vcount() == 0:
-        return 0
+        raise ValueError(
+            "Graph does not have any segments, cannot calculate average node degree"
+        )
+    
     return int(sum(graph.graph.degree()) / graph.graph.vcount())
 
 
@@ -63,9 +71,18 @@ def _calculate_average_segment_length(segment_lengths: dict) -> int:
     -------
     int
         Average segment length.
+
+    Raises
+    ------
+    ValueError
+        If the graph does not have any segments.
     """
-    if not segment_lengths:
-        return 0
+
+    if len(segment_lengths) == 0:
+        raise ValueError(
+            "Graph does not have any segments, cannot calculate average segment length"
+        )
+
     return int(sum(segment_lengths.values()) / len(segment_lengths))
 
 
@@ -87,8 +104,6 @@ def _calculate_n50_l50(lengths: list[int]) -> tuple[int, int]:
         - L50 : int
             The minimum number of segments whose summed length ≥ 50% of the total.
     """
-    if not lengths:
-        return (0, 0)
 
     sorted_lengths = sorted(lengths, reverse=True)
     total_length = sum(sorted_lengths)
@@ -113,11 +128,17 @@ def _get_gc_content(sequences: list, total_length: int) -> float:
     -------
     float
         GC content as a percentage of total base pairs.
+    
+    Raises
+    ------
+    ValueError
+        If total length of the segments is zero.
     """
-    if not sequences:
-        return 0.0
-    elif total_length == 0:
-        return 0.0
+
+    if total_length == 0:
+        raise ValueError(
+            "Total length of segments is zero, cannot calculate GC content"
+        )
 
     gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
     return gc_count / total_length
