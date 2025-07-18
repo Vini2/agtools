@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
 from collections import OrderedDict
-from pathlib import Path
 from typing import Mapping, Optional
 
 import click
@@ -186,6 +184,19 @@ def fastg2gfa(graph, ksize, output):
     gfa_path = commands.fastg2gfa(graph[0], ksize, output)
 
     logger.info(f"GFA file is written to {gfa_path} with fixed overlap: {ksize}M")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
+def asqg2gfa(graph, output):
+    """Convert ASQG file to GFA format"""
+
+    logger.info(f"Converting ASQG file {graph[0]} to GFA format")
+
+    gfa_path = commands.asqg2gfa(graph[0], output)
+
+    logger.info(f"ASQG file is written to {gfa_path}")
 
 
 @main.command(**_click_command_opts)

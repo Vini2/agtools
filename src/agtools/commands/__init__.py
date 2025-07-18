@@ -10,6 +10,7 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
+from .asqg2gfa import asqg2gfa
 from .component import component
 from .fastg2gfa import fastg2gfa
 from .filter import filter
