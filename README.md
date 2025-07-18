@@ -71,3 +71,41 @@ Commands:
   gfa2fasta  Get segments in FASTA format
   gfa2adj    Get adjacency matrix of the assembly graph
 ```
+
+## Loading graphs from the Python package interface
+
+### SPAdes
+
+```python
+from agtools.assemblers import spades
+
+graph_file = "tests/data/ESC/assembly_graph_with_scaffolds.gfa"
+contig_paths_file = "tests/data/ESC/contigs.paths"
+
+contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
+unitig_graph = spades.get_unitig_graph(graph_file)
+```
+
+### MEGAHIT
+
+```python
+from agtools.assemblers import megahit
+
+graph_file = "tests/data/5G/final.gfa"
+contig_file = "tests/data/5G/final.contigs.fa"
+
+contig_graph = megahit.get_contig_graph(graph_file, contig_file)
+```
+
+### Flye
+
+```python
+from agtools.assemblers import flye
+
+graph_file = "tests/data/1Y3B/assembly_graph.gfa"
+contig_paths_file = "tests/data/1Y3B/assembly_info.txt"
+contigs_file = "tests/data/1Y3B/assembly.fasta"
+
+contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+unitig_graph = flye.get_unitig_graph(graph_file)
+```
