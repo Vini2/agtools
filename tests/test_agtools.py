@@ -96,6 +96,12 @@ def test_agtools_gfa2fastg():
     exec_command(cmd)
 
 
+def test_agtools_gfa2dot():
+    """test agtools gfa2dot"""
+    cmd = "agtools gfa2dot --help"
+    exec_command(cmd)
+
+
 def test_agtools_gfa2fasta():
     """test agtools gfa2fasta"""
     cmd = "agtools gfa2fasta --help"

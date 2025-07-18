@@ -99,6 +99,22 @@ def test_agtools_gfa2fastg(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_gfa2dot(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2dot, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
+def test_agtools_gfa2dot_abyss(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -ab -o {outpath}".split()
+    r = runner.invoke(gfa2dot, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
 def test_agtools_gfa2fasta(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
