@@ -250,12 +250,20 @@ def gfa2fasta(graph, output):
 
 @main.command(**_click_command_opts)
 @_graph
+@click.option(
+    "--delimiter",
+    help="delimiter for adjacency file. Supports a comma and a tab.",
+    type=click.Choice(["comma", "tab"], case_sensitive=False),
+    default="comma",
+    show_default=True,
+    required=False,
+)
 @_output
-def gfa2adj(graph, output):
+def gfa2adj(graph, delimiter, output):
     """Get adjacency matrix of the assembly graph"""
 
     logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
 
-    adj_path = commands.gfa2adj(graph[0], output)
+    adj_path = commands.gfa2adj(graph[0], delimiter, output)
 
     logger.info(f"Adjacency matrix is written to {adj_path}")

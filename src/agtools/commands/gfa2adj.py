@@ -15,7 +15,7 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
-def gfa2adj(gfa_file: str, output_path: str) -> str:
+def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     """
     Convert a GFA file into an adjacency matrix and save it as a TSV file.
 
@@ -44,8 +44,9 @@ def gfa2adj(gfa_file: str, output_path: str) -> str:
 
     adj_df = pd.DataFrame(adj_matrix, index=labels, columns=labels)
 
+    separator = "," if delimiter == "comma" else "\t"
     output_file = f"{output_path}/adjacency_matrix.tsv"
-    adj_df.to_csv(output_file, sep="\t")
+    adj_df.to_csv(output_file, sep=separator)
 
     return output_file
 
