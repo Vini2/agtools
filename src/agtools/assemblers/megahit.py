@@ -181,7 +181,6 @@ def get_contig_graph(gfa_file, contigs_file):
         ecount=graph.ecount(),
         file_path=gfa_file,
         contig_names=contig_names,
-        contig_ids=None,
         contig_sequences=contig_sequences,
         contig_descriptions=contig_descriptions,
         graph_to_contig_map=graph_to_contig_map,

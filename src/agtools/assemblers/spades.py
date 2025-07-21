@@ -100,7 +100,7 @@ def _get_segment_paths(contig_paths):
     return paths, segment_contigs, node_count, id_map, contig_names
 
 
-def _get_graph_edges(graph_file, contigs_map, contigs_map_rev, paths, segment_contigs):
+def _get_graph_edges(graph_file, contigs_map, paths, segment_contigs):
     """
     Construct edges between contigs based on shared segment links in the GFA file.
 
@@ -110,8 +110,6 @@ def _get_graph_edges(graph_file, contigs_map, contigs_map_rev, paths, segment_co
         Path to the GFA file.
     contigs_map : bidict[int, int]
         Mapping from internal node ID to contig number.
-    contigs_map_rev : bidict[int, int]
-        Reverse mapping from contig number to node ID.
     paths : dict[str, list[str]]
         Mapping from contig number to list of segments.
     segment_contigs : dict[str, set[str]]
@@ -125,6 +123,8 @@ def _get_graph_edges(graph_file, contigs_map, contigs_map_rev, paths, segment_co
 
     links = []
     links_map = defaultdict(set)
+
+    contigs_map_rev = contigs_map.inverse
 
     # Get links from assembly_graph_with_scaffolds.gfa
     with open(graph_file) as file:
@@ -227,7 +227,6 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
     edge_list = _get_graph_edges(
         graph_file=graph_file,
         contigs_map=contigs_map,
-        contigs_map_rev=contigs_map.inverse,
         paths=contig_paths,
         segment_contigs=segment_contigs,
     )
@@ -244,7 +243,6 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
         ecount=graph.ecount(),
         file_path=graph_file,
         contig_names=contig_names,
-        contig_ids=contigs_map,
         contig_descriptions=None,
         graph_to_contig_map=None,
         self_loops=None,

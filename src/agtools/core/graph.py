@@ -30,9 +30,9 @@ class UnitigGraph:
     ----------
     graph : igraph.Graph
         The undirected graph representing the unitig-level assembly graph.
-    vcount: int
+    vcount : int
         The number of vertices in the graph
-    ecount: int
+    ecount : int
         The number of edges in the graph
     file_path : str
         Path to the original GFA file.
@@ -41,13 +41,14 @@ class UnitigGraph:
     link_overlap : dict
         Mapping from oriented segment pair to overlap length.
     segment_names : bidict
-        Maps internal node IDs to Segment IDs.
+        Maps internal node IDs (starting from 0) to Segment IDs.
     segment_sequences : dict
         Segment ID → sequence (as Bio.Seq.Seq).
     segment_lengths : dict
         Segment ID → length of sequence.
     self_loops : list
         List of segment IDs that form self-loops.
+    self.paths : 
 
     References
     ----------
@@ -62,7 +63,7 @@ class UnitigGraph:
         self.file_path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.segment_names = bidict()  # node_id → segment_id
+        self.segment_names = bidict()  # node_id → segment_name
         self.segment_sequences = dict()  # segment_id → sequence
         self.segment_lengths = dict()  # segment_id → length
         self.self_loops = []
@@ -94,11 +95,11 @@ class UnitigGraph:
 
                 if line.startswith("S"):
                     parts = line.strip().split("\t")
-                    seg_id = parts[1]
+                    seg_name = parts[1]
                     seq = parts[2]
-                    ug.segment_names[node_count] = seg_id
-                    ug.segment_sequences[seg_id] = Seq(seq)
-                    ug.segment_lengths[seg_id] = len(seq)
+                    ug.segment_names[node_count] = seg_name
+                    ug.segment_sequences[seg_name] = Seq(seq)
+                    ug.segment_lengths[seg_name] = len(seq)
                     node_count += 1
                 elif line.startswith("L"):
                     parts = line.strip().split("\t")
@@ -216,16 +217,14 @@ class ContigGraph:
     ----------
     graph : igraph.Graph
         The igraph object representing the contig-level graph structure.
-    vcount: int
+    vcount : int
         The number of vertices in the graph
-    ecount: int
+    ecount : int
         The number of edges in the graph
     file_path : str
         Path to the GFA file.
     contig_names : bidict
-        Mapping from node ID to contig name string.
-    contig_ids : bidict, optional
-        Mapping from node ID to internal or external contig number.
+        Mapping from internal node IDs (starting from 0) to contig name.
     contig_sequences : dict[str, str], optional
         Dictionary mapping contig names to DNA sequences.
     contig_descriptions : dict[str, str], optional
@@ -243,7 +242,6 @@ class ContigGraph:
         ecount,
         file_path,
         contig_names,
-        contig_ids=None,
         contig_sequences=None,
         contig_descriptions=None,
         graph_to_contig_map=None,
@@ -253,8 +251,7 @@ class ContigGraph:
         self.vcount = vcount
         self.ecount = ecount
         self.file_path = file_path
-        self.contig_names = contig_names  # node_id → segment_id
-        self.contig_ids = contig_ids  # node_id → contig_i
+        self.contig_names = contig_names  # node_id → contig_name
         self.contig_sequences = contig_sequences
         self.contig_descriptions = contig_descriptions
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
