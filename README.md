@@ -20,8 +20,6 @@ You should have Python and the following packages installed.
 * [python-igraph](https://python.igraph.org/en/stable/index.html)
 * [biopython](https://biopython.org/)
 * [pandas](https://pandas.pydata.org/)
-* [collections](https://docs.python.org/3/library/collections.html) - Usually installed by default with Python
-* [re](https://docs.python.org/3/library/re.html) - Usually installed by default with Python
 
 ## Installing `agtools`
 
