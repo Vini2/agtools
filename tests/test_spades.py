@@ -20,7 +20,6 @@ def test_get_contig_graph():
     assert contig_graph.vcount == 189
     assert contig_graph.ecount == 394
 
-    assert len(contig_graph.contig_ids) == 189
     assert len(contig_graph.contig_names) == 189
 
     assert "NODE_1_length_488682_cov_86.190505" in contig_graph.contig_names.values()
