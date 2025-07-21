@@ -48,7 +48,7 @@ class UnitigGraph:
         Segment ID → length of sequence.
     self_loops : list
         List of segment IDs that form self-loops.
-    self.paths : 
+    self.paths :
 
     References
     ----------

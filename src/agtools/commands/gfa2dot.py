@@ -29,8 +29,8 @@ def _write_abyss_dot(graph, output_path):
 
     with open(output_file, "w") as f:
 
-        f.write(f'digraph g {{\n')
-        
+        f.write(f"digraph g {{\n")
+
         for segment in graph.graph.vs["name"]:
             f.write(f'"{segment}+" [l={graph.segment_lengths[segment]}]\n')
             f.write(f'"{segment}-" [l={graph.segment_lengths[segment]}]\n')
@@ -38,7 +38,7 @@ def _write_abyss_dot(graph, output_path):
         for link in graph.link_overlap:
             f.write(f'"{link[0]}" -> "{link[1]}" [d=-{graph.link_overlap[link]}]\n')
 
-        f.write(f'}}')
+        f.write(f"}}")
 
     return output_file
 
