@@ -30,7 +30,11 @@ class UnitigGraph:
     ----------
     graph : igraph.Graph
         The undirected graph representing the unitig-level assembly graph.
-    path : str
+    vcount: int
+        The number of vertices in the graph
+    ecount: int
+        The number of edges in the graph
+    file_path : str
         Path to the original GFA file.
     oriented_links : dict
         Mapping from (from_seg, to_seg) → list of (from_orient, to_orient).
@@ -53,7 +57,9 @@ class UnitigGraph:
 
     def __init__(self):
         self.graph = Graph(directed=False)
-        self.path = None
+        self.vcount = 0
+        self.ecount = 0
+        self.file_path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
         self.segment_names = bidict()  # node_id → segment_id
@@ -62,13 +68,13 @@ class UnitigGraph:
         self.self_loops = []
 
     @classmethod
-    def from_gfa(cls, path: str) -> "UnitigGraph":
+    def from_gfa(cls, file_path: str) -> "UnitigGraph":
         """
         Parse a GFA file into a UnitigGraph object.
 
         Parameters
         ----------
-        path : str
+        file_path : str
             Path to the GFA file.
 
         Returns
@@ -81,9 +87,9 @@ class UnitigGraph:
         node_count = 0
         links = []
 
-        ug.path = path
+        ug.file_path = file_path
 
-        with open(path) as f:
+        with open(file_path) as f:
             for line in f:
 
                 if line.startswith("S"):
@@ -115,6 +121,10 @@ class UnitigGraph:
         edge_list, ug.self_loops = ug._get_graph_edges(links)
         ug.graph.add_edges(edge_list)
         ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
+
+        ug.vcount = ug.graph.vcount()
+        ug.ecount = ug.graph.ecount()
+
         return ug
 
     def _add_oriented_links(self, from_seg, to_seg, from_orient, to_orient, overlap):
@@ -206,7 +216,11 @@ class ContigGraph:
     ----------
     graph : igraph.Graph
         The igraph object representing the contig-level graph structure.
-    path : str
+    vcount: int
+        The number of vertices in the graph
+    ecount: int
+        The number of edges in the graph
+    file_path : str
         Path to the GFA file.
     contig_names : bidict
         Mapping from node ID to contig name string.
@@ -225,7 +239,9 @@ class ContigGraph:
     def __init__(
         self,
         graph,
-        path,
+        vcount,
+        ecount,
+        file_path,
         contig_names,
         contig_ids=None,
         contig_sequences=None,
@@ -234,7 +250,9 @@ class ContigGraph:
         self_loops=None,
     ):
         self.graph = graph
-        self.path = path
+        self.vcount = vcount
+        self.ecount = ecount
+        self.file_path = file_path
         self.contig_names = contig_names  # node_id → segment_id
         self.contig_ids = contig_ids  # node_id → contig_i
         self.contig_sequences = contig_sequences
