@@ -18,8 +18,8 @@ def test_get_contig_graph():
 
     contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 
-    assert contig_graph.graph.vcount() == 67
-    assert contig_graph.graph.ecount() == 2
+    assert contig_graph.vcount == 67
+    assert contig_graph.ecount == 2
 
     assert len(contig_graph.contig_names) == 67
 
@@ -32,5 +32,5 @@ def test_get_unitig_graph():
 
     unitig_graph = flye.get_unitig_graph(graph_file)
 
-    assert unitig_graph.graph.vcount() == 69
-    assert unitig_graph.graph.ecount() == 4
+    assert unitig_graph.vcount == 69
+    assert unitig_graph.ecount == 4

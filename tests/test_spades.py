@@ -17,8 +17,8 @@ def test_get_contig_graph():
 
     contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
 
-    assert contig_graph.graph.vcount() == 189
-    assert contig_graph.graph.ecount() == 394
+    assert contig_graph.vcount == 189
+    assert contig_graph.ecount == 394
 
     assert len(contig_graph.contig_ids) == 189
     assert len(contig_graph.contig_names) == 189
@@ -32,5 +32,5 @@ def test_get_unitig_graph():
 
     unitig_graph = spades.get_unitig_graph(graph_file)
 
-    assert unitig_graph.graph.vcount() == 982
-    assert unitig_graph.graph.ecount() == 1265
+    assert unitig_graph.vcount == 982
+    assert unitig_graph.ecount == 1265

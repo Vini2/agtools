@@ -17,8 +17,8 @@ def test_get_contig_graph():
 
     contig_graph = megahit.get_contig_graph(graph_file, contig_file)
 
-    assert contig_graph.graph.vcount() == 11761
-    assert contig_graph.graph.ecount() == 1120
+    assert contig_graph.vcount == 11761
+    assert contig_graph.ecount == 1120
 
     assert len(contig_graph.contig_sequences) == 11761
     assert len(contig_graph.contig_names) == 11761
