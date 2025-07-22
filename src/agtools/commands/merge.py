@@ -144,35 +144,35 @@ def _write_gfa_elements(
 
         # Write comments
         for line in comments:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write headers
         for line in headers:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write segments
         for line in segments:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write links
         for line in links:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write jumps
         for line in jumps:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write containments
         for line in containments:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write paths
         for line in paths:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
         # Write walks
         for line in walks:
-            file_out.write(line + "\n")
+            file_out.write(f"{line}\n")
 
     return output_file
 
