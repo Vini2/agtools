@@ -185,7 +185,7 @@ class UnitigGraph:
                 edges.append((src, tgt))
         return edges, loops
 
-    def get_neighbors(self, seg_id: str) -> list:
+    def get_neighbours(self, seg_id: str) -> list:
         """
         Get neighbor segment IDs connected to the given segment.
 

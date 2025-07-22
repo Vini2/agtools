@@ -29,8 +29,8 @@ def test_from_gfa_basic_segments_and_links():
     assert ug.segment_lengths["seg2"] == 4
 
     # Check neighbours
-    assert ug.get_neighbors("seg1") == ["seg2"]
-    assert ug.get_neighbors("seg2") == ["seg1"]
+    assert ug.get_neighbours("seg1") == ["seg2"]
+    assert ug.get_neighbours("seg2") == ["seg1"]
 
     # Check edge presence
     assert ug.graph.ecount() == 1
