@@ -99,7 +99,7 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
                 parts[1] = _remap_segment(parts[1], segment_map)
                 outfile.write("\t".join(parts) + "\n")
 
-            elif tag == "L":
+            elif tag == "L" or tag == "J" or tag == "C":
                 parts[1] = _remap_segment(parts[1], segment_map)
                 parts[3] = _remap_segment(parts[3], segment_map)
                 outfile.write("\t".join(parts) + "\n")
@@ -113,11 +113,11 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "W":
-                segments = parts[5].split(",")
+                segments = parts[4].split(",")
                 segments = [
                     _remap_segment(s[:-1], segment_map) + s[-1] for s in segments
                 ]
-                parts[5] = ",".join(segments)
+                parts[4] = ",".join(segments)
                 outfile.write("\t".join(parts) + "\n")
 
             else:
