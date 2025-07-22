@@ -196,7 +196,7 @@ def asqg2gfa(graph, output):
 
     gfa_path = commands.asqg2gfa(graph[0], output)
 
-    logger.info(f"ASQG file is written to {gfa_path}")
+    logger.info(f"GFA file is written to {gfa_path}")
 
 
 @main.command(**_click_command_opts)

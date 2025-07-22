@@ -40,6 +40,11 @@ def _write_component_graph(
     -------
     str
         Path to the newly written GFA file containing only the specified component.
+
+    References
+    ----------
+    The GFA Format Specification
+    https://gfa-spec.github.io/GFA-spec/GFA1.html
     """
 
     output_file = f"{output_path}/component_graph.gfa"
@@ -66,7 +71,7 @@ def _write_component_graph(
                     filtered_gfa.write(line)
             elif line.startswith("P"):
                 parts = line.strip().split("\t")
-                seg_ids = parts[2].split(",")
+                seg_ids = [part[:-1] for part in re.split(r"[,;]", parts[2])]
                 if all(seg_id in component_segments for seg_id in seg_ids):
                     filtered_gfa.write(line)
             elif line.startswith("W"):

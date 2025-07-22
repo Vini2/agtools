@@ -40,11 +40,11 @@ def _get_segment_sequences(gfa_file: str) -> list:
 
     with open(gfa_file) as file:
         for line in file.readlines():
-            if "S" in line:
+            if line.startswith("S"):
                 strings = line.split("\t")
 
                 record = SeqRecord(
-                    Seq(re.sub("[^GATC]", "", str(strings[2]).upper())),
+                    Seq(re.sub("[^GATC]", "", str(strings[2].strip()).upper())),
                     id=str(strings[1]),
                     name=str(strings[1]),
                     description="",
