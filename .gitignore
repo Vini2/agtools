@@ -162,3 +162,11 @@ cython_debug/
 # .DS_Store folders in Mac
 .DS_Store
 ./**/.DS_Store
+
+# Demo outputs
+demo/*.txt
+demo/*.gfa
+demo/*.fastg
+demo/*.dot
+demo/*.gv
+demo/*.fasta
