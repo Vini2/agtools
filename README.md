@@ -79,10 +79,12 @@ Commands:
 ```python
 from agtools.core.graph import UnitigGraph
 
+graph_file = "tests/data/ESC/assembly_graph_with_scaffolds.gfa"
 unitig_graph = UnitigGraph.from_gfa(graph_file)
 
-print(f"Number of segments: {unitig_graph.graph.vcount()}")
-print(f"Number of links: {unitig_graph.graph.ecount()}")
+print(f"Graph loaded from file: {unitig_graph.file_path}")
+print(f"Number of segments: {unitig_graph.vcount}")
+print(f"Number of links: {unitig_graph.ecount}")
 ```
 
 ### Loading a SPAdes graph
