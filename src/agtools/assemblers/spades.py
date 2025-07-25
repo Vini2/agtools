@@ -1,27 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Utility functions for constructing contig and unitig graphs from GFA files and contig path mappings from SPAdes assembler.
-
-This module includes:
-- Parsing contig path mappings to segment associations.
-- Building contig-level graphs from assembly graphs.
-- Creating unitig-level graphs from assembly graphs.
-
-Classes:
---------
-- UnitigGraph
-- ContigGraph
-
-Functions:
-----------
-- _get_segment_paths
-- _get_graph_edges
-- get_contig_graph
-- get_unitig_graph
-"""
-
-
 import re
 from collections import defaultdict
 

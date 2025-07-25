@@ -7,7 +7,7 @@ from igraph import Graph
 from agtools.core.graph import ContigGraph
 
 
-def _get_links_megahit(gfa_file):
+def _get_links_megahit(gfa_file: str) -> tuple:
     """
     Parse a GFA file to extract segment sequences and connectivity (links) between segments.
 
@@ -68,7 +68,7 @@ def _get_links_megahit(gfa_file):
     return node_count, graph_contig_seqs, links, contig_names
 
 
-def _get_graph_edges_megahit(links, contig_names_rev):
+def _get_graph_edges_megahit(links: list, contig_names_rev: bidict) -> tuple:
     """
     Convert a list of segment links into igraph-compatible edges.
 
@@ -102,7 +102,7 @@ def _get_graph_edges_megahit(links, contig_names_rev):
     return edge_list, self_loops
 
 
-def get_contig_graph(gfa_file, contigs_file):
+def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     """
     Build a contig-level graph from a MEGAHIT GFA file and a contig FASTA file.
 

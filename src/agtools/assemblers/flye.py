@@ -9,7 +9,7 @@ from igraph import Graph
 from agtools.core.graph import ContigGraph, UnitigGraph
 
 
-def _get_contig_map(contigs_file: str) -> dict:
+def _get_contig_map(contigs_file: str) -> bidict:
     """
     Create a bidirectional mapping from contig number to contig name.
 
