@@ -25,9 +25,9 @@ def test_from_gfa_basic_segments_and_links():
     os.unlink(f_path)
 
     # Check segments
-    assert "seg1" in ug.segment_sequences
-    assert "seg2" in ug.segment_sequences
-    assert ug.graph.vcount() == len(ug.segment_sequences)
+    assert "seg1" in ug.segment_lengths
+    assert "seg2" in ug.segment_lengths
+    assert ug.graph.vcount() == len(ug.segment_lengths)
 
     # Check segment lengths
     assert ug.segment_lengths["seg1"] == 4
@@ -84,3 +84,10 @@ def test_is_connected():
     assert not ug.is_connected("seg1", "seg2")
     assert ug.is_connected("seg4", "seg5")
     assert not ug.is_connected("seg10", "segX")
+
+def test_get_sequence_segment():
+    graph_path = DATADIR / "test_graph.gfa"
+    ug = UnitigGraph.from_gfa(graph_path)
+
+    # Check segment sequences
+    assert ug.get_segment_sequence("seg1") == "ATGCGTATGCGTATGCGTAA"
