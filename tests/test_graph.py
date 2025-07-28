@@ -85,6 +85,7 @@ def test_is_connected():
     assert ug.is_connected("seg4", "seg5")
     assert not ug.is_connected("seg10", "segX")
 
+
 def test_get_sequence_segment():
     graph_path = DATADIR / "test_graph.gfa"
     ug = UnitigGraph.from_gfa(graph_path)

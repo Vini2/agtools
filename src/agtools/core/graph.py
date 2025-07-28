@@ -1,19 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-graph.py: Graph utility classes and functions for parsing and manipulating assembly graphs.
-
-Includes:
-- `UnitigGraph`: Represents unitig-level assembly graphs from GFA format.
-- `ContigGraph`: Represents contig-level graphs with optional mappings.
-- `parse_fastg`: Parses FASTG files into segments and adjacency data.
-
-Dependencies:
-- `igraph` for graph structures
-- `bidict` for bidirectional maps
-- `Bio.Seq.Seq` for sequence storage
-"""
-
 import re
 from collections import defaultdict
 
