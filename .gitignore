@@ -170,3 +170,5 @@ demo/*.fastg
 demo/*.dot
 demo/*.gv
 demo/*.fasta
+demo/*.tsv
+demo/*.csv
