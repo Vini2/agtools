@@ -42,10 +42,10 @@ class UnitigGraph:
         Mapping from oriented segment pair to overlap length.
     segment_names : bidict
         Maps internal node IDs (starting from 0) to Segment IDs.
-    segment_sequences : dict
-        Segment ID → sequence (as Bio.Seq.Seq).
     segment_lengths : dict
         Segment ID → length of sequence.
+    segment_offsets : dict
+        Segment ID → byte offset to the segment line in the gfa file.
     self_loops : list
         List of segment IDs that form self-loops.
     self.paths :
@@ -66,6 +66,7 @@ class UnitigGraph:
         self.segment_names = bidict()  # node_id → segment_name
         self.segment_sequences = dict()  # segment_id → sequence
         self.segment_lengths = dict()  # segment_id → length
+        self.segment_offsets = dict()  # segment_id → byte offset in file
         self.self_loops = []
 
     @classmethod
@@ -91,14 +92,18 @@ class UnitigGraph:
         ug.file_path = file_path
 
         with open(file_path) as f:
-            for line in f:
+            while True:
+                pos = f.tell()
+                line = f.readline()
+                if not line:
+                    break
 
                 if line.startswith("S"):
                     parts = line.strip().split("\t")
                     seg_name = parts[1]
                     seq = parts[2]
                     ug.segment_names[node_count] = seg_name
-                    ug.segment_sequences[seg_name] = Seq(seq)
+                    ug.segment_offsets[seg_name] = pos
                     ug.segment_lengths[seg_name] = len(seq)
                     node_count += 1
                 elif line.startswith("L"):
@@ -184,6 +189,44 @@ class UnitigGraph:
                 tgt = segment_names_rev[to_edge]
                 edges.append((src, tgt))
         return edges, loops
+
+    def get_segment_sequence(self, seg_name: str) -> Seq:
+        """
+        Load the DNA sequence for a specific segment on demand.
+
+        This method retrieves the sequence of a segment from the original GFA file
+        using byte offsets, without loading all sequences into memory at once.
+
+        Parameters
+        ----------
+        seg_name : str
+            The segment identifier (ID) whose DNA sequence should be retrieved.
+
+        Returns
+        -------
+        Bio.Seq.Seq
+            The DNA sequence corresponding to the given segment.
+
+        Raises
+        ------
+        KeyError
+            If the segment name does not exist in the graph.
+        ValueError
+            If the retrieved sequence length does not match the expected length
+            recorded during graph construction.
+        """
+        pos = self.segment_offsets[seg_name]
+        with open(self.file_path, "r") as f:
+            f.seek(pos)
+            line = f.readline()
+            seq = line.strip().split("\t")[2]
+
+            if seg_name not in self.segment_lengths:
+                raise KeyError("Segment name does not exist in the graph")
+            if len(seq) == self.segment_lengths[seg_name]:
+                return Seq(seq)
+            else:
+                raise ValueError("Wrong sequence retrieved")
 
     def get_neighbours(self, seg_id: str) -> list:
         """
