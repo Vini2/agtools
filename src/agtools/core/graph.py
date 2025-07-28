@@ -203,7 +203,38 @@ class UnitigGraph:
         vid = segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
+    
+    def is_connected(self, from_seg: str, to_seg:str) -> bool:
+        """
+        Check if there is a path between two segments in the graph.
 
+        This method determines whether a path exists between the segment 
+        specified by `from_seg` and the segment specified by `to_seg` 
+        using the underlying graph's shortest path search.
+
+        Parameters
+        ----------
+        from_seg : str
+            Name of the starting segment.
+        to_seg : str
+            Name of the target segment.
+
+        Returns
+        -------
+        bool
+            True if there is a path connecting `from_seg` to `to_seg`, 
+            False otherwise.
+        """
+        segments_names_rev = self.segment_names.inverse
+        from_id = segments_names_rev[from_seg]
+        to_id = segments_names_rev[to_seg]
+
+        results = self.graph.get_shortest_paths(from_id, to=to_id)
+
+        if len(results[0]) > 0:
+            return True
+        else:
+            return False
 
 class ContigGraph:
     """
@@ -256,6 +287,57 @@ class ContigGraph:
         self.contig_descriptions = contig_descriptions
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
         self.self_loops = self_loops
+
+    def get_neighbours(self, contig_id: str) -> list:
+        """
+        Get neighbor contig IDs connected to the given contig.
+
+        Parameters
+        ----------
+        contig_id : str
+            The contig ID.
+
+        Returns
+        -------
+        list of str
+            List of neighboring segment IDs.
+        """
+        contig_names_rev = self.contig_names.inverse
+        vid = contig_names_rev[contig_id]
+        neighbor_ids = self.graph.neighbors(vid)
+        return [self.contig_names[nid] for nid in neighbor_ids]
+    
+    def is_connected(self, from_contig: str, to_contig:str) -> bool:
+        """
+        Check if there is a path between two contigs in the graph.
+
+        This method determines whether a path exists between the contig 
+        specified by `from_contig` and the contig specified by `to_contig` 
+        using the underlying graph's shortest path search.
+
+        Parameters
+        ----------
+        from_contig : str
+            Name of the starting contig.
+        to_contig : str
+            Name of the target contig.
+
+        Returns
+        -------
+        bool
+            True if there is a path connecting `from_contig` to `to_contig`, 
+            False otherwise.
+        """
+        contig_names_rev = self.contig_names.inverse
+        from_id = contig_names_rev[from_contig]
+        to_id = contig_names_rev[to_contig]
+
+        results = self.graph.get_shortest_paths(from_id, to=to_id)
+
+        if len(results[0]) > 0:
+            return True
+        else:
+            return False
 
 
 def parse_fastg(fastg_file: str) -> tuple:
