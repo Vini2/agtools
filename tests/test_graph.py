@@ -2,8 +2,9 @@
 
 import os
 import pathlib
-import pytest
 import tempfile
+
+import pytest
 
 from agtools.core.graph import UnitigGraph
 
@@ -11,6 +12,7 @@ __author__ = "Vijini Mallawaarachchi"
 __credits__ = ["Vijini Mallawaarachchi"]
 
 DATADIR = pathlib.Path(__file__).parent / "data"
+
 
 def test_from_gfa_basic_segments_and_links():
     gfa_content = "S\tseg1\tATGC\nS\tseg2\tGGTT\nL\tseg1\t+\tseg2\t-\t10M\n"

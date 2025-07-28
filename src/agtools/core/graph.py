@@ -203,13 +203,13 @@ class UnitigGraph:
         vid = segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
-    
-    def is_connected(self, from_seg: str, to_seg:str) -> bool:
+
+    def is_connected(self, from_seg: str, to_seg: str) -> bool:
         """
         Check if there is a path between two segments in the graph.
 
-        This method determines whether a path exists between the segment 
-        specified by `from_seg` and the segment specified by `to_seg` 
+        This method determines whether a path exists between the segment
+        specified by `from_seg` and the segment specified by `to_seg`
         using the underlying graph's shortest path search.
 
         Parameters
@@ -222,7 +222,7 @@ class UnitigGraph:
         Returns
         -------
         bool
-            True if there is a path connecting `from_seg` to `to_seg`, 
+            True if there is a path connecting `from_seg` to `to_seg`,
             False otherwise.
         """
         segments_names_rev = self.segment_names.inverse
@@ -235,6 +235,7 @@ class UnitigGraph:
             return True
         else:
             return False
+
 
 class ContigGraph:
     """
@@ -300,19 +301,19 @@ class ContigGraph:
         Returns
         -------
         list of str
-            List of neighboring segment IDs.
+            List of neighboring contig IDs.
         """
         contig_names_rev = self.contig_names.inverse
         vid = contig_names_rev[contig_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.contig_names[nid] for nid in neighbor_ids]
-    
-    def is_connected(self, from_contig: str, to_contig:str) -> bool:
+
+    def is_connected(self, from_contig: str, to_contig: str) -> bool:
         """
         Check if there is a path between two contigs in the graph.
 
-        This method determines whether a path exists between the contig 
-        specified by `from_contig` and the contig specified by `to_contig` 
+        This method determines whether a path exists between the contig
+        specified by `from_contig` and the contig specified by `to_contig`
         using the underlying graph's shortest path search.
 
         Parameters
@@ -325,7 +326,7 @@ class ContigGraph:
         Returns
         -------
         bool
-            True if there is a path connecting `from_contig` to `to_contig`, 
+            True if there is a path connecting `from_contig` to `to_contig`,
             False otherwise.
         """
         contig_names_rev = self.contig_names.inverse

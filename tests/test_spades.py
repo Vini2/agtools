@@ -32,8 +32,12 @@ def test_contig_get_neighbours():
 
     contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
 
-    assert "NODE_4_length_346431_cov_86.228266" in contig_graph.get_neighbours("NODE_1_length_488682_cov_86.190505")
-    assert "NODE_44_length_45842_cov_86.030074" in contig_graph.get_neighbours("NODE_1_length_488682_cov_86.190505")
+    assert "NODE_4_length_346431_cov_86.228266" in contig_graph.get_neighbours(
+        "NODE_1_length_488682_cov_86.190505"
+    )
+    assert "NODE_44_length_45842_cov_86.030074" in contig_graph.get_neighbours(
+        "NODE_1_length_488682_cov_86.190505"
+    )
 
 
 def test_is_connected():
@@ -43,8 +47,12 @@ def test_is_connected():
 
     contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
 
-    assert contig_graph.is_connected("NODE_1_length_488682_cov_86.190505", "NODE_146_length_99_cov_86.818182")
-    assert contig_graph.is_connected("NODE_164_length_65_cov_81.100000", "NODE_146_length_99_cov_86.818182")
+    assert contig_graph.is_connected(
+        "NODE_1_length_488682_cov_86.190505", "NODE_146_length_99_cov_86.818182"
+    )
+    assert contig_graph.is_connected(
+        "NODE_164_length_65_cov_81.100000", "NODE_146_length_99_cov_86.818182"
+    )
 
 
 def test_get_unitig_graph():
