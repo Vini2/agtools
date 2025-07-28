@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+import pathlib
+import pytest
 import tempfile
 
 from agtools.core.graph import UnitigGraph
@@ -8,6 +10,7 @@ from agtools.core.graph import UnitigGraph
 __author__ = "Vijini Mallawaarachchi"
 __credits__ = ["Vijini Mallawaarachchi"]
 
+DATADIR = pathlib.Path(__file__).parent / "data"
 
 def test_from_gfa_basic_segments_and_links():
     gfa_content = "S\tseg1\tATGC\nS\tseg2\tGGTT\nL\tseg1\t+\tseg2\t-\t10M\n"
@@ -69,3 +72,13 @@ def test_self_loops_are_recorded():
     assert "segX" in ug.self_loops
     assert ug.graph.ecount() == 0  # loop removed by simplify()
     assert ug.graph.vcount() == 1
+
+
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
+def test_is_connected():
+    graph_path = DATADIR / "test_graph.gfa"
+    ug = UnitigGraph.from_gfa(graph_path)
+
+    assert not ug.is_connected("seg1", "seg2")
+    assert ug.is_connected("seg4", "seg5")
+    assert not ug.is_connected("seg10", "segX")
