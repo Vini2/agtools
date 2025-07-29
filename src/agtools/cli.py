@@ -107,14 +107,14 @@ def rename(graph, prefix, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def merge(graph, output):
-    """Merge two or more GFA files"""
+def concat(graph, output):
+    """Concatenate two or more GFA files"""
 
-    logger.info(f"Merging graph files [{', '.join(graph)}]")
+    logger.info(f"Concatenating graph files [{', '.join(graph)}]")
 
-    output_file = commands.merge(graph, output)
+    output_file = commands.concat(graph, output)
 
-    logger.info(f"Merged graph file is {output_file}")
+    logger.info(f"Concatenated graph file is {output_file}")
 
 
 @main.command(**_click_command_opts)

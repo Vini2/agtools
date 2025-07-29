@@ -61,7 +61,7 @@ Options:
 Commands:
   stats      Compute statistics about the graph
   rename     Rename segments in a GFA file
-  merge      Merge two or more GFA files
+  concat     Concatenate two or more GFA files
   filter     Filter segments from GFA file
   component  Extract a component containing a given segment
   fastg2gfa  Convert FASTG file to GFA format
@@ -93,9 +93,10 @@ print(f"Number of links: {unitig_graph.ecount}")
 from agtools.assemblers import spades
 
 graph_file = "tests/data/ESC/assembly_graph_with_scaffolds.gfa"
+contigs_file = "tests/data/ESC/contigs.fasta"
 contig_paths_file = "tests/data/ESC/contigs.paths"
 
-contig_graph = spades.get_contig_graph(graph_file, contig_paths_file)
+contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 unitig_graph = spades.get_unitig_graph(graph_file)
 ```
 

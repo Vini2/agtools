@@ -60,9 +60,9 @@ def test_agtools_rename():
     exec_command(cmd)
 
 
-def test_agtools_merge():
-    """test agtools merge"""
-    cmd = "agtools merge --help"
+def test_agtools_concatenate():
+    """test agtools concatenate"""
+    cmd = "agtools concat --help"
     exec_command(cmd)
 
 

@@ -16,7 +16,7 @@ __status__ = "Alpha"
 
 def _combine_gfa_files(graph_files: list) -> tuple:
     """
-    Read and merge the components of multiple GFA files.
+    Read and concatenate the components of multiple GFA files.
 
     This function parses a list of GFA files and categorizes each line by type
     (e.g., segment, link, path), ensuring segment IDs are unique across all files.
@@ -25,7 +25,7 @@ def _combine_gfa_files(graph_files: list) -> tuple:
     Parameters
     ----------
     graph_files : list of str
-        List of paths to GFA files to be merged.
+        List of paths to GFA files to be concatenated.
 
     Returns
     -------
@@ -58,7 +58,7 @@ def _combine_gfa_files(graph_files: list) -> tuple:
                         segment_lines.append(line.strip())
                     else:
                         logger.error("Duplicate segment IDs found in GFA files.")
-                        logger.error("Please rename segment IDs and merge.")
+                        logger.error("Please rename segment IDs and concatenate.")
                         sys.exit(1)
 
                 elif line.startswith("L"):
@@ -106,7 +106,7 @@ def _write_gfa_elements(
     output_path: str,
 ) -> str:
     """
-    Write categorized GFA lines to a new merged GFA file.
+    Write categorized GFA lines to a new concatenated GFA file.
 
     This function writes the collected GFA components (e.g., segments, links, paths)
     to a single output file in the correct GFA format and order.
@@ -130,15 +130,15 @@ def _write_gfa_elements(
     walks : list
         Walk lines beginning with 'W'.
     output_path : str
-        Directory where the merged GFA file will be saved.
+        Directory where the concatenated GFA file will be saved.
 
     Returns
     -------
     str
-        Path to the written merged GFA file.
+        Path to the written concatenated GFA file.
     """
 
-    output_file = f"{output_path}/merged_graph.gfa"
+    output_file = f"{output_path}/concatenated_graph.gfa"
 
     with open(output_file, "w") as file_out:
 
@@ -177,24 +177,24 @@ def _write_gfa_elements(
     return output_file
 
 
-def merge(graph_files: str, output_path: str) -> str:
+def concat(graph_files: str, output_path: str) -> str:
     """
-    Merge multiple GFA files into a single output GFA file.
+    Concatenate multiple GFA files into a single output GFA file.
 
     This is the main function that coordinates reading multiple GFA files,
-    verifying uniqueness of segments, and writing the merged result.
+    verifying uniqueness of segments, and writing the concatenated result.
 
     Parameters
     ----------
     graph_files : list of str
-        Paths to the GFA files to merge.
+        Paths to the GFA files to concatenate.
     output_path : str
-        Directory where the merged GFA file will be saved.
+        Directory where the concatenated GFA file will be saved.
 
     Returns
     -------
     str
-        Path to the final merged GFA file.
+        Path to the final concatenated GFA file.
     """
 
     comments, headers, segments, links, jumps, containments, paths, walks = (
