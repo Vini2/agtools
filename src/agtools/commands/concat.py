@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import tempfile
 import os
 import sys
+import tempfile
 
 from agtools.log_config import logger
 
@@ -37,7 +37,9 @@ def concat(graph_files: list, output_path: str) -> str:
     """
 
     gfa_tags = ["#", "H", "S", "L", "J", "C", "P", "W"]
-    temp_files = {tag: tempfile.NamedTemporaryFile(mode="w+", delete=False) for tag in gfa_tags}
+    temp_files = {
+        tag: tempfile.NamedTemporaryFile(mode="w+", delete=False) for tag in gfa_tags
+    }
     other_lines = tempfile.NamedTemporaryFile(mode="w+", delete=False)
 
     output_file = f"{output_path}/concatenated_graph.gfa"
@@ -57,7 +59,7 @@ def concat(graph_files: list, output_path: str) -> str:
 
                         if segment_id not in segments:
                             segments.add(segment_id)
-                            
+
                         else:
                             logger.error("Duplicate segment IDs found in GFA files.")
                             logger.error("Please rename segment IDs and concatenate.")
@@ -79,12 +81,14 @@ def concat(graph_files: list, output_path: str) -> str:
                 tf = temp_files[tag]
                 tf.flush()
                 tf.seek(0)
+                
                 for line in tf:
                     out.write(line)
 
             # Write any unrecognised tags at the end
             other_lines.flush()
             other_lines.seek(0)
+
             for line in other_lines:
                 out.write(line)
 
@@ -94,8 +98,8 @@ def concat(graph_files: list, output_path: str) -> str:
             name = tf.name
             tf.close()
             os.remove(name)
-        name = other_lines.name
+
         other_lines.close()
-        os.remove(name)
-    
+        os.remove(other_lines.name)
+
     return output_file

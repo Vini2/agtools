@@ -21,7 +21,7 @@ class FastaParser:
 
     def __init__(self, file_path):
         """
-        Initialize the FastaParser and build an index for sequence IDs.
+        Initialise the FastaParser and build an index for sequence IDs.
 
         Parameters
         ----------
