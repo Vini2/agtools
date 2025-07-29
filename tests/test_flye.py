@@ -34,8 +34,12 @@ def test_contig_sequences():
 
     contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 
-    assert contig_graph.contig_parser.get_sequence("contig_2").startswith("GAATTATAATTTGAAA")
-    assert contig_graph.contig_parser.get_sequence("contig_57").endswith("ATATCATCTGATG")
+    assert contig_graph.contig_parser.get_sequence("contig_2").startswith(
+        "GAATTATAATTTGAAA"
+    )
+    assert contig_graph.contig_parser.get_sequence("contig_57").endswith(
+        "ATATCATCTGATG"
+    )
 
 
 def test_contig_index():

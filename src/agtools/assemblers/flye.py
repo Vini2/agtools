@@ -6,8 +6,8 @@ from bidict import bidict
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
-from agtools.core.unitig_graph import UnitigGraph
 from agtools.core.fasta_parser import FastaParser
+from agtools.core.unitig_graph import UnitigGraph
 
 
 def _get_links(contig_paths_file: str) -> tuple:

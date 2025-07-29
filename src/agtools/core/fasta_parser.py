@@ -58,11 +58,11 @@ class FastaParser:
         For each header line starting with '>', store the current file position.
         This allows seeking to the start of a sequence later.
         """
-        with self._open('rt') as f:
+        with self._open("rt") as f:
             pos = f.tell() if not self.gzipped else f.fileobj.tell()
             line = f.readline()
             while line:
-                if line.startswith('>'):
+                if line.startswith(">"):
                     seq_id = line[1:].strip().split()[0]
                     self.index[seq_id] = pos
                 pos = f.tell() if not self.gzipped else f.fileobj.tell()

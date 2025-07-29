@@ -39,7 +39,11 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     adj_df = ug.get_adjacency_matrix(type="pandas")
 
     separator = "," if delimiter == "comma" else "\t"
-    output_file = f"{output_path}/adjacency_matrix.csv" if delimiter == "comma" else f"{output_path}/adjacency_matrix.tsv"
+    output_file = (
+        f"{output_path}/adjacency_matrix.csv"
+        if delimiter == "comma"
+        else f"{output_path}/adjacency_matrix.tsv"
+    )
     adj_df.to_csv(output_file, sep=separator)
 
     return output_file

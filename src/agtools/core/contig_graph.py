@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import warnings
+
 import pandas as pd
+
 
 class ContigGraph:
     """
@@ -102,7 +105,10 @@ class ContigGraph:
         from_id = contig_names_rev[from_contig]
         to_id = contig_names_rev[to_contig]
 
-        results = self.graph.get_shortest_paths(from_id, to=to_id)
+        with warnings.catch_warnings():
+            # Suppress igraph's "RuntimeWarning: Couldn't reach some vertices"
+            warnings.simplefilter("ignore")
+            results = self.graph.get_shortest_paths(from_id, to=to_id)
 
         if len(results[0]) > 0:
             return True

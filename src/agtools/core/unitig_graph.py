@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-import pandas as pd 
-
 from collections import defaultdict
 
+import pandas as pd
 from bidict import bidict
 from Bio.Seq import Seq
 from igraph import Graph
@@ -233,7 +232,7 @@ class UnitigGraph:
         vid = segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
-    
+
     def get_adjacency_matrix(self, type="matrix"):
         """
         Return the adjacency matrix of the unitig graph in different formats.

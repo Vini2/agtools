@@ -79,8 +79,15 @@ def test_contig_sequences():
 
     contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 
-    assert contig_graph.contig_parser.get_sequence("NODE_174_length_58_cov_650.333333") == "GAACTATTATCATTAGCTAAGGTAATAGACAATCAAAGGCTTACCTATTGCTATGCGT"
-    assert contig_graph.contig_parser.get_sequence("NODE_189_length_56_cov_33.000000") == "TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG"
+    assert (
+        contig_graph.contig_parser.get_sequence("NODE_174_length_58_cov_650.333333")
+        == "GAACTATTATCATTAGCTAAGGTAATAGACAATCAAAGGCTTACCTATTGCTATGCGT"
+    )
+    assert (
+        contig_graph.contig_parser.get_sequence("NODE_189_length_56_cov_33.000000")
+        == "TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG"
+    )
+
 
 def test_contig_index():
 
@@ -90,8 +97,12 @@ def test_contig_index():
 
     contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 
-    assert contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485847
-    assert contig_graph.contig_parser.index["NODE_189_length_56_cov_33.000000"] == 8487228
+    assert (
+        contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485847
+    )
+    assert (
+        contig_graph.contig_parser.index["NODE_189_length_56_cov_33.000000"] == 8487228
+    )
 
 
 def test_get_unitig_graph():
