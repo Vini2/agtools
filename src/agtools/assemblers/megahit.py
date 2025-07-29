@@ -22,7 +22,7 @@ def _get_links_megahit(gfa_file: str) -> tuple:
     node_count : int
         Number of unique segments.
     graph_contig_seqs : dict
-        Mapping of segment ID -> sequence.
+        Mapping of segment ID -> sequence length in graph file.
     links : list of list
         List of 2-element lists representing linked segment IDs.
     contig_names : bidict
@@ -60,7 +60,7 @@ def _get_links_megahit(gfa_file: str) -> tuple:
 
                 contig_names[node_count] = strings[1]
 
-                graph_contig_seqs[strings[1]] = strings[2]
+                graph_contig_seqs[strings[1]] = len(strings[2])
 
                 node_count += 1
 
@@ -125,12 +125,10 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
 
     original_contig_seqs = {}
     contig_descriptions = {}
-    contig_sequences = {}
 
     # Get mapping of original contig identifiers with descriptions
     for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
-        contig_sequences[record.id] = record.seq
-        original_contig_seqs[record.id] = str(record.seq)
+        original_contig_seqs[record.id] = len(record.seq)
         contig_descriptions[record.id] = record.description
 
     # Get links and contigs of the assembly graph
@@ -186,7 +184,6 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
         file_path=gfa_file,
         contig_names=contig_names,
         contig_parser=parser,
-        contig_sequences=contig_sequences,
         contig_descriptions=contig_descriptions,
         graph_to_contig_map=graph_to_contig_map,
         self_loops=self_loops,

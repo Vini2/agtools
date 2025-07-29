@@ -27,8 +27,6 @@ class ContigGraph:
         Mapping from internal node IDs (starting from 0) to contig name.
     contig_parser : FastaParser
         FastaParser object containing the file pointers to contig sequences
-    contig_sequences : dict[str, str], optional
-        Dictionary mapping contig names to DNA sequences.
     contig_descriptions : dict[str, str], optional
         Dictionary mapping contig names to additional descriptions in FASTA file.
     graph_to_contig_map : dict[int, str], optional
@@ -45,7 +43,6 @@ class ContigGraph:
         file_path,
         contig_names,
         contig_parser,
-        contig_sequences=None,
         contig_descriptions=None,
         graph_to_contig_map=None,
         self_loops=None,
@@ -56,9 +53,8 @@ class ContigGraph:
         self.file_path = file_path
         self.contig_names = contig_names  # node_id -> contig_name
         self.contig_parser = contig_parser
-        self.contig_sequences = contig_sequences
-        self.contig_descriptions = contig_descriptions
-        self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
+        self.contig_descriptions = contig_descriptions  # name in contigs.fa (for MEGAHIT)
+        self.graph_to_contig_map = graph_to_contig_map  # graph name -> contig.fa name (for MEGAHIT)
         self.self_loops = self_loops
 
     def get_neighbours(self, contig_id: str) -> list:
