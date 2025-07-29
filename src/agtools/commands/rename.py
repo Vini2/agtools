@@ -83,7 +83,9 @@ def _build_element_maps(input_gfa: str, prefix: str) -> tuple:
     return segment_map, path_map, walk_map
 
 
-def _write_renamed_file(input_gfa: str, segment_map: dict, path_map: dict, walk_map: dict, output_path: str) -> str:
+def _write_renamed_file(
+    input_gfa: str, segment_map: dict, path_map: dict, walk_map: dict, output_path: str
+) -> str:
     """
     Write a new GFA file with segment IDs renamed based on the provided segment map.
 
@@ -176,5 +178,7 @@ def rename(gfa_file: str, prefix: str, output_path: str) -> str:
     """
 
     segment_map, path_map, walk_map = _build_element_maps(gfa_file, prefix)
-    output_file = _write_renamed_file(gfa_file, segment_map, path_map, walk_map, output_path)
+    output_file = _write_renamed_file(
+        gfa_file, segment_map, path_map, walk_map, output_path
+    )
     return output_file

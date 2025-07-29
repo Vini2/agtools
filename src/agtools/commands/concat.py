@@ -81,7 +81,7 @@ def concat(graph_files: list, output_path: str) -> str:
                 tf = temp_files[tag]
                 tf.flush()
                 tf.seek(0)
-                
+
                 for line in tf:
                     out.write(line)
 
