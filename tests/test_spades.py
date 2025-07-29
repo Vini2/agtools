@@ -105,6 +105,18 @@ def test_contig_index():
     )
 
 
+def test_adjacency_matrix():
+
+    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    contigs_file = DATADIR / "ESC" / "contigs.fasta"
+    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
+
+    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+    assert len(contig_graph.get_adjacency_matrix()) == 189
+    assert contig_graph.get_adjacency_matrix()[3, 0] == 1
+
+
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
