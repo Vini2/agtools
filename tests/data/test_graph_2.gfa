@@ -1,27 +1,27 @@
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 seq2_ments (20 bp) and 1 short seq2_ment (10 bp: seq2_X)
 H	VN:Z:1.0
 # Segments
-S	seq1	ATGCGTATGCGTATGCGTAA
-S	seq2	CGTACTGACTGACTGACTGA
-S	seq3	TGCATGCATGCATGCATGCA
-S	seq4	ACGTACGTACGTACGTACGT
-S	seq5	GTACGTACGTACGTACGTAC
-S	seq6	CGTACGTACGTACGTACGTA
-S	seq7	TACGTACGTACGTACGTACG
-S	seq8	ATCGATCGATCGATCGATCG
-S	seq9	GCGTGCGTGCGTGCGTGCGT
-S	seq10	TTGCTTGCTTGCTTGCTTGC
-S	seqX	ACGTACGTAC
-L	seqX	+	seq2	-	5M
-L	seq4	+	seq5	+	10M
-L	seq6	-	seq7	+	7M
-L	seq9	+	seq10	-	5M
-J	seq5	+	seqX	-	*
-J	seq3	-	seq8	+	*
-J	seq7	+	seq2	+	*
-C	seq1	+	seqX	-	10M	5	0
-C	seq2	+	seqX	+	10M	2	0
-P	path1	seq1+,seqX+,seq3-	20M,10M,20M
-P	path2	seq4+,seq5+,seq6+	20M,20M,20M
-W	seqread1	0	*	<seq6<seqX>seq9
-W	seqread2	0	*	<seq1>seq2>seq3
+S	seq2_1	ATGCGTATGCGTATGCGTAA
+S	seq2_2	CGTACTGACTGACTGACTGA
+S	seq2_3	TGCATGCATGCATGCATGCA
+S	seq2_4	ACGTACGTACGTACGTACGT
+S	seq2_5	GTACGTACGTACGTACGTAC
+S	seq2_6	CGTACGTACGTACGTACGTA
+S	seq2_7	TACGTACGTACGTACGTACG
+S	seq2_8	ATCGATCGATCGATCGATCG
+S	seq2_9	GCGTGCGTGCGTGCGTGCGT
+S	seq2_10	TTGCTTGCTTGCTTGCTTGC
+S	seq2_X	ACGTACGTAC
+L	seq2_X	+	seq2_2	-	5M
+L	seq2_4	+	seq2_5	+	10M
+L	seq2_6	-	seq2_7	+	7M
+L	seq2_9	+	seq2_10	-	5M
+J	seq2_5	+	seq2_X	-	*
+J	seq2_3	-	seq2_8	+	*
+J	seq2_7	+	seq2_2	+	*
+C	seq2_1	+	seq2_X	-	10M	5	0
+C	seq2_2	+	seq2_X	+	10M	2	0
+P	path1	seq2_1+,seq2_X+,seq2_3-	20M,10M,20M
+P	path2	seq2_4+,seq2_5+,seq2_6+	20M,20M,20M
+W	seq2_read1	0	*	<seq2_6<seq2_X>seq2_9
+W	seq2_read2	0	*	<seq2_1>seq2_2>seq2_3

@@ -41,7 +41,7 @@ def test_concat_seg_error(runner, tmp_dir):
 
 def test_concat_path_error(runner, tmp_dir):
     outpath = tmp_dir
-    graph_1 = DATADIR / "test_graph_1.gfa"
+    graph_1 = DATADIR / "test_graph.gfa"
     graph_2 = DATADIR / "test_graph_2.gfa"
     args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
     r = runner.invoke(concat, args, catch_exceptions=False)
@@ -51,7 +51,7 @@ def test_concat_path_error(runner, tmp_dir):
 
 def test_concat_walk_error(runner, tmp_dir):
     outpath = tmp_dir
-    graph_1 = DATADIR / "test_graph_1.gfa"
+    graph_1 = DATADIR / "test_graph.gfa"
     graph_2 = DATADIR / "test_graph_3.gfa"
     args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
     r = runner.invoke(concat, args, catch_exceptions=False)

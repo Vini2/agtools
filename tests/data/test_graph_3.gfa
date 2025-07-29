@@ -1,27 +1,27 @@
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 seq3_ments (20 bp) and 1 short seq3_ment (10 bp: seq3_X)
 H	VN:Z:1.0
 # Segments
-S	seq1	ATGCGTATGCGTATGCGTAA
-S	seq2	CGTACTGACTGACTGACTGA
-S	seq3	TGCATGCATGCATGCATGCA
-S	seq4	ACGTACGTACGTACGTACGT
-S	seq5	GTACGTACGTACGTACGTAC
-S	seq6	CGTACGTACGTACGTACGTA
-S	seq7	TACGTACGTACGTACGTACG
-S	seq8	ATCGATCGATCGATCGATCG
-S	seq9	GCGTGCGTGCGTGCGTGCGT
-S	seq10	TTGCTTGCTTGCTTGCTTGC
-S	seqX	ACGTACGTAC
-L	seqX	+	seq2	-	5M
-L	seq4	+	seq5	+	10M
-L	seq6	-	seq7	+	7M
-L	seq9	+	seq10	-	5M
-J	seq5	+	seqX	-	*
-J	seq3	-	seq8	+	*
-J	seq7	+	seq2	+	*
-C	seq1	+	seqX	-	10M	5	0
-C	seq2	+	seqX	+	10M	2	0
-P	seqpath1	seq1+,seqX+,seq3-	20M,10M,20M
-P	seqpath2	seq4+,seq5+,seq6+	20M,20M,20M
-W	read1	0	*	seq6+,seqX-,seq9+	1500	3
-W	read2	0	*	seq1+,seq2+,seq3-	1800	3
+S	seq3_1	ATGCGTATGCGTATGCGTAA
+S	seq3_2	CGTACTGACTGACTGACTGA
+S	seq3_3	TGCATGCATGCATGCATGCA
+S	seq3_4	ACGTACGTACGTACGTACGT
+S	seq3_5	GTACGTACGTACGTACGTAC
+S	seq3_6	CGTACGTACGTACGTACGTA
+S	seq3_7	TACGTACGTACGTACGTACG
+S	seq3_8	ATCGATCGATCGATCGATCG
+S	seq3_9	GCGTGCGTGCGTGCGTGCGT
+S	seq3_10	TTGCTTGCTTGCTTGCTTGC
+S	seq3_X	ACGTACGTAC
+L	seq3_X	+	seq3_2	-	5M
+L	seq3_4	+	seq3_5	+	10M
+L	seq3_6	-	seq3_7	+	7M
+L	seq3_9	+	seq3_10	-	5M
+J	seq3_5	+	seq3_X	-	*
+J	seq3_3	-	seq3_8	+	*
+J	seq3_7	+	seq3_2	+	*
+C	seq3_1	+	seq3_X	-	10M	5	0
+C	seq3_2	+	seq3_X	+	10M	2	0
+P	seq3_path1	seq3_1+,seq3_X+,seq3_3-	20M,10M,20M
+P	seq3_path2	seq3_4+,seq3_5+,seq3_6+	20M,20M,20M
+W	read1	0	*	seq3_6+,seq3_X-,seq3_9+	1500	3
+W	read2	0	*	seq3_1+,seq3_2+,seq3_3-	1800	3
