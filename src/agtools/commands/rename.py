@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import re 
+
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
@@ -134,20 +136,22 @@ def _write_renamed_file(
 
             elif tag == "P":
                 parts[1] = _remap_element(parts[1], path_map)
-                segments = parts[2].split(",")
+                path_path = parts[2]
+                segments = re.split(r'([,;])', path_path)
                 segments = [
                     _remap_element(s[:-1], segment_map) + s[-1] for s in segments
                 ]
-                parts[2] = ",".join(segments)
+                parts[2] = "".join(segments)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "W":
                 parts[1] = _remap_element(parts[1], walk_map)
-                segments = parts[4].split(",")
+                walk_path = parts[-1]
+                segments = re.split(r'([><])', walk_path)
                 segments = [
-                    _remap_element(s[:-1], segment_map) + s[-1] for s in segments
+                    _remap_element(s, segment_map) for s in segments
                 ]
-                parts[4] = ",".join(segments)
+                parts[-1] = "".join(segments)
                 outfile.write("\t".join(parts) + "\n")
 
             else:
