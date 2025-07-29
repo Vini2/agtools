@@ -71,6 +71,29 @@ def test_is_connected():
     )
 
 
+def test_contig_sequences():
+
+    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    contigs_file = DATADIR / "ESC" / "contigs.fasta"
+    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
+
+    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+    assert contig_graph.contig_parser.get_sequence("NODE_174_length_58_cov_650.333333") == "GAACTATTATCATTAGCTAAGGTAATAGACAATCAAAGGCTTACCTATTGCTATGCGT"
+    assert contig_graph.contig_parser.get_sequence("NODE_189_length_56_cov_33.000000") == "TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG"
+
+def test_contig_index():
+
+    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    contigs_file = DATADIR / "ESC" / "contigs.fasta"
+    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
+
+    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+    assert contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485847
+    assert contig_graph.contig_parser.index["NODE_189_length_56_cov_33.000000"] == 8487228
+
+
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
