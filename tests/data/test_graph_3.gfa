@@ -23,5 +23,5 @@ C	seq1	+	seqX	-	10M	5	0
 C	seq2	+	seqX	+	10M	2	0
 P	seqpath1	seq1+,seqX+,seq3-	20M,10M,20M
 P	seqpath2	seq4+,seq5+,seq6+	20M,20M,20M
-W	seqread1	0	*	<seq6<seqX>seq9
-W	seqread2	0	*	<seq1>seq2<seq3
+W	read1	0	*	seq6+,seqX-,seq9+	1500	3
+W	read2	0	*	seq1+,seq2+,seq3-	1800	3

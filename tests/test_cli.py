@@ -38,9 +38,27 @@ def test_agtools_stats(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
-def test_agtools_rename(runner, tmp_dir):
+def test_agtools_rename_seg(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    prefix = "test"
+    args = f"-g {graph} -p {prefix} -o {outpath}".split()
+    r = runner.invoke(rename, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
+def test_agtools_rename_path(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_path.gfa"
+    prefix = "test"
+    args = f"-g {graph} -p {prefix} -o {outpath}".split()
+    r = runner.invoke(rename, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
+def test_agtools_rename_walk(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_walk.gfa"
     prefix = "test"
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
