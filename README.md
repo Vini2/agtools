@@ -60,7 +60,7 @@ Options:
 
 Commands:
   stats      Compute statistics about the graph
-  rename     Rename segments in a GFA file
+  rename     Rename segments, paths and walks in a GFA file
   concat     Concatenate two or more GFA files
   filter     Filter segments from GFA file
   component  Extract a component containing a given segment
