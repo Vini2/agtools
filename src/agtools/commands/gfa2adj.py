@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import pandas as pd
-
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -38,18 +36,10 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
 
     ug = UnitigGraph.from_gfa(gfa_file)
 
-    adj_matrix = ug.graph.get_adjacency()
-
-    labels = list(ug.segment_names.values())
-
-    adj_df = pd.DataFrame(adj_matrix, index=labels, columns=labels)
+    adj_df = ug.get_adjacency_matrix(type="pandas")
 
     separator = "," if delimiter == "comma" else "\t"
-    output_file = f"{output_path}/adjacency_matrix.tsv"
+    output_file = f"{output_path}/adjacency_matrix.csv" if delimiter == "comma" else f"{output_path}/adjacency_matrix.tsv"
     adj_df.to_csv(output_file, sep=separator)
 
     return output_file
-
-
-# TODO: give option to change delimiter of the saved file
-# TODO: show isolated segments in the adjacency matrix

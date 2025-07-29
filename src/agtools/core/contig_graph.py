@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import pandas as pd
 
 class ContigGraph:
     """
@@ -107,3 +108,37 @@ class ContigGraph:
             return True
         else:
             return False
+
+    def get_adjacency_matrix(self, type="matrix"):
+        """
+        Return the adjacency matrix of the contig graph in different formats.
+
+        Parameters
+        ----------
+        type : str, optional
+            The return type. Options are:
+            - "matrix": Return the adjacency matrix object from `self.graph.get_adjacency()`.
+            - "pandas": Return a Pandas DataFrame with contig names as row and column labels.
+
+        Returns
+        -------
+        adjacency : object or pandas.DataFrame
+            - If `type="matrix"`, returns the adjacency matrix object.
+            - If `type="pandas"`, returns a DataFrame where both rows and columns are indexed by contig names.
+
+        Raises
+        ------
+        ValueError
+            If `type` is not "matrix" or "pandas".
+        """
+
+        adj = self.graph.get_adjacency()
+
+        if type == "matrix":
+            return adj
+        elif type == "pandas":
+            labels = list(self.contig_names.values())
+            adj_df = pd.DataFrame(adj, index=labels, columns=labels)
+            return adj_df
+        else:
+            raise ValueError("type must be 'matrix' or 'pandas'")

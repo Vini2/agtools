@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pandas as pd 
+
 from collections import defaultdict
 
 from bidict import bidict
@@ -231,6 +233,40 @@ class UnitigGraph:
         vid = segment_names_rev[seg_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.segment_names[nid] for nid in neighbor_ids]
+    
+    def get_adjacency_matrix(self, type="matrix"):
+        """
+        Return the adjacency matrix of the unitig graph in different formats.
+
+        Parameters
+        ----------
+        type : str, optional
+            The return type. Options are:
+            - "matrix": Return the adjacency matrix object from `self.graph.get_adjacency()`.
+            - "pandas": Return a Pandas DataFrame with unitig names as row and column labels.
+
+        Returns
+        -------
+        adjacency : object or pandas.DataFrame
+            - If `type="matrix"`, returns the adjacency matrix object.
+            - If `type="pandas"`, returns a DataFrame where both rows and columns are indexed by unitig names.
+
+        Raises
+        ------
+        ValueError
+            If `type` is not "matrix" or "pandas".
+        """
+
+        adj = self.graph.get_adjacency()
+
+        if type == "matrix":
+            return adj
+        elif type == "pandas":
+            labels = list(self.segment_names.values())
+            adj_df = pd.DataFrame(adj, index=labels, columns=labels)
+            return adj_df
+        else:
+            raise ValueError("type must be 'matrix' or 'pandas'")
 
     def is_connected(self, from_seg: str, to_seg: str) -> bool:
         """
