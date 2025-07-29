@@ -94,9 +94,9 @@ def stats(graph, output):
 )
 @_output
 def rename(graph, prefix, output):
-    """Rename segments in a GFA file"""
+    """Rename segments, paths and walks in a GFA file"""
 
-    logger.info(f"Renaming segments in graph file {graph[0]}")
+    logger.info(f"Renaming elements in graph file {graph[0]}")
     logger.info(f"Prefix used is {prefix}")
 
     output_file = commands.rename(graph[0], prefix, output)

@@ -10,30 +10,31 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
-def _remap_segment(seg_id: str, segment_map: dict) -> str:
+def _remap_element(element_id: str, element_map: dict) -> str:
     """
-    Remap a segment ID using the provided mapping.
+    Remap an element ID using the provided mapping.
 
     Parameters
     ----------
-    seg_id : str
-        The original segment ID to be remapped.
+    element_id : str
+        The original element ID to be remapped.
 
-    segment_map : dict
-        Dictionary mapping original segment IDs to new segment IDs.
+    element_map : dict
+        Dictionary mapping original element IDs to new element IDs.
 
     Returns
     -------
     str
-        The remapped segment ID if found in the mapping, otherwise the original ID.
+        The remapped element ID if found in the mapping, otherwise the original ID.
     """
 
-    return segment_map.get(seg_id, seg_id)
+    return element_map.get(element_id, element_id)
 
 
-def _build_map_segments(input_gfa: str, prefix: str) -> dict:
+def _build_element_maps(input_gfa: str, prefix: str) -> tuple:
     """
-    Create a mapping of segment IDs from an input GFA file, applying a prefix to each segment ID.
+    Create a mapping of element IDs from an input GFA file, applying
+    a prefix to each element ID. Used for segments, paths and walks.
 
     Parameters
     ----------
@@ -41,15 +42,22 @@ def _build_map_segments(input_gfa: str, prefix: str) -> dict:
         Path to the input GFA file.
 
     prefix : str
-        Prefix to prepend to each segment ID.
+        Prefix to prepend to each element ID.
 
     Returns
     -------
-    dict
-        A dictionary mapping original segment IDs to prefixed segment IDs.
+    A tuple containing:
+        - segment_map : dict[str, str]
+            A dictionary mapping original segment IDs to prefixed segment IDs.
+        - path_map : dict[str, str]
+            A dictionary mapping original path IDs to prefixed path IDs.
+        - walk_map : dict[str, str]
+            A dictionary mapping original walk IDs to prefixed walk IDs.
     """
 
     segment_map = {}
+    path_map = {}
+    walk_map = {}
 
     # Build map of old_id -> new_id
     with open(input_gfa, "r") as infile:
@@ -60,10 +68,22 @@ def _build_map_segments(input_gfa: str, prefix: str) -> dict:
                 new_id = f"{prefix}_{old_id}"
                 segment_map[old_id] = new_id
 
-    return segment_map
+            elif line.startswith("P"):
+                parts = line.strip().split("\t")
+                old_id = parts[1]
+                new_id = f"{prefix}_{old_id}"
+                path_map[old_id] = new_id
+
+            elif line.startswith("W"):
+                parts = line.strip().split("\t")
+                old_id = parts[1]
+                new_id = f"{prefix}_{old_id}"
+                walk_map[old_id] = new_id
+
+    return segment_map, path_map, walk_map
 
 
-def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> str:
+def _write_renamed_file(input_gfa: str, segment_map: dict, path_map: dict, walk_map: dict, output_path: str) -> str:
     """
     Write a new GFA file with segment IDs renamed based on the provided segment map.
 
@@ -75,6 +95,12 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
     segment_map : dict
         Mapping of old segment IDs to new IDs.
 
+    path_map : dict
+        Mapping of old path IDs to new IDs.
+
+    walk_map : dict
+        Mapping of old walk IDs to new IDs.
+
     output_path : str
         Directory path where the renamed GFA file will be saved.
 
@@ -84,7 +110,7 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
         Path to the renamed GFA file.
     """
 
-    output_file = f"{output_path}renamed_graph.gfa"
+    output_file = f"{output_path}/renamed_graph.gfa"
 
     # Rewrite file with renamed segment IDs
     with open(input_gfa, "r") as infile, open(output_file, "w") as outfile:
@@ -96,26 +122,28 @@ def _write_renamed_file(input_gfa: str, segment_map: dict, output_path: str) -> 
             tag = parts[0]
 
             if tag == "S":
-                parts[1] = _remap_segment(parts[1], segment_map)
+                parts[1] = _remap_element(parts[1], segment_map)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "L" or tag == "J" or tag == "C":
-                parts[1] = _remap_segment(parts[1], segment_map)
-                parts[3] = _remap_segment(parts[3], segment_map)
+                parts[1] = _remap_element(parts[1], segment_map)
+                parts[3] = _remap_element(parts[3], segment_map)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "P":
+                parts[1] = _remap_element(parts[1], path_map)
                 segments = parts[2].split(",")
                 segments = [
-                    _remap_segment(s[:-1], segment_map) + s[-1] for s in segments
+                    _remap_element(s[:-1], segment_map) + s[-1] for s in segments
                 ]
                 parts[2] = ",".join(segments)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "W":
+                parts[1] = _remap_element(parts[1], walk_map)
                 segments = parts[4].split(",")
                 segments = [
-                    _remap_segment(s[:-1], segment_map) + s[-1] for s in segments
+                    _remap_element(s[:-1], segment_map) + s[-1] for s in segments
                 ]
                 parts[4] = ",".join(segments)
                 outfile.write("\t".join(parts) + "\n")
@@ -147,6 +175,6 @@ def rename(gfa_file: str, prefix: str, output_path: str) -> str:
         Path to the renamed GFA file.
     """
 
-    segment_map = _build_map_segments(gfa_file, prefix)
-    output_file = _write_renamed_file(gfa_file, segment_map, output_path)
+    segment_map, path_map, walk_map = _build_element_maps(gfa_file, prefix)
+    output_file = _write_renamed_file(gfa_file, segment_map, path_map, walk_map, output_path)
     return output_file
