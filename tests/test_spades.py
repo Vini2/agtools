@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import pathlib
+import pytest
 
 from agtools.assemblers import spades
 
@@ -10,13 +11,16 @@ __credits__ = ["Vijini Mallawaarachchi"]
 DATADIR = pathlib.Path(__file__).parent / "data"
 
 
-def test_get_contig_graph():
-
+@pytest.fixture(scope="module")
+def contig_graph():
+    """Load the contig graph once per test module."""
     graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     contigs_file = DATADIR / "ESC" / "contigs.fasta"
     contig_paths_file = DATADIR / "ESC" / "contigs.paths"
+    return spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+def test_get_contig_graph(contig_graph):
 
     assert contig_graph.vcount == 189
     assert contig_graph.ecount == 394
@@ -26,26 +30,14 @@ def test_get_contig_graph():
     assert "NODE_1_length_488682_cov_86.190505" in contig_graph.contig_names.values()
 
 
-def test_contig_names_mappings():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_contig_names_mappings(contig_graph):
 
     assert contig_graph.contig_names[0] == "NODE_1_length_488682_cov_86.190505"
     assert contig_graph.contig_names[1] == "NODE_2_length_472233_cov_17.669606"
     assert contig_graph.contig_names[100] == "NODE_101_length_219_cov_317.097561"
 
 
-def test_contig_get_neighbours():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_contig_get_neighbours(contig_graph):
 
     assert "NODE_4_length_346431_cov_86.228266" in contig_graph.get_neighbours(
         "NODE_1_length_488682_cov_86.190505"
@@ -55,13 +47,7 @@ def test_contig_get_neighbours():
     )
 
 
-def test_is_connected():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_is_connected(contig_graph):
 
     assert contig_graph.is_connected(
         "NODE_1_length_488682_cov_86.190505", "NODE_146_length_99_cov_86.818182"
@@ -71,13 +57,7 @@ def test_is_connected():
     )
 
 
-def test_contig_sequences():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_contig_sequences(contig_graph):
 
     assert (
         contig_graph.contig_parser.get_sequence("NODE_174_length_58_cov_650.333333")
@@ -89,13 +69,7 @@ def test_contig_sequences():
     )
 
 
-def test_contig_index():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_contig_index(contig_graph):
 
     assert (
         contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485847
@@ -105,13 +79,7 @@ def test_contig_index():
     )
 
 
-def test_adjacency_matrix():
-
-    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
-    contigs_file = DATADIR / "ESC" / "contigs.fasta"
-    contig_paths_file = DATADIR / "ESC" / "contigs.paths"
-
-    contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+def test_adjacency_matrix(contig_graph):
 
     assert len(contig_graph.get_adjacency_matrix()) == 189
     assert contig_graph.get_adjacency_matrix()[3, 0] == 1
