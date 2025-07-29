@@ -82,7 +82,7 @@ def concat(graph_files: list, output_path: str) -> str:
                             sys.exit(1)
 
                     # Handle duplicate walk names
-                    if tag == "P":
+                    if tag == "W":
                         parts = line.strip().split("\t")
                         walk_id = parts[1]
 
