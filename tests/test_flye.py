@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import pathlib
+
 import pytest
 
 from agtools.assemblers import flye

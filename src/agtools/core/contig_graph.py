@@ -53,8 +53,12 @@ class ContigGraph:
         self.file_path = file_path
         self.contig_names = contig_names  # node_id -> contig_name
         self.contig_parser = contig_parser
-        self.contig_descriptions = contig_descriptions  # name in contigs.fa (for MEGAHIT)
-        self.graph_to_contig_map = graph_to_contig_map  # graph name -> contig.fa name (for MEGAHIT)
+        self.contig_descriptions = (
+            contig_descriptions  # name in contigs.fa (for MEGAHIT)
+        )
+        self.graph_to_contig_map = (
+            graph_to_contig_map  # graph name -> contig.fa name (for MEGAHIT)
+        )
         self.self_loops = self_loops
 
     def get_neighbours(self, contig_id: str) -> list:
