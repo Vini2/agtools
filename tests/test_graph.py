@@ -6,7 +6,7 @@ import tempfile
 
 import pytest
 
-from agtools.core.graph import UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
 
 __author__ = "Vijini Mallawaarachchi"
 __credits__ = ["Vijini Mallawaarachchi"]
