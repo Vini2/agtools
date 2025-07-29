@@ -62,6 +62,18 @@ def test_contig_mappings():
     assert contig_graph.contig_names[5] == "contig_6"
 
 
+def test_adjacency_matrix():
+
+    graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"
+    contig_paths_file = DATADIR / "1Y3B" / "assembly_info.txt"
+    contigs_file = DATADIR / "1Y3B" / "assembly.fasta"
+
+    contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+    assert len(contig_graph.get_adjacency_matrix()) == 67
+    assert contig_graph.get_adjacency_matrix()[8, 61] == 1
+
+
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"
