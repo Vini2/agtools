@@ -77,7 +77,7 @@ Commands:
 ### Loading a GFA file
 
 ```python
-from agtools.core.graph import UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
 
 graph_file = "tests/data/ESC/assembly_graph_with_scaffolds.gfa"
 unitig_graph = UnitigGraph.from_gfa(graph_file)
