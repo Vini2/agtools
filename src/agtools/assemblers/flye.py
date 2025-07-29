@@ -6,7 +6,8 @@ from bidict import bidict
 from Bio import SeqIO
 from igraph import Graph
 
-from agtools.core.graph import ContigGraph, UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
+from agtools.core.contig_graph import ContigGraph
 
 
 def _get_links(contig_paths_file: str) -> tuple:

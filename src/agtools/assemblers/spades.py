@@ -6,7 +6,9 @@ from collections import defaultdict
 from bidict import bidict
 from igraph import Graph
 
-from agtools.core.graph import ContigGraph, UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
+from agtools.core.contig_graph import ContigGraph
+from agtools.core.fasta_parser import FastaParser
 
 
 def _get_segment_paths(contig_paths):

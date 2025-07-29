@@ -4,7 +4,7 @@ from bidict import bidict
 from Bio import SeqIO
 from igraph import Graph
 
-from agtools.core.graph import ContigGraph
+from agtools.core.contig_graph import ContigGraph
 
 
 def _get_links_megahit(gfa_file: str) -> tuple:

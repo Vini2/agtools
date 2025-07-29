@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from agtools.core.graph import parse_fastg
+import re
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -10,6 +10,55 @@ __version__ = "0.1.0"
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
+
+
+def _parse_fastg(fastg_file: str) -> tuple:
+    """
+    Parse a FASTG file and extract segment sequences and edges.
+
+    Parameters
+    ----------
+    fastg_file : str
+        Path to the FASTG file.
+
+    Returns
+    -------
+    tuple
+        segments : dict
+            Mapping from node ID to DNA sequence.
+        edges : dict
+            Mapping from node ID to list of adjacent node IDs.
+    """
+
+    segments = {}
+    edges = {}
+
+    with open(fastg_file, "r") as f:
+        current_node = None
+        sequence = []
+
+        for line in f:
+            line = line.strip()
+            if line.startswith(">"):
+                if current_node and sequence:
+                    segments[current_node] = "".join(sequence)
+                    sequence = []
+
+                header = line[1:]
+                parts = header.split(":")
+                node = parts[0].strip("'")
+                neighbors = []
+                if len(parts) > 1:
+                    neighbors = re.split(r"[,\s]+", parts[1])
+                current_node = node
+                edges[node] = neighbors
+            else:
+                sequence.append(line)
+
+        if current_node and sequence:
+            segments[current_node] = "".join(sequence)
+
+    return segments, edges
 
 
 def _extract_links(edges: dict, fixed_overlap: int) -> list:
@@ -97,7 +146,7 @@ def fastg2gfa(fastg_path: str, k_overlap: int, gfa_path: str) -> str:
         Full path to the generated GFA file.
     """
 
-    segments, edges = parse_fastg(fastg_path)
+    segments, edges = _parse_fastg(fastg_path)
     links = _extract_links(edges, fixed_overlap=k_overlap)
     output_file = _write_gfa(segments, links, gfa_path)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from agtools.core.graph import UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
 
 
 def _write_abyss_dot(graph, output_path):

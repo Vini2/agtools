@@ -2,7 +2,7 @@
 
 import re
 
-from agtools.core.graph import UnitigGraph
+from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
