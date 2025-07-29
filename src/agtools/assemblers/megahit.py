@@ -5,6 +5,7 @@ from Bio import SeqIO
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
+from agtools.core.fasta_parser import FastaParser
 
 
 def _get_links_megahit(gfa_file: str) -> tuple:
@@ -175,12 +176,16 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     del graph_contig_seqs
     del original_contig_seqs
 
+    # Get parser for contigs.fasta
+    parser = FastaParser(contigs_file)
+
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),
         ecount=graph.ecount(),
         file_path=gfa_file,
         contig_names=contig_names,
+        contig_parser=parser,
         contig_sequences=contig_sequences,
         contig_descriptions=contig_descriptions,
         graph_to_contig_map=graph_to_contig_map,

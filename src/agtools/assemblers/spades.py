@@ -230,6 +230,7 @@ def get_contig_graph(
         ecount=graph.ecount(),
         file_path=graph_file,
         contig_names=contig_names,
+        contig_parser=parser,
         contig_descriptions=None,
         graph_to_contig_map=None,
         self_loops=None,

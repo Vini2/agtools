@@ -3,11 +3,11 @@
 from collections import defaultdict
 
 from bidict import bidict
-from Bio import SeqIO
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.unitig_graph import UnitigGraph
+from agtools.core.fasta_parser import FastaParser
 
 
 def _get_links(contig_paths_file: str) -> tuple:
@@ -235,12 +235,16 @@ def get_contig_graph(
     # Simplify the graph
     graph.simplify(multiple=True, loops=False, combine_edges=None)
 
+    # Get parser for contigs.fasta
+    parser = FastaParser(contigs_file)
+
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),
         ecount=graph.ecount(),
         file_path=graph_file,
         contig_names=contig_names,
+        contig_parser=parser,
     )
 
     return contig_graph

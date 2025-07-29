@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+
 class ContigGraph:
     """
-    Represents a contig-level graph derived from an assembly graph.
+    Represents a contig-level assembly graph derived from a GFA file.
 
     This class encapsulates structural and sequence metadata for contigs constructed
     from GFA segment links, and optionally includes sequence, description, and
@@ -11,15 +12,17 @@ class ContigGraph:
     Attributes
     ----------
     graph : igraph.Graph
-        The igraph object representing the contig-level graph structure.
+        The undirected graph representing the contig-level assembly graph.
     vcount : int
-        The number of vertices in the graph
+        The number of vertices in the graph.
     ecount : int
-        The number of edges in the graph
+        The number of edges in the graph.
     file_path : str
         Path to the GFA file.
     contig_names : bidict
         Mapping from internal node IDs (starting from 0) to contig name.
+    contig_parser : FastaParser
+        FastaParser object containing the file pointers to contig sequences
     contig_sequences : dict[str, str], optional
         Dictionary mapping contig names to DNA sequences.
     contig_descriptions : dict[str, str], optional
@@ -37,6 +40,7 @@ class ContigGraph:
         ecount,
         file_path,
         contig_names,
+        contig_parser,
         contig_sequences=None,
         contig_descriptions=None,
         graph_to_contig_map=None,
@@ -46,7 +50,8 @@ class ContigGraph:
         self.vcount = vcount
         self.ecount = ecount
         self.file_path = file_path
-        self.contig_names = contig_names  # node_id → contig_name
+        self.contig_names = contig_names  # node_id -> contig_name
+        self.contig_parser = contig_parser
         self.contig_sequences = contig_sequences
         self.contig_descriptions = contig_descriptions
         self.graph_to_contig_map = graph_to_contig_map  # for MEGAHIT
