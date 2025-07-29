@@ -26,6 +26,18 @@ def test_get_contig_graph():
     assert "contig_6" in contig_graph.contig_names.values()
 
 
+def test_contig_mappings():
+
+    graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"
+    contig_paths_file = DATADIR / "1Y3B" / "assembly_info.txt"
+    contigs_file = DATADIR / "1Y3B" / "assembly.fasta"
+
+    contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+
+    assert contig_graph.contig_names[0] == "contig_1"
+    assert contig_graph.contig_names[5] == "contig_6"
+
+
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"
