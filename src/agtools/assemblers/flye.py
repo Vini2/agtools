@@ -9,33 +9,7 @@ from igraph import Graph
 from agtools.core.graph import ContigGraph, UnitigGraph
 
 
-def _get_contig_map(contigs_file: str) -> bidict:
-    """
-    Create a bidirectional mapping from contig number to contig name.
-
-    Parameters
-    ----------
-    contigs_file : str
-        Path to a FASTA file containing contig sequences.
-
-    Returns
-    -------
-    dict
-        A bidict mapping from contig index (int) to contig name (str).
-    """
-
-    contig_names = bidict()
-
-    contig_num = 0
-
-    for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
-        contig_names[contig_num] = record.id
-        contig_num += 1
-
-    return contig_names
-
-
-def _get_links(contig_paths_file: str, contig_names: dict) -> tuple:
+def _get_links(contig_paths_file: str) -> tuple:
     """
     Parse contig paths file to extract paths and segment-contig mappings.
 
@@ -43,25 +17,26 @@ def _get_links(contig_paths_file: str, contig_names: dict) -> tuple:
     ----------
     contig_paths_file : str
         Path to the file containing contig path information.
-    contig_names : dict
-        Bidict mapping contig indices to contig names.
 
     Returns
     -------
     tuple
         A tuple of:
+        - contig_names : dict
+            Bidict mapping contig indices to contig names.
         - paths : dict
             Mapping from contig index to list of segment identifiers.
         - segment_contigs : dict
             Mapping from segment ID to a set of contig indices it belongs to.
     """
 
+    contig_names = bidict()
+    contig_num = 0
+
     paths = {}
     segment_contigs = {}
 
-    contig_names_rev = contig_names.inverse
-
-    with open(contig_paths_file) as file:
+    with open(contig_paths_file, "r") as file:
         for line in file.readlines():
             if not (line.startswith("#") or line.startswith("seq_name")):
                 strings = line.strip().split()
@@ -79,7 +54,7 @@ def _get_links(contig_paths_file: str, contig_names: dict) -> tuple:
 
                 segments = path.rstrip().split(",")
 
-                contig_num = contig_names_rev[contig_name]
+                contig_names[contig_num] = contig_name
 
                 if contig_num not in paths:
                     paths[contig_num] = segments
@@ -89,8 +64,10 @@ def _get_links(contig_paths_file: str, contig_names: dict) -> tuple:
                         segment_contigs[segment] = set([contig_num])
                     else:
                         segment_contigs[segment].add(contig_num)
+                
+                contig_num += 1
 
-    return paths, segment_contigs
+    return contig_names, paths, segment_contigs
 
 
 def _get_graph_edges(graph_file: str, paths: dict, segment_contigs: dict) -> list:
@@ -226,15 +203,13 @@ def get_contig_graph(
         An object representing the contig-level graph with node metadata.
     """
 
-    # Get contigs map
-    contig_names = _get_contig_map(contigs_file)
-    node_count = len(contig_names)
-
-    # Get links and contigs of the assembly graph
+    # Get contigs map, links and contigs of the assembly graph
     (
+        contig_names,
         paths,
         segment_contigs,
-    ) = _get_links(contig_paths_file, contig_names)
+    ) = _get_links(contig_paths_file)
+    node_count = len(contig_names)
 
     # Create graph
     graph = Graph()

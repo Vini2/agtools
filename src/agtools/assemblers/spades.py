@@ -164,7 +164,7 @@ def _get_graph_edges(graph_file, contigs_map, paths, segment_contigs):
     return edge_list
 
 
-def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
+def get_contig_graph(graph_file: str, contigs_file: str, contig_paths_file: str) -> ContigGraph:
     """
     Build a contig-level graph from a GFA file and a contig paths mapping file.
 
@@ -172,6 +172,8 @@ def get_contig_graph(graph_file, contig_paths_file) -> ContigGraph:
     ----------
     graph_file : str
         Path to the GFA file.
+    contigs_file : str
+        Path to the FASTA file with contig sequences.
     contig_paths_file : str
         Path to the contigs.paths or scaffolds.paths file.
 
