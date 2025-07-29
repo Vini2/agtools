@@ -80,9 +80,9 @@ def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict, dict, dict, int]:
             The fixed or computed overlap value.
     """
 
-    sequences = {}  # segment_id → sequence
-    graph_nodes = defaultdict(set)  # oriented node → set of oriented neighbors
-    overlaps = {}  # (from_node, to_node) → int
+    sequences = {}  # segment_id -> sequence
+    graph_nodes = defaultdict(set)  # oriented node -> set of oriented neighbors
+    overlaps = {}  # (from_node, to_node) -> int
     overlap_value = 0
 
     with open(gfa_file) as f:

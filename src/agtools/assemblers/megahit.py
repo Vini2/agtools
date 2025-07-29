@@ -21,11 +21,11 @@ def _get_links_megahit(gfa_file: str) -> tuple:
     node_count : int
         Number of unique segments.
     graph_contig_seqs : dict
-        Mapping of segment ID → sequence.
+        Mapping of segment ID -> sequence.
     links : list of list
         List of 2-element lists representing linked segment IDs.
     contig_names : bidict
-        Mapping of numeric node ID → segment ID.
+        Mapping of numeric node ID -> segment ID.
     """
 
     node_count = 0
@@ -77,7 +77,7 @@ def _get_graph_edges_megahit(links: list, contig_names_rev: bidict) -> tuple:
     links : list of list
         Pairs of linked segment IDs.
     contig_names_rev : bidict
-        Mapping of segment ID → numeric node ID.
+        Mapping of segment ID -> numeric node ID.
 
     Returns
     -------

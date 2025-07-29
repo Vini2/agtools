@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import re
 from collections import defaultdict
 
 from bidict import bidict
@@ -10,28 +9,28 @@ from igraph import Graph
 
 class UnitigGraph:
     """
-    Represents an assembly graph parsed from a GFA file.
+    Represents a unitig-level assembly graph parsed from a GFA file.
 
     Attributes
     ----------
     graph : igraph.Graph
         The undirected graph representing the unitig-level assembly graph.
     vcount : int
-        The number of vertices in the graph
+        The number of vertices in the graph.
     ecount : int
-        The number of edges in the graph
+        The number of edges in the graph.
     file_path : str
         Path to the original GFA file.
     oriented_links : dict
-        Mapping from (from_seg, to_seg) → list of (from_orient, to_orient).
+        Mapping from (from_seg, to_seg) -> list of (from_orient, to_orient).
     link_overlap : dict
         Mapping from oriented segment pair to overlap length.
     segment_names : bidict
         Maps internal node IDs (starting from 0) to Segment IDs.
     segment_lengths : dict
-        Segment ID → length of sequence.
+        Segment ID -> length of sequence.
     segment_offsets : dict
-        Segment ID → byte offset to the segment line in the gfa file.
+        Segment ID -> byte offset to the segment line in the gfa file.
     self_loops : list
         List of segment IDs that form self-loops.
     self.paths :
@@ -49,10 +48,10 @@ class UnitigGraph:
         self.file_path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.segment_names = bidict()  # node_id → segment_name
-        self.segment_sequences = dict()  # segment_id → sequence
-        self.segment_lengths = dict()  # segment_id → length
-        self.segment_offsets = dict()  # segment_id → byte offset in file
+        self.segment_names = bidict()  # node_id -> segment_name
+        self.segment_sequences = dict()  # segment_id -> sequence
+        self.segment_lengths = dict()  # segment_id -> length
+        self.segment_offsets = dict()  # segment_id -> byte offset in file
         self.self_loops = []
 
     @classmethod

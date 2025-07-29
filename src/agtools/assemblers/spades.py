@@ -6,9 +6,9 @@ from collections import defaultdict
 from bidict import bidict
 from igraph import Graph
 
-from agtools.core.unitig_graph import UnitigGraph
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
+from agtools.core.unitig_graph import UnitigGraph
 
 
 def _get_segment_paths(contig_paths):
@@ -40,8 +40,8 @@ def _get_segment_paths(contig_paths):
     segment_contigs = {}
     node_count = 0
 
-    id_map = bidict()  # id → contig_num
-    contig_names = bidict()  # id → contig_name
+    id_map = bidict()  # id -> contig_num
+    contig_names = bidict()  # id -> contig_name
 
     current_contig_num = ""
 
@@ -166,7 +166,9 @@ def _get_graph_edges(graph_file, contigs_map, paths, segment_contigs):
     return edge_list
 
 
-def get_contig_graph(graph_file: str, contigs_file: str, contig_paths_file: str) -> ContigGraph:
+def get_contig_graph(
+    graph_file: str, contigs_file: str, contig_paths_file: str
+) -> ContigGraph:
     """
     Build a contig-level graph from a GFA file and a contig paths mapping file.
 
@@ -218,6 +220,9 @@ def get_contig_graph(graph_file: str, contigs_file: str, contig_paths_file: str)
 
     # Simplify the graph
     graph.simplify(multiple=True, loops=False, combine_edges=None)
+
+    # Get parser for contigs.fasta
+    parser = FastaParser(contigs_file)
 
     contig_graph = ContigGraph(
         graph=graph,

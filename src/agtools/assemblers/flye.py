@@ -6,8 +6,8 @@ from bidict import bidict
 from Bio import SeqIO
 from igraph import Graph
 
-from agtools.core.unitig_graph import UnitigGraph
 from agtools.core.contig_graph import ContigGraph
+from agtools.core.unitig_graph import UnitigGraph
 
 
 def _get_links(contig_paths_file: str) -> tuple:
@@ -65,7 +65,7 @@ def _get_links(contig_paths_file: str) -> tuple:
                         segment_contigs[segment] = set([contig_num])
                     else:
                         segment_contigs[segment].add(contig_num)
-                
+
                 contig_num += 1
 
     return contig_names, paths, segment_contigs
