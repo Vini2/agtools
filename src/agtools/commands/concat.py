@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import tempfile
+import os
 import sys
 
 from agtools.log_config import logger
@@ -14,175 +16,12 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
-def _combine_gfa_files(graph_files: list) -> tuple:
-    """
-    Read and concatenate the components of multiple GFA files.
-
-    This function parses a list of GFA files and categorizes each line by type
-    (e.g., segment, link, path), ensuring segment IDs are unique across all files.
-    If duplicate segment IDs are found, the program exits with an error.
-
-    Parameters
-    ----------
-    graph_files : list of str
-        List of paths to GFA files to be concatenated.
-
-    Returns
-    -------
-    tuple
-        Eight lists containing lines from the input GFA files, grouped as:
-        (comment_lines, header_lines, segment_lines, link_lines,
-         jump_lines, containment_lines, path_lines, walk_lines)
-    """
-
-    segments = {}
-    comment_lines = []
-    header_lines = []
-    segment_lines = []
-    link_lines = []
-    jump_lines = []
-    containment_lines = []
-    path_lines = []
-    walk_lines = []
-
-    for gfa_file in graph_files:
-
-        with open(gfa_file) as f:
-            for line in f:
-                if line.startswith("S"):
-
-                    parts = line.strip().split("\t")
-
-                    if parts[1] not in segments:
-                        segments[parts[1]] = parts[2]
-                        segment_lines.append(line.strip())
-                    else:
-                        logger.error("Duplicate segment IDs found in GFA files.")
-                        logger.error("Please rename segment IDs and concatenate.")
-                        sys.exit(1)
-
-                elif line.startswith("L"):
-                    link_lines.append(line.strip())
-
-                elif line.startswith("J"):
-                    jump_lines.append(line.strip())
-
-                elif line.startswith("C"):
-                    containment_lines.append(line.strip())
-
-                elif line.startswith("P"):
-                    path_lines.append(line.strip())
-
-                elif line.startswith("W"):
-                    walk_lines.append(line.strip())
-
-                elif line.startswith("H"):
-                    header_lines.append(line.strip())
-
-                elif line.startswith("#"):
-                    comment_lines.append(line.strip())
-
-    return (
-        comment_lines,
-        header_lines,
-        segment_lines,
-        link_lines,
-        jump_lines,
-        containment_lines,
-        path_lines,
-        walk_lines,
-    )
-
-
-def _write_gfa_elements(
-    comments: list,
-    headers: list,
-    segments: list,
-    links: list,
-    jumps: list,
-    containments: list,
-    paths: list,
-    walks: list,
-    output_path: str,
-) -> str:
-    """
-    Write categorized GFA lines to a new concatenated GFA file.
-
-    This function writes the collected GFA components (e.g., segments, links, paths)
-    to a single output file in the correct GFA format and order.
-
-    Parameters
-    ----------
-    comments : list
-        Comment lines beginning with '#'.
-    headers : list
-        Header lines beginning with 'H'.
-    segments : list
-        Segment lines beginning with 'S'.
-    links : list
-        Link lines beginning with 'L'.
-    jumps : list
-        Jump lines beginning with 'J'.
-    containments : list
-        Containment lines beginning with 'C'.
-    paths : list
-        Path lines beginning with 'P'.
-    walks : list
-        Walk lines beginning with 'W'.
-    output_path : str
-        Directory where the concatenated GFA file will be saved.
-
-    Returns
-    -------
-    str
-        Path to the written concatenated GFA file.
-    """
-
-    output_file = f"{output_path}/concatenated_graph.gfa"
-
-    with open(output_file, "w") as file_out:
-
-        # Write comments
-        for line in comments:
-            file_out.write(f"{line}\n")
-
-        # Write headers
-        for line in headers:
-            file_out.write(f"{line}\n")
-
-        # Write segments
-        for line in segments:
-            file_out.write(f"{line}\n")
-
-        # Write links
-        for line in links:
-            file_out.write(f"{line}\n")
-
-        # Write jumps
-        for line in jumps:
-            file_out.write(f"{line}\n")
-
-        # Write containments
-        for line in containments:
-            file_out.write(f"{line}\n")
-
-        # Write paths
-        for line in paths:
-            file_out.write(f"{line}\n")
-
-        # Write walks
-        for line in walks:
-            file_out.write(f"{line}\n")
-
-    return output_file
-
-
-def concat(graph_files: str, output_path: str) -> str:
+def concat(graph_files: list, output_path: str) -> str:
     """
     Concatenate multiple GFA files into a single output GFA file.
 
-    This is the main function that coordinates reading multiple GFA files,
-    verifying uniqueness of segments, and writing the concatenated result.
+    This function reads multiple GFA files, groups by tags, verifies
+    the uniqueness of segments, and writes the concatenated result.
 
     Parameters
     ----------
@@ -197,18 +36,66 @@ def concat(graph_files: str, output_path: str) -> str:
         Path to the final concatenated GFA file.
     """
 
-    comments, headers, segments, links, jumps, containments, paths, walks = (
-        _combine_gfa_files(graph_files)
-    )
-    output_file = _write_gfa_elements(
-        comments,
-        headers,
-        segments,
-        links,
-        jumps,
-        containments,
-        paths,
-        walks,
-        output_path,
-    )
+    gfa_tags = ["#", "H", "S", "L", "J", "C", "P", "W"]
+    temp_files = {tag: tempfile.NamedTemporaryFile(mode="w+", delete=False) for tag in gfa_tags}
+    other_lines = tempfile.NamedTemporaryFile(mode="w+", delete=False)
+
+    output_file = f"{output_path}/concatenated_graph.gfa"
+
+    segments = set()
+
+    try:
+        # Single pass per file: distribute lines into per-tag temp files
+        for graph_file in graph_files:
+            with open(graph_file, "r") as f:
+                for line in f:
+                    tag = line[0]
+
+                    if tag == "S":
+                        parts = line.strip().split("\t")
+                        segment_id = parts[1]
+
+                        if segment_id not in segments:
+                            segments.add(segment_id)
+                            
+                        else:
+                            logger.error("Duplicate segment IDs found in GFA files.")
+                            logger.error("Please rename segment IDs and concatenate.")
+
+                            sys.exit(1)
+
+                    # Handle missing newline
+                    line_to_write = line if line.endswith("\n") else f"{line}\n"
+
+                    if tag in temp_files:
+                        temp_files[tag].write(line_to_write)
+                    else:
+                        other_lines.write(line_to_write)
+
+        # Write to concatenated output
+        with open(output_file, "w") as out:
+            # Write each tag group in order
+            for tag in gfa_tags:
+                tf = temp_files[tag]
+                tf.flush()
+                tf.seek(0)
+                for line in tf:
+                    out.write(line)
+
+            # Write any unrecognised tags at the end
+            other_lines.flush()
+            other_lines.seek(0)
+            for line in other_lines:
+                out.write(line)
+
+    finally:
+        # Clean up temp files
+        for tf in temp_files.values():
+            name = tf.name
+            tf.close()
+            os.remove(name)
+        name = other_lines.name
+        other_lines.close()
+        os.remove(name)
+    
     return output_file
