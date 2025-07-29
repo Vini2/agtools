@@ -45,6 +45,8 @@ def concat(graph_files: list, output_path: str) -> str:
     output_file = f"{output_path}/concatenated_graph.gfa"
 
     segments = set()
+    paths = set()
+    walks = set()
 
     try:
         # Single pass per file: distribute lines into per-tag temp files
@@ -53,6 +55,7 @@ def concat(graph_files: list, output_path: str) -> str:
                 for line in f:
                     tag = line[0]
 
+                    # Handle duplicate segment names
                     if tag == "S":
                         parts = line.strip().split("\t")
                         segment_id = parts[1]
@@ -62,8 +65,33 @@ def concat(graph_files: list, output_path: str) -> str:
 
                         else:
                             logger.error("Duplicate segment IDs found in GFA files.")
-                            logger.error("Please rename segment IDs and concatenate.")
+                            logger.error("Please rename IDs and concatenate.")
+                            sys.exit(1)
 
+                    # Handle duplicate path names
+                    if tag == "P":
+                        parts = line.strip().split("\t")
+                        path_id = parts[1]
+
+                        if path_id not in paths:
+                            paths.add(path_id)
+
+                        else:
+                            logger.error("Duplicate path IDs found in GFA files.")
+                            logger.error("Please rename IDs and concatenate.")
+                            sys.exit(1)
+
+                    # Handle duplicate walk names
+                    if tag == "P":
+                        parts = line.strip().split("\t")
+                        walk_id = parts[1]
+
+                        if walk_id not in walks:
+                            walks.add(walk_id)
+
+                        else:
+                            logger.error("Duplicate walk IDs found in GFA files.")
+                            logger.error("Please rename IDs and concatenate.")
                             sys.exit(1)
 
                     # Handle missing newline
