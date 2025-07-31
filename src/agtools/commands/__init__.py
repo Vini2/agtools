@@ -11,6 +11,7 @@ __status__ = "Alpha"
 
 
 from .asqg2gfa import asqg2gfa
+from .clean import clean
 from .component import component
 from .concat import concat
 from .fastg2gfa import fastg2gfa

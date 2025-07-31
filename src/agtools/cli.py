@@ -143,6 +143,35 @@ def filter(graph, min_length, output):
 @main.command(**_click_command_opts)
 @_graph
 @click.option(
+    "--fasta",
+    "-f",
+    help="path to the FASTA file",
+    type=click.Path(exists=True),
+    required=False,
+)
+@click.option(
+    "--assembler",
+    "-a",
+    help="assembler name (if assembler used is myloasm)",
+    type=str,
+    show_default=True,
+    required=False,
+)
+@_output
+def clean(graph, fasta, assembler, output):
+    """Clean a GFA file based on segments in a FASTA file"""
+
+    logger.info(f"Cleaning the graph file {graph[0]}")
+    logger.info(f"Using the FASTA file {fasta}")
+
+    cleaned_gfa = commands.clean(graph[0], fasta, assembler, output)
+
+    logger.info(f"Cleaned graph file is {cleaned_gfa}")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@click.option(
     "--segment",
     "-s",
     help="segment ID",
