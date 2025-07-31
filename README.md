@@ -63,6 +63,7 @@ Commands:
   rename     Rename segments, paths and walks in a GFA file
   concat     Concatenate two or more GFA files
   filter     Filter segments from GFA file
+  clean      Clean a GFA file based on segments in a FASTA file
   component  Extract a component containing a given segment
   fastg2gfa  Convert FASTG file to GFA format
   asqg2gfa   Convert ASQG file to GFA format
