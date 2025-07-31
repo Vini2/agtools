@@ -13,137 +13,6 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Alpha"
 
 
-def _calculate_average_node_degree(graph: UnitigGraph) -> int:
-    """
-    Calculate the average node degree of the graph.
-
-    Parameters
-    ----------
-    graph : UnitigGraph
-        The unitig graph object containing the assembly graph.
-
-    Returns
-    -------
-    int
-        Average node degree of the graph.
-
-    Raises
-    ------
-    ValueError
-        If the graph does not have any segments.
-    """
-
-    if graph.graph.vcount() == 0:
-        raise ValueError(
-            "Graph does not have any segments, cannot calculate average node degree"
-        )
-
-    return int(sum(graph.graph.degree()) / graph.graph.vcount())
-
-
-def _calculate_total_length(segment_lengths: dict) -> int:
-    """
-    Calculate the total length of all segments in the graph.
-
-    Parameters
-    ----------
-    segment_lengths : dict
-        Dictionary mapping segment IDs to their lengths.
-
-    Returns
-    -------
-    int
-        Total length of all segments.
-    """
-    return sum(segment_lengths.values())
-
-
-def _calculate_average_segment_length(segment_lengths: dict) -> int:
-    """
-    Calculate the average segment length.
-
-    Parameters
-    ----------
-    segment_lengths : dict
-        Dictionary mapping segment IDs to their lengths.
-
-    Returns
-    -------
-    int
-        Average segment length.
-
-    Raises
-    ------
-    ValueError
-        If the graph does not have any segments.
-    """
-
-    if len(segment_lengths) == 0:
-        raise ValueError(
-            "Graph does not have any segments, cannot calculate average segment length"
-        )
-
-    return int(sum(segment_lengths.values()) / len(segment_lengths))
-
-
-def _calculate_n50_l50(lengths: list[int]) -> tuple[int, int]:
-    """
-    Calculate N50 and L50 from a list of segment lengths.
-
-    Parameters
-    ----------
-    lengths : list of int
-        List of segment lengths.
-
-    Returns
-    -------
-    tuple of (int, int)
-        A tuple containing:
-        - N50 : int
-            The length N such that 50% of the total length is contained in segments of length ≥ N.
-        - L50 : int
-            The minimum number of segments whose summed length ≥ 50% of the total.
-    """
-
-    sorted_lengths = sorted(lengths, reverse=True)
-    total_length = sum(sorted_lengths)
-    cum_sum = 0
-
-    for i, length in enumerate(sorted_lengths):
-        cum_sum += length
-        if cum_sum >= total_length / 2:
-            return length, i + 1
-
-
-def _get_gc_content(sequences: list, total_length: int) -> float:
-    """
-    Calculate the GC content of sequences.
-
-    Parameters
-    ----------
-    sequence : list of str
-        A list of nucleotide sequences (A, T, G, C).
-
-    Returns
-    -------
-    float
-        GC content as a percentage of total base pairs.
-
-    Raises
-    ------
-    ValueError
-        If total length of the segments is zero.
-    """
-
-    if total_length == 0:
-        raise ValueError(
-            "Total length of segments is zero, cannot calculate GC content"
-        )
-
-    gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
-    return gc_count / total_length
-
-
 def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     """
     Write the statistics to a file.
@@ -221,7 +90,7 @@ def stats(gfa_file: str, output_path: str) -> str:
     stats = {
         "nsegments": ug.graph.vcount(),
         "nlinks": ug.graph.ecount(),
-        "ncomponents": len(ug.graph.components()),
+        "ncomponents": len(ug.get_connected_components()),
         "nloops": len(ug.self_loops),
         "average_node_degree": 0,
         "total_length": 0,
@@ -231,15 +100,11 @@ def stats(gfa_file: str, output_path: str) -> str:
         "gc_content": 0.0,
     }
 
-    stats["average_node_degree"] = _calculate_average_node_degree(ug)
-    stats["total_length"] = _calculate_total_length(ug.segment_lengths)
-    stats["average_segment_length"] = _calculate_average_segment_length(
-        ug.segment_lengths
-    )
-    stats["n50"], stats["l50"] = _calculate_n50_l50(ug.segment_lengths.values())
-    stats["gc_content"] = _get_gc_content(
-        ug.segment_sequences.values(), stats["total_length"]
-    )
+    stats["average_node_degree"] = ug.calculate_average_node_degree()
+    stats["total_length"] = ug.calculate_total_length()
+    stats["average_segment_length"] = ug.calculate_average_segment_length()
+    stats["n50"], stats["l50"] = ug.calculate_n50_l50()
+    stats["gc_content"] = ug.get_gc_content()
 
     output_file = _write_stats_file(gfa_file, stats, output_path)
 

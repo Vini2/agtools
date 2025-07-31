@@ -113,8 +113,8 @@ def filter(gfa_file: str, min_length: int, output_path: str) -> str:
     segments_to_remove = set(
         [
             seg_id
-            for seg_id, seq in ug.segment_sequences.items()
-            if len(seq) < min_length
+            for seg_id, seq_length in ug.segment_lengths.items()
+            if seq_length < min_length
         ]
     )
     logger.info(

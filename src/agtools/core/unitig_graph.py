@@ -26,6 +26,8 @@ class UnitigGraph:
         Mapping from (from_seg, to_seg) -> list of (from_orient, to_orient).
     link_overlap : dict
         Mapping from oriented segment pair to overlap length.
+    paths: dict
+        Mapping from path name to (segment names, overlaps)
     segment_names : bidict
         Maps internal node IDs (starting from 0) to Segment IDs.
     segment_lengths : dict
@@ -34,7 +36,6 @@ class UnitigGraph:
         Segment ID -> byte offset to the segment line in the gfa file.
     self_loops : list
         List of segment IDs that form self-loops.
-    self.paths :
 
     References
     ----------
@@ -49,8 +50,8 @@ class UnitigGraph:
         self.file_path = None
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.segment_names = bidict()  # node_id -> segment_name
-        self.segment_sequences = dict()  # segment_id -> sequence
+        self.paths = dict()  # path_id -> segment names
+        self.segment_names = bidict()  # node_id -> segment name
         self.segment_lengths = dict()  # segment_id -> length
         self.segment_offsets = dict()  # segment_id -> byte offset in file
         self.self_loops = []
@@ -102,6 +103,12 @@ class UnitigGraph:
                     ug._add_oriented_links(
                         from_seg, to_seg, from_orient, to_orient, overlap
                     )
+                elif line.startswith("P"):
+                    parts = line.strip().split("\t")
+                    path_name = parts[1]
+                    segments = parts[2]
+                    overlaps = parts[3]
+                    ug.paths[path_name] = (segments, overlaps)
 
         ug.graph.add_vertices(node_count)
 
@@ -298,3 +305,122 @@ class UnitigGraph:
             return True
         else:
             return False
+
+    def get_connected_components(self) -> list:
+        """
+        Calculate the average node degree of the graph.
+
+        Returns
+        -------
+        list
+            A list of the connected components
+        """
+        return self.graph.components()
+
+    def calculate_average_node_degree(self) -> int:
+        """
+        Calculate the average node degree of the graph.
+
+        Returns
+        -------
+        int
+            Average node degree of the graph.
+
+        Raises
+        ------
+        ValueError
+            If the graph does not have any segments.
+        """
+
+        if self.graph.vcount() == 0:
+            raise ValueError(
+                "Graph does not have any segments, cannot calculate average node degree"
+            )
+
+        return int(sum(self.graph.degree()) / self.graph.vcount())
+
+    def calculate_total_length(self) -> int:
+        """
+        Calculate the total length of all segments in the graph.
+
+        Returns
+        -------
+        int
+            Total length of all segments.
+        """
+        return sum(self.segment_lengths.values())
+
+    def calculate_average_segment_length(self) -> int:
+        """
+        Calculate the average segment length.
+
+        Returns
+        -------
+        int
+            Average segment length.
+
+        Raises
+        ------
+        ValueError
+            If the graph does not have any segments.
+        """
+
+        segment_lengths = self.segment_lengths
+        if len(segment_lengths) == 0:
+            raise ValueError(
+                "Graph does not have any segments, cannot calculate average segment length"
+            )
+
+        return int(sum(segment_lengths.values()) / len(segment_lengths))
+
+    def calculate_n50_l50(self) -> tuple[int, int]:
+        """
+        Calculate N50 and L50 from a list of segment lengths.
+
+        Returns
+        -------
+        tuple of (int, int)
+            A tuple containing:
+            - N50 : int
+                The length N such that 50% of the total length is contained in segments of length ≥ N.
+            - L50 : int
+                The minimum number of segments whose summed length ≥ 50% of the total.
+        """
+
+        lengths = self.segment_lengths.values()
+        sorted_lengths = sorted(lengths, reverse=True)
+        total_length = sum(sorted_lengths)
+        cum_sum = 0
+
+        for i, length in enumerate(sorted_lengths):
+            cum_sum += length
+            if cum_sum >= total_length / 2:
+                return length, i + 1
+
+    def get_gc_content(self) -> float:
+        """
+        Calculate the GC content of sequences.
+
+        Returns
+        -------
+        float
+            GC content as a percentage of total base pairs.
+
+        Raises
+        ------
+        ValueError
+            If total length of the segments is zero.
+        """
+
+        sequences = [
+            self.get_segment_sequence(seq) for seq in self.segment_lengths.keys()
+        ]
+        total_length = self.calculate_total_length()
+
+        if total_length == 0:
+            raise ValueError(
+                "Total length of segments is zero, cannot calculate GC content"
+            )
+
+        gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
+        return gc_count / total_length

@@ -175,7 +175,7 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     del original_contig_seqs
 
     # Get parser for contigs.fasta
-    parser = FastaParser(contigs_file)
+    parser = FastaParser(contigs_file, assembler="megahit", mapping=graph_to_contig_map)
 
     contig_graph = ContigGraph(
         graph=graph,

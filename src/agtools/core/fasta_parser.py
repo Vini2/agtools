@@ -19,7 +19,7 @@ class FastaParser:
         True if the file is gzip-compressed.
     """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, assembler="general", mapping=None):
         """
         Initialise the FastaParser and build an index for sequence IDs.
 
@@ -29,6 +29,8 @@ class FastaParser:
             Path to the FASTA file (.fasta or .fasta.gz).
         """
         self.file_path = file_path
+        self.assembler = assembler
+        self.mapping = mapping  # MEGAHIT
         self.index = {}
         self.gzipped = str(file_path).endswith(".gz")
         self._build_index()
@@ -82,6 +84,7 @@ class FastaParser:
         str or None
             The DNA sequence as a string, or None if the ID is not found.
         """
+        seq_id = self.mapping[seq_id] if self.assembler == "megahit" else seq_id
         if seq_id not in self.index:
             return None
         seq_lines = []
