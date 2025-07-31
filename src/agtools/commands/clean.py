@@ -122,6 +122,6 @@ def clean(gfa_file: str, fasta: str, assembler: str, output_path: str) -> str:
         if segment not in parser.index:
             segments_to_remove.add(segment)
 
-    output_file = _write_filtered_graph(parser, segments_to_remove, gfa_file, output_path)
+    output_file = _write_filtered_graph(segments_to_remove, parser, gfa_file, output_path)
 
     return output_file
