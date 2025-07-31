@@ -1,4 +1,5 @@
 import gzip
+import warnings
 
 
 class FastaParser:
@@ -27,10 +28,14 @@ class FastaParser:
         ----------
         file_path : str
             Path to the FASTA file (.fasta or .fasta.gz).
+        assembler : str
+            Assembler used to get the GFA file
+        mapping : dict
+            Name mapping of contigs in graph and FASTA file (MEGAHIT)
         """
         self.file_path = file_path
         self.assembler = assembler
-        self.mapping = mapping  # MEGAHIT
+        self.mapping = mapping  # for MEGAHIT
         self.index = {}
         self.gzipped = str(file_path).endswith(".gz")
         self._build_index()
@@ -65,7 +70,10 @@ class FastaParser:
             line = f.readline()
             while line:
                 if line.startswith(">"):
-                    seq_id = line[1:].strip().split()[0]
+                    if self.assembler == "myloasm":
+                        seq_id = line[1:].strip().split("_")[0]
+                    else:
+                        seq_id = line[1:].strip().split()[0]
                     self.index[seq_id] = pos
                 pos = f.tell() if not self.gzipped else f.fileobj.tell()
                 line = f.readline()
@@ -83,20 +91,30 @@ class FastaParser:
         -------
         str or None
             The DNA sequence as a string, or None if the ID is not found.
+
+        Raises
+        ------
+        RuntimeWarning
+            If the sequence is not found in the contigs FASTA file
         """
         seq_id = self.mapping[seq_id] if self.assembler == "megahit" else seq_id
         if seq_id not in self.index:
-            return None
+            warnings.warn(f"The sequence {seq_id} is not found in the contigs FASTA file", RuntimeWarning)
+            return ""
+        
         seq_lines = []
+
         with self._open("rt") as f:
             if not self.gzipped:
                 f.seek(self.index[seq_id])
             else:
-                # For gzip, use fileobj.seek because f.seek is not fully random access
+                # For gzip, use fileobj.seek
                 f.fileobj.seek(self.index[seq_id])
+            
             f.readline()  # skip header line
             for line in f:
                 if line.startswith(">"):
                     break
                 seq_lines.append(line.strip())
+        
         return "".join(seq_lines)
