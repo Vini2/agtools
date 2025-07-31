@@ -83,6 +83,15 @@ def test_agtools_filter(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_clean(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "myloasm" / "final_contig_graph.gfa"
+    fasta = DATADIR / "myloasm" / "assembly_primary.fa"
+    args = f"-g {graph} -f {fasta} -a myloasm -o {outpath}".split()
+    r = runner.invoke(clean, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+
 def test_agtools_component(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "test_graph.gfa"

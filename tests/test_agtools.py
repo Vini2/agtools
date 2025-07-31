@@ -72,6 +72,12 @@ def test_agtools_filter():
     exec_command(cmd)
 
 
+def test_agtools_clean():
+    """test agtools clean"""
+    cmd = "agtools clean --help"
+    exec_command(cmd)
+
+
 def test_agtools_component():
     """test agtools component"""
     cmd = "agtools component --help"
