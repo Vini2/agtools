@@ -22,17 +22,16 @@ def contig_graph():
 
 def test_get_contig_graph(contig_graph):
 
-    assert contig_graph.vcount == 3
+    assert contig_graph.vcount == 2
     assert contig_graph.ecount == 1
 
-    assert len(contig_graph.contig_names) == 3
+    assert len(contig_graph.contig_names) == 2
 
 
 def test_contig_names_mappings(contig_graph):
 
-    assert contig_graph.contig_names[0] == "u673671ctg"
-    assert contig_graph.contig_names[1] == "u913838ctg"
-    assert contig_graph.contig_names[2] == "u579439ctg"
+    assert contig_graph.contig_names[0] == "u913838ctg"
+    assert contig_graph.contig_names[1] == "u579439ctg"
 
 
 def test_contig_get_neighbors(contig_graph):
@@ -61,33 +60,29 @@ def test_contig_index(contig_graph):
 
 def test_adjacency_matrix(contig_graph):
 
-    assert len(contig_graph.get_adjacency_matrix()) == 3
-    assert contig_graph.get_adjacency_matrix()[1, 2] == 1
+    assert len(contig_graph.get_adjacency_matrix()) == 2
+    assert contig_graph.get_adjacency_matrix()[0, 1] == 1
 
 
 def test_connected_components(contig_graph):
-    assert len(contig_graph.get_connected_components()) == 2
+    assert len(contig_graph.get_connected_components()) == 1
 
 
 def test_average_node_degree(contig_graph):
-    assert contig_graph.calculate_average_node_degree() == 0
+    assert contig_graph.calculate_average_node_degree() == 1
 
 
-@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_total_length(contig_graph):
     assert contig_graph.calculate_total_length() == 58400
 
 
-@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_average_contig_length(contig_graph):
-    assert contig_graph.calculate_average_contig_length() == 19466
+    assert contig_graph.calculate_average_contig_length() == 29200
 
 
-@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_n50_l50(contig_graph):
     assert contig_graph.calculate_n50_l50() == (39317, 1)
 
 
-@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_gc_content(contig_graph):
     assert contig_graph.get_gc_content() == 0.551986301369863
