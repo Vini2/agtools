@@ -66,12 +66,12 @@ def test_is_connected(contig_graph):
 
 def test_contig_sequences(contig_graph):
 
-    assert contig_graph.contig_parser.get_sequence("k141_11371").startswith(
-        "GCCGATGCCGCC"
-    )
-    assert contig_graph.contig_parser.get_sequence("k141_4704").endswith(
-        "AAAATGACCCGAA"
-    )
+    assert contig_graph.contig_parser.get_sequence(
+        "NODE_11761_length_301_cov_1.0000_ID_23521"
+    ).startswith("GCCGATGCCGCC")
+    assert contig_graph.contig_parser.get_sequence(
+        "NODE_1_length_205_cov_1.0000_ID_1"
+    ).endswith("AAAATGACCCGAA")
 
 
 def test_contig_index(contig_graph):
@@ -84,3 +84,27 @@ def test_adjacency_matrix(contig_graph):
 
     assert len(contig_graph.get_adjacency_matrix()) == 11761
     assert contig_graph.get_adjacency_matrix()[9686, 8190] == 1
+
+
+def test_connected_components(contig_graph):
+    assert len(contig_graph.get_connected_components()) == 10657
+
+
+def test_average_node_degree(contig_graph):
+    assert contig_graph.calculate_average_node_degree() == 0
+
+
+def test_total_length(contig_graph):
+    assert contig_graph.calculate_total_length() == 30368344
+
+
+def test_average_contig_length(contig_graph):
+    assert contig_graph.calculate_average_contig_length() == 2582
+
+
+def test_n50_l50(contig_graph):
+    assert contig_graph.calculate_n50_l50() == (151640, 52)
+
+
+def test_gc_content(contig_graph):
+    assert contig_graph.get_gc_content() == 0.6378570066250566

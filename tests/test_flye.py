@@ -65,6 +65,30 @@ def test_adjacency_matrix(contig_graph):
     assert contig_graph.get_adjacency_matrix()[8, 61] == 1
 
 
+def test_connected_components(contig_graph):
+    assert len(contig_graph.get_connected_components()) == 65
+
+
+def test_average_node_degree(contig_graph):
+    assert contig_graph.calculate_average_node_degree() == 0
+
+
+def test_total_length(contig_graph):
+    assert contig_graph.calculate_total_length() == 23184836
+
+
+def test_average_contig_length(contig_graph):
+    assert contig_graph.calculate_average_contig_length() == 346042
+
+
+def test_n50_l50(contig_graph):
+    assert contig_graph.calculate_n50_l50() == (752071, 4)
+
+
+def test_gc_content(contig_graph):
+    assert contig_graph.get_gc_content() == 0.4752605107924852
+
+
 def test_get_unitig_graph():
 
     graph_file = DATADIR / "1Y3B" / "assembly_graph.gfa"

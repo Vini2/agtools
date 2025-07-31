@@ -14,6 +14,20 @@ __credits__ = ["Vijini Mallawaarachchi"]
 DATADIR = pathlib.Path(__file__).parent / "data"
 
 
+@pytest.fixture(scope="module")
+def unitig_graph():
+    """Load the contig graph once per test module."""
+    graph_file = DATADIR / "test_graph.gfa"
+    return UnitigGraph.from_gfa(graph_file)
+
+
+@pytest.fixture(scope="module")
+def spades_unitig_graph():
+    """Load the contig graph once per test module."""
+    graph_file = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
+    return UnitigGraph.from_gfa(graph_file)
+
+
 def test_from_gfa_basic_segments_and_links():
     gfa_content = "S\tseg1\tATGC\nS\tseg2\tGGTT\nL\tseg1\t+\tseg2\t-\t10M\n"
 
@@ -77,18 +91,41 @@ def test_self_loops_are_recorded():
 
 
 @pytest.mark.filterwarnings("ignore::RuntimeWarning")
-def test_is_connected():
-    graph_path = DATADIR / "test_graph.gfa"
-    ug = UnitigGraph.from_gfa(graph_path)
-
-    assert not ug.is_connected("seg1", "seg2")
-    assert ug.is_connected("seg4", "seg5")
-    assert not ug.is_connected("seg10", "segX")
+def test_is_connected(unitig_graph):
+    assert not unitig_graph.is_connected("seg1", "seg2")
+    assert unitig_graph.is_connected("seg4", "seg5")
+    assert not unitig_graph.is_connected("seg10", "segX")
 
 
-def test_get_sequence_segment():
-    graph_path = DATADIR / "test_graph.gfa"
-    ug = UnitigGraph.from_gfa(graph_path)
+def test_get_sequence_segment(unitig_graph):
+    assert unitig_graph.get_segment_sequence("seg1") == "ATGCGTATGCGTATGCGTAA"
 
-    # Check segment sequences
-    assert ug.get_segment_sequence("seg1") == "ATGCGTATGCGTATGCGTAA"
+
+def test_graph_stats(spades_unitig_graph):
+    assert spades_unitig_graph.vcount == 982
+    assert spades_unitig_graph.ecount == 1265
+    assert len(spades_unitig_graph.self_loops) == 1
+
+
+def test_connected_components(spades_unitig_graph):
+    assert len(spades_unitig_graph.get_connected_components()) == 4
+
+
+def test_average_node_degree(spades_unitig_graph):
+    assert spades_unitig_graph.calculate_average_node_degree() == 2
+
+
+def test_total_length(spades_unitig_graph):
+    assert spades_unitig_graph.calculate_total_length() == 8337494
+
+
+def test_average_segment_length(spades_unitig_graph):
+    assert spades_unitig_graph.calculate_average_segment_length() == 8490
+
+
+def test_n50_l50(spades_unitig_graph):
+    assert spades_unitig_graph.calculate_n50_l50() == (60706, 36)
+
+
+def test_gc_content(spades_unitig_graph):
+    assert spades_unitig_graph.get_gc_content() == 0.4351642112126258
