@@ -221,7 +221,7 @@ class UnitigGraph:
             else:
                 raise ValueError("Wrong sequence retrieved")
 
-    def get_neighbours(self, seg_id: str) -> list:
+    def get_neighbors(self, seg_id: str) -> list:
         """
         Get neighbor segment IDs connected to the given segment.
 

@@ -99,9 +99,12 @@ class FastaParser:
         """
         seq_id = self.mapping[seq_id] if self.assembler == "megahit" else seq_id
         if seq_id not in self.index:
-            warnings.warn(f"The sequence {seq_id} is not found in the contigs FASTA file", RuntimeWarning)
+            warnings.warn(
+                f"The sequence {seq_id} is not found in the contigs FASTA file",
+                RuntimeWarning,
+            )
             return ""
-        
+
         seq_lines = []
 
         with self._open("rt") as f:
@@ -110,11 +113,11 @@ class FastaParser:
             else:
                 # For gzip, use fileobj.seek
                 f.fileobj.seek(self.index[seq_id])
-            
+
             f.readline()  # skip header line
             for line in f:
                 if line.startswith(">"):
                     break
                 seq_lines.append(line.strip())
-        
+
         return "".join(seq_lines)

@@ -17,12 +17,12 @@ def main():
 
     # Iterate through the contigs
     for i in range(assembly_graph.vcount()):
-        # Get neighbours of each contig
-        neighbours = assembly_graph.neighbors(i, mode="all")
+        # Get neighbors of each contig
+        neighbors = assembly_graph.neighbors(i, mode="all")
 
-        # Print ID, contig label and number of neighbours
+        # Print ID, contig label and number of neighbors
         print(
-            assembly_graph.vs[i]["id"], assembly_graph.vs[i]["label"], len(neighbours)
+            assembly_graph.vs[i]["id"], assembly_graph.vs[i]["label"], len(neighbors)
         )
 
 

@@ -38,12 +38,12 @@ def test_contig_names_mappings(contig_graph):
     assert contig_graph.contig_names[100] == "NODE_101_length_219_cov_317.097561"
 
 
-def test_contig_get_neighbours(contig_graph):
+def test_contig_get_neighbors(contig_graph):
 
-    assert "NODE_4_length_346431_cov_86.228266" in contig_graph.get_neighbours(
+    assert "NODE_4_length_346431_cov_86.228266" in contig_graph.get_neighbors(
         "NODE_1_length_488682_cov_86.190505"
     )
-    assert "NODE_44_length_45842_cov_86.030074" in contig_graph.get_neighbours(
+    assert "NODE_44_length_45842_cov_86.030074" in contig_graph.get_neighbors(
         "NODE_1_length_488682_cov_86.190505"
     )
 

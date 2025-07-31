@@ -35,9 +35,9 @@ def test_contig_names_mappings(contig_graph):
     assert contig_graph.contig_names[2] == "u579439ctg"
 
 
-def test_contig_get_neighbours(contig_graph):
+def test_contig_get_neighbors(contig_graph):
 
-    assert "u579439ctg" in contig_graph.get_neighbours("u913838ctg")
+    assert "u579439ctg" in contig_graph.get_neighbors("u913838ctg")
 
 
 def test_is_connected(contig_graph):
@@ -50,19 +50,13 @@ def test_contig_sequences(contig_graph):
     assert contig_graph.contig_parser.get_sequence("u913838ctg").startswith(
         "ATCCTTGCGCATTTTC"
     )
-    assert contig_graph.contig_parser.get_sequence("u579439ctg").endswith(
-        "GGCGTCGGT"
-    )
+    assert contig_graph.contig_parser.get_sequence("u579439ctg").endswith("GGCGTCGGT")
 
 
 def test_contig_index(contig_graph):
 
-    assert (
-        contig_graph.contig_parser.index["u579439ctg"] == 0
-    )
-    assert (
-        contig_graph.contig_parser.index["u913838ctg"] == 39374
-    )
+    assert contig_graph.contig_parser.index["u579439ctg"] == 0
+    assert contig_graph.contig_parser.index["u913838ctg"] == 39374
 
 
 def test_adjacency_matrix(contig_graph):

@@ -61,7 +61,7 @@ class ContigGraph:
         )
         self.self_loops = self_loops
 
-    def get_neighbours(self, contig_id: str) -> list:
+    def get_neighbors(self, contig_id: str) -> list:
         """
         Get neighbor contig IDs connected to the given contig.
 

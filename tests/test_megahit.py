@@ -41,13 +41,12 @@ def test_contig_names_mappings(contig_graph):
     )
 
 
-def test_contig_get_neighbours(contig_graph):
+def test_contig_get_neighbors(contig_graph):
 
-    assert (
-        "NODE_8191_length_113647_cov_17.9932_ID_16381"
-        in contig_graph.get_neighbours("NODE_9687_length_564_cov_18.0000_ID_19373")
+    assert "NODE_8191_length_113647_cov_17.9932_ID_16381" in contig_graph.get_neighbors(
+        "NODE_9687_length_564_cov_18.0000_ID_19373"
     )
-    assert "NODE_8333_length_892_cov_32.0000_ID_16665" in contig_graph.get_neighbours(
+    assert "NODE_8333_length_892_cov_32.0000_ID_16665" in contig_graph.get_neighbors(
         "NODE_11566_length_60808_cov_17.9787_ID_23131"
     )
 
