@@ -7,7 +7,7 @@ from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 
 
-def _get_links_myloasm(gfa_file: str) -> tuple:
+def _get_links_myloasm(gfa_file: str, contig_index: dict) -> tuple:
     """
     Parse a GFA file to extract contig information and connectivity
     information (links) between contigs.
@@ -46,19 +46,22 @@ def _get_links_myloasm(gfa_file: str) -> tuple:
                 link2 = strings[3]
                 link2_orient = strings[4]
 
-                link.append(link1)
-                link.append(link1_orient)
-                link.append(link2)
-                link.append(link2_orient)
+                if link1 in contig_index and link2 in contig_index:
 
-                links.append(link)
+                    link.append(link1)
+                    link.append(link1_orient)
+                    link.append(link2)
+                    link.append(link2_orient)
+
+                    links.append(link)
 
             # Identify lines with contig information
             elif line.startswith("S"):
                 strings = line.strip().split("\t")
-                contig_names[node_count] = strings[1]
 
-                node_count += 1
+                if strings[1] in contig_index:
+                    contig_names[node_count] = strings[1]
+                    node_count += 1
 
     return node_count, links, contig_names
 
@@ -114,8 +117,11 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
         Parsed contig graph object.
     """
 
+    # Get parser for contigs.fasta
+    parser = FastaParser(contigs_file, assembler="myloasm")
+
     # Get links and contigs of the assembly graph
-    node_count, links, contig_names = _get_links_myloasm(gfa_file)
+    node_count, links, contig_names = _get_links_myloasm(gfa_file, parser.index)
 
     # Get list of edges and self loops
     edge_list, self_loops = _get_graph_edges_myloasm(
@@ -138,9 +144,6 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
 
     # Simplify the graph
     graph.simplify(multiple=True, loops=False, combine_edges=None)
-
-    # Get parser for contigs.fasta
-    parser = FastaParser(contigs_file, assembler="myloasm")
 
     contig_graph = ContigGraph(
         graph=graph,
