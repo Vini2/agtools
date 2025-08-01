@@ -19,6 +19,10 @@ plugins:
         python:
           options:
             docstring_style: numpy
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 nav:
     - Introduction: index.md
     - Installing agtools: install.md
@@ -27,4 +31,4 @@ nav:
     - CLI Reference: cli.md
     - API Reference: api.md
     - Changelog: changelog.md
-    - Frequently asked questions: faq.md
+    - FAQs: faq.md
