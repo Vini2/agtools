@@ -16,4 +16,5 @@ pygments>=2.12
 pymdown-extensions
 mkdocs-material
 mkdocstrings==0.25.2
+mkdocstrings-python==1.10.0
 mkdocs-autorefs==1.2.0
