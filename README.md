@@ -25,6 +25,18 @@ You should have Python and the following packages installed.
 
 ## Installing `agtools`
 
+### Using pip
+
+You can install agtools from [PyPI](https://pypi.org/project/agtools/) using `pip`.
+
+```bash
+pip install agtools
+```
+
+### Using conda
+
+Conda support coming soon!
+
 ### For development
 
 Please follow the steps below to install `agtools` using `flit` for development.
