@@ -15,5 +15,5 @@ mergedeep>=1.3.4
 pygments>=2.12
 pymdown-extensions
 mkdocs-material
-mkdocstrings>=0.30.0
-mkdocstrings-python>=1.16.0
+mkdocstrings
+mkdocstrings-python
