@@ -9,6 +9,8 @@
 
 `agtools` is a toolkit for manipulating assembly graphs, with a focus on the [Graphical Fragment Assembly (GFA) format](https://github.com/GFA-spec/GFA-spec). It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Supported formats include [GFA](https://github.com/pmelsted/GFA-spec/blob/master/GFA-spec.md), [FASTG](https://web.archive.org/web/20211209213905/http://fastg.sourceforge.net/FASTG_Spec_v1.00.pdf), [ASQG](https://github.com/jts/sga/wiki/ASQG-Format) and [GraphViz DOT](http://www.graphviz.org/content/dot-language). Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration based on the GFA format.
 
+For detailed instructions on installation and usage, please refer to the [documentation hosted at Read the Docs](https://agtools.readthedocs.io).
+
 ## Requirements
 
 You should have Python and the following packages installed.
@@ -75,4 +77,12 @@ Commands:
 
 ## Documentation
 
-Please refer to the complete documentation available at [Read the docs](https://agtools.readthedocs.io/)
+Please refer to the complete documentation available at [Read the docs](https://agtools.readthedocs.io/).
+
+## Issues and Questions
+
+If you want to test (or break) agtools give it a try and report any issues and suggestions under [agtools Issues](https://github.com/Vini2/agtools/issues).
+
+If you come across any questions, please have a look at the [agtools FAQ page](https://agtools.readthedocs.io/en/latest/faq/). If your question is not here, feel free to post it under [agtools Issues](https://github.com/Vini2/agtools/issues).
+
+If you want to request a feature, please post it under [agtools Issues](https://github.com/Vini2/agtools/issues).
