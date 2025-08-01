@@ -16,8 +16,8 @@ dependencies = ["click", "loguru", "bidict", "biopython", "igraph", "pandas"]
 Home = "https://agtools.readthedocs.io"
 
 [project.sdist]
-include = ["doc/", "requirements.txt", "src/*", "pyproject.toml"]
-exclude = ["doc/*.html"]
+include = ["requirements.txt", "src/*", "pyproject.toml"]
+exclude = ["doc/*", "tests*"]
 
 [project.scripts]
 agtools = "agtools.cli:main"
