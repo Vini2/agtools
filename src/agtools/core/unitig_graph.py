@@ -37,6 +37,40 @@ class UnitigGraph:
     self_loops : list
         List of segment IDs that form self-loops.
 
+    Methods
+    -------
+    from_gfa(file_path)
+        Parse a GFA file into a UnitigGraph object.
+    get_segment_sequence(seg_name)
+        Retrieve a DNA sequence for a segment.
+    get_neighbors(seg_id)
+        Get neighboring segments of a given segment.
+    get_adjacency_matrix(type="matrix")
+        Return the adjacency matrix as igraph or pandas DataFrame.
+    is_connected(from_seg, to_seg)
+        Check if there is a path between two segments in the graph.
+    get_connected_components()
+        Get connected components of the graph.
+    calculate_average_node_degree()
+        Calculate the average node degree of the graph.
+    calculate_total_length()
+        Calculate the total length of all segments in the graph.
+    calculate_average_segment_length()
+        Calculate the average segment length.
+    calculate_n50_l50()
+        Calculate N50 and L50 for the segments in the graph.
+    get_gc_content()
+        Calculate the GC content of segment sequences.
+
+    Examples
+    --------
+    >>> from agtools.core.unitig_graph import UnitigGraph
+    >>> ug = UnitigGraph.from_gfa("assembly.gfa")
+    >>> ug.vcount
+    42
+    >>> ug.ecount
+    80
+
     References
     ----------
     GFA: Graphical Fragment Assembly (GFA) Format Specification
@@ -70,6 +104,14 @@ class UnitigGraph:
         -------
         UnitigGraph
             The constructed graph object with segments, links, and metadata.
+
+        Examples
+        --------
+        >>> ug = UnitigGraph.from_gfa("assembly.gfa")
+        >>> ug.vcount
+        42
+        >>> ug.ecount
+        80
         """
 
         ug = cls()
@@ -185,7 +227,7 @@ class UnitigGraph:
 
     def get_segment_sequence(self, seg_name: str) -> Seq:
         """
-        Load the DNA sequence for a specific segment on demand.
+        Retrieve a DNA sequence for a segment.
 
         This method retrieves the sequence of a segment from the original GFA file
         using byte offsets, without loading all sequences into memory at once.
@@ -207,6 +249,11 @@ class UnitigGraph:
         ValueError
             If the retrieved sequence length does not match the expected length
             recorded during graph construction.
+
+        Examples
+        --------
+        >>> ug.get_segment_sequence("unitig_1")[:10]
+        Seq('ATGCGTACGG')
         """
         pos = self.segment_offsets[seg_name]
         with open(self.file_path, "r") as f:
@@ -223,7 +270,7 @@ class UnitigGraph:
 
     def get_neighbors(self, seg_id: str) -> list:
         """
-        Get neighbor segment IDs connected to the given segment.
+        Get neighboring segments of a given segment.
 
         Parameters
         ----------
@@ -234,6 +281,11 @@ class UnitigGraph:
         -------
         list of str
             List of neighboring segment IDs.
+        
+        Examples
+        --------
+        >>> ug.get_neighbors("unitig_1")
+        ['unitig_2', 'unitig_3']
         """
         segment_names_rev = self.segment_names.inverse
         vid = segment_names_rev[seg_id]
@@ -242,7 +294,7 @@ class UnitigGraph:
 
     def get_adjacency_matrix(self, type="matrix"):
         """
-        Return the adjacency matrix of the unitig graph in different formats.
+        Return the adjacency matrix as igraph or pandas DataFrame.
 
         Parameters
         ----------
@@ -261,6 +313,18 @@ class UnitigGraph:
         ------
         ValueError
             If `type` is not "matrix" or "pandas".
+
+        Examples
+        --------
+        >>> matrix = ug.get_adjacency_matrix()
+        >>> isinstance(matrix, list)
+        True
+        >>> df = ug.get_adjacency_matrix(type="pandas")
+        >>> df.head()
+                    unitig_1  unitig_2  unitig_3
+        unitig_1          0         1         0
+        unitig_2          1         0         1
+        unitig_3          0         1         0
         """
 
         adj = self.graph.get_adjacency()
@@ -294,6 +358,11 @@ class UnitigGraph:
         bool
             True if there is a path connecting `from_seg` to `to_seg`,
             False otherwise.
+        
+        Examples
+        --------
+        >>> ug.is_connected("unitig_1", "unitig_2")
+        True
         """
         segments_names_rev = self.segment_names.inverse
         from_id = segments_names_rev[from_seg]
@@ -308,12 +377,22 @@ class UnitigGraph:
 
     def get_connected_components(self) -> list:
         """
-        Calculate the average node degree of the graph.
+        Get connected components of the graph.
 
         Returns
         -------
         list
             A list of the connected components
+
+        Examples
+        --------
+        >>> components = ug.get_connected_components()
+        >>> len(components)
+        3
+        >>> [len(c) for c in components]
+        [10, 8, 5]
+        >>> components[0]
+        [0, 1, 2, 3, ...]
         """
         return self.graph.components()
 
@@ -330,6 +409,11 @@ class UnitigGraph:
         ------
         ValueError
             If the graph does not have any segments.
+        
+        Examples
+        --------
+        >>> ug.calculate_average_node_degree()
+        2
         """
 
         if self.graph.vcount() == 0:
@@ -347,6 +431,11 @@ class UnitigGraph:
         -------
         int
             Total length of all segments.
+        
+        Examples
+        --------
+        >>> ug.calculate_total_length()
+        350000
         """
         return sum(self.segment_lengths.values())
 
@@ -363,6 +452,11 @@ class UnitigGraph:
         ------
         ValueError
             If the graph does not have any segments.
+        
+        Examples
+        --------
+        >>> ug.calculate_average_segment_length()
+        3494
         """
 
         segment_lengths = self.segment_lengths
@@ -375,7 +469,7 @@ class UnitigGraph:
 
     def calculate_n50_l50(self) -> tuple[int, int]:
         """
-        Calculate N50 and L50 from a list of segment lengths.
+        Calculate N50 and L50 for the segment in the graph.
 
         Returns
         -------
@@ -385,6 +479,11 @@ class UnitigGraph:
                 The length N such that 50% of the total length is contained in segments of length ≥ N.
             - L50 : int
                 The minimum number of segments whose summed length ≥ 50% of the total.
+
+        Examples
+        --------
+        >>> ug.calculate_n50_l50()
+        (15000, 12)
         """
 
         lengths = self.segment_lengths.values()
@@ -399,7 +498,7 @@ class UnitigGraph:
 
     def get_gc_content(self) -> float:
         """
-        Calculate the GC content of sequences.
+        Calculate the GC content of segment sequences.
 
         Returns
         -------
@@ -410,6 +509,11 @@ class UnitigGraph:
         ------
         ValueError
             If total length of the segments is zero.
+
+        Examples
+        --------
+        >>> round(ug.get_gc_content(), 2)
+        0.42
         """
 
         sequences = [

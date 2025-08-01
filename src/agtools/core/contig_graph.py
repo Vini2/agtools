@@ -33,6 +33,32 @@ class ContigGraph:
         Dictionary mapping from unitig-level node IDs to contig identifiers
     self_loops : list[str], optional
         List of contig names that form self-loops in the graph.
+    
+    Methods
+    -------
+    get_neighbors(contig_id)
+        Get neighboring contigs of a given contig.
+    get_adjacency_matrix(type="matrix")
+        Return the adjacency matrix as igraph or pandas DataFrame.
+    is_connected(from_contig, to_contig)
+        Check if there is a path between two contigs in the graph.
+    get_connected_components()
+        Get connected components of the graph.
+    calculate_average_node_degree()
+        Calculate the average node degree of the graph.
+    calculate_total_length()
+        Calculate the total length of all contigs in the graph.
+    calculate_average_contig_length()
+        Calculate the average contig length.
+    calculate_n50_l50()
+        Calculate N50 and L50 for the contigs in the graph.
+    get_gc_content()
+        Calculate the GC content of contig sequences.
+
+    Examples
+    --------
+    >>> from agtools.core.contig_graph import ContigGraph
+    >>> cg = ContigGraph(graph, 20, 35, "assembly.gfa", contig_names, parser)
     """
 
     def __init__(
@@ -63,7 +89,7 @@ class ContigGraph:
 
     def get_neighbors(self, contig_id: str) -> list:
         """
-        Get neighbor contig IDs connected to the given contig.
+        Get neighboring contigs of a given contig.
 
         Parameters
         ----------
@@ -74,6 +100,11 @@ class ContigGraph:
         -------
         list of str
             List of neighboring contig IDs.
+
+        Examples
+        --------
+        >>> cg.get_neighbors("contig_1")
+        ['contig_2', 'contig_3']
         """
         contig_names_rev = self.contig_names.inverse
         vid = contig_names_rev[contig_id]
@@ -100,6 +131,11 @@ class ContigGraph:
         bool
             True if there is a path connecting `from_contig` to `to_contig`,
             False otherwise.
+
+        Examples
+        --------
+        >>> cg.is_connected("contig_1", "contig_2")
+        True
         """
         contig_names_rev = self.contig_names.inverse
         from_id = contig_names_rev[from_contig]
@@ -117,7 +153,7 @@ class ContigGraph:
 
     def get_adjacency_matrix(self, type="matrix"):
         """
-        Return the adjacency matrix of the contig graph in different formats.
+        Return the adjacency matrix as igraph or pandas DataFrame.
 
         Parameters
         ----------
@@ -136,6 +172,18 @@ class ContigGraph:
         ------
         ValueError
             If `type` is not "matrix" or "pandas".
+
+        Examples
+        --------
+        >>> matrix = cg.get_adjacency_matrix()
+        >>> isinstance(matrix, list)
+        True
+        >>> df = cg.get_adjacency_matrix(type="pandas")
+        >>> df.head()
+                    contig_1  contig_2  contig_3
+        contig_1          0         1         0
+        contig_2          1         0         1
+        contig_3          0         1         0
         """
 
         adj = self.graph.get_adjacency()
@@ -151,12 +199,22 @@ class ContigGraph:
 
     def get_connected_components(self) -> list:
         """
-        Calculate the average node degree of the graph.
+        Get connected components of the graph.
 
         Returns
         -------
         list
             A list of the connected components
+
+        Examples
+        --------
+        >>> components = cg.get_connected_components()
+        >>> len(components)
+        3
+        >>> [len(c) for c in components]
+        [10, 8, 5]
+        >>> components[0]
+        [0, 1, 2, 3, ...]
         """
         return self.graph.components()
 
@@ -173,6 +231,11 @@ class ContigGraph:
         ------
         ValueError
             If the graph does not have any segments.
+
+        Examples
+        --------
+        >>> cg.calculate_average_node_degree()
+        1
         """
 
         if self.graph.vcount() == 0:
@@ -184,12 +247,17 @@ class ContigGraph:
 
     def calculate_total_length(self) -> int:
         """
-        Calculate the total length of all segments in the graph.
+        Calculate the total length of all contigs in the graph.
 
         Returns
         -------
         int
-            Total length of all segments.
+            Total length of all contigs.
+
+        Examples
+        --------
+        >>> cg.calculate_total_length()
+        120000
         """
         contig_lengths = [
             len(self.contig_parser.get_sequence(seq))
@@ -199,17 +267,22 @@ class ContigGraph:
 
     def calculate_average_contig_length(self) -> int:
         """
-        Calculate the average segment length.
+        Calculate the average contig length.
 
         Returns
         -------
         int
-            Average segment length.
+            Average contig length.
 
         Raises
         ------
         ValueError
-            If the graph does not have any segments.
+            If the graph does not have any contig.
+
+        Examples
+        --------
+        >>> cg.calculate_average_contig_length()
+        40000
         """
 
         contig_lengths = [
@@ -218,23 +291,28 @@ class ContigGraph:
         ]
         if len(contig_lengths) == 0:
             raise ValueError(
-                "Graph does not have any segments, cannot calculate average segment length"
+                "Graph does not have any contigs, cannot calculate average contig length"
             )
 
         return int(sum(contig_lengths) / len(contig_lengths))
 
     def calculate_n50_l50(self) -> tuple[int, int]:
         """
-        Calculate N50 and L50 from a list of segment lengths.
+        Calculate N50 and L50 for the contigs in the graph.
 
         Returns
         -------
         tuple of (int, int)
             A tuple containing:
             - N50 : int
-                The length N such that 50% of the total length is contained in segments of length ≥ N.
+                The length N such that 50% of the total length is contained in contigs of length ≥ N.
             - L50 : int
-                The minimum number of segments whose summed length ≥ 50% of the total.
+                The minimum number of contigs whose summed length ≥ 50% of the total.
+
+        Examples
+        --------
+        >>> cg.calculate_n50_l50()
+        (15000, 12)
         """
 
         contig_lengths = [
@@ -252,7 +330,7 @@ class ContigGraph:
 
     def get_gc_content(self) -> float:
         """
-        Calculate the GC content of sequences.
+        Calculate the GC content of contig sequences.
 
         Returns
         -------
@@ -262,7 +340,12 @@ class ContigGraph:
         Raises
         ------
         ValueError
-            If total length of the segments is zero.
+            If total length of the contigs is zero.
+
+        Examples
+        --------
+        >>> cg.get_gc_content()
+        0.42
         """
 
         contig_sequences = [
@@ -272,7 +355,7 @@ class ContigGraph:
 
         if total_length == 0:
             raise ValueError(
-                "Total length of segments is zero, cannot calculate GC content"
+                "Total length of contigs is zero, cannot calculate GC content"
             )
 
         gc_count = sum(seq.count("G") + seq.count("C") for seq in contig_sequences)

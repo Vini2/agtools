@@ -1,6 +1,8 @@
 import gzip
 import warnings
 
+from Bio.Seq import Seq
+
 
 class FastaParser:
     """
@@ -14,25 +16,29 @@ class FastaParser:
     ----------
     file_path : str
         Path to the FASTA file (plain or gzipped).
+    assembler : str
+        Assembler used to get the GFA file
+    mapping : dict
+        Name mapping of contigs in graph and FASTA file (for MEGAHIT)
     index : dict
         Mapping of sequence ID -> file offset for the header line.
     gzipped : bool
         True if the file is gzip-compressed.
+    
+    Methods
+    -------
+    get_sequence(seq_id)
+        Retrieve a DNA sequence by ID.
+    get_index(seq_id)
+        Retrieve the file pointer of the DNA sequence by ID.
+
+    Examples
+    --------
+    >>> from agtools.core.fasta_parser import FastaParser
+    >>> parser = FastaParser("contigs.fasta")
     """
 
     def __init__(self, file_path, assembler="general", mapping=None):
-        """
-        Initialise the FastaParser and build an index for sequence IDs.
-
-        Parameters
-        ----------
-        file_path : str
-            Path to the FASTA file (.fasta or .fasta.gz).
-        assembler : str
-            Assembler used to get the GFA file
-        mapping : dict
-            Name mapping of contigs in graph and FASTA file (MEGAHIT)
-        """
         self.file_path = file_path
         self.assembler = assembler
         self.mapping = mapping  # for MEGAHIT
@@ -78,7 +84,7 @@ class FastaParser:
                 pos = f.tell() if not self.gzipped else f.fileobj.tell()
                 line = f.readline()
 
-    def get_sequence(self, seq_id):
+    def get_sequence(self, seq_id: str) -> Seq:
         """
         Retrieve a DNA sequence by ID.
 
@@ -89,13 +95,21 @@ class FastaParser:
 
         Returns
         -------
-        str or None
-            The DNA sequence as a string, or None if the ID is not found.
+        Bio.Seq.Seq
+            The DNA sequence corresponding to the given sequence ID.
 
         Raises
         ------
         RuntimeWarning
             If the sequence is not found in the contigs FASTA file
+
+        Examples
+        --------
+        >>> seq = parser.get_sequence("contig_1")
+        >>> len(seq)
+        1500
+        >>> seq[:10]
+        Seq('TGGCTCTTCA')
         """
         seq_id = self.mapping[seq_id] if self.assembler == "megahit" else seq_id
         if seq_id not in self.index:
@@ -120,4 +134,33 @@ class FastaParser:
                     break
                 seq_lines.append(line.strip())
 
-        return "".join(seq_lines)
+        return Seq("".join(seq_lines))
+
+    def get_index(self, seq_id: str) -> int:
+        """
+        Retrieve the file pointer of the DNA sequence by ID.
+
+        Parameters
+        ----------
+        seq_id : str
+            The sequence ID to fetch (matching the FASTA header without '>').
+
+        Returns
+        -------
+        int
+            The DNA sequence as a string, or None if the ID is not found.
+
+        Raises
+        ------
+        KeyError
+            If the sequence is not found in the index
+
+        Examples
+        --------
+        >>> parser.get_index("contig_1")
+        8487228
+        """
+        if seq_id in self.index:
+            return self.index[seq_id]
+        else:
+            raise KeyError(f"{seq_id} not found in the index")
