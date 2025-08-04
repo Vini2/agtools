@@ -87,7 +87,7 @@ def stats(graph, output):
 @click.option(
     "--prefix",
     "-p",
-    help="prefix for the output file",
+    help="prefix for the graph elements",
     type=str,
     default="",
     required=False,

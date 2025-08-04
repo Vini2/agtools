@@ -50,7 +50,7 @@ def _write_filtered_graph(
                 if seg_id not in segments_to_remove:
                     if parts[2] == '':
                         parts[2] = str(parser.get_sequence(seg_id))
-                        line = "\t".join(parts)
+                        line = "\t".join(parts) + "\n"
                     cleaned_gfa.write(line)
 
             elif line.startswith("L") or line.startswith("J"):
