@@ -11,18 +11,6 @@
 
 For detailed instructions on installation and usage, please refer to the [documentation hosted at Read the Docs](https://agtools.readthedocs.io).
 
-## Requirements
-
-You should have Python and the following packages installed.
-
-* [flit](https://flit.pypa.io/en/stable/)
-* [click](https://click.palletsprojects.com/en/stable/)
-* [loguru](https://loguru.readthedocs.io/en/stable/)
-* [bidict](https://bidict.readthedocs.io/en/main/intro.html)
-* [python-igraph](https://python.igraph.org/en/stable/index.html)
-* [biopython](https://biopython.org/)
-* [pandas](https://pandas.pydata.org/)
-
 ## Installing `agtools`
 
 ### Using pip
@@ -39,7 +27,7 @@ Conda support coming soon!
 
 ### For development
 
-Please follow the steps below to install `agtools` using `flit` for development.
+Please follow the steps below to install `agtools` using [`flit`](https://flit.pypa.io/en/stable/) for development.
 
 ```bash
 # clone repository
