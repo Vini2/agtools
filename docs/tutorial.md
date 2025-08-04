@@ -1,6 +1,6 @@
 # API Tutorial
 
-This page is a detailed tutorial of *agtools*' API. If you have not installed *agtools* yet, refer to [Installing *agtools*](install.md).
+This page is a detailed tutorial of *agtools*' API. If you want to get a quick idea on how the *agtools* API works, do check out the [Quick Start Guide](quickstart.md) If you have not installed *agtools* yet, refer to [Installing *agtools*](install.md).
 
 ## Importing *agtools*
 
@@ -57,11 +57,14 @@ You can call different functions to calculate graph and sequence based statistic
 (15000, 12)
 ```
 
-You can retrieve a sequence given the segment ID as follows.
+You can retrieve a sequence given the segment ID as follows. A `Bio.Seq.Seq` object will be returned.
 
 ```python
->>> ug.get_segment_sequence("unitig_1")
+>>> seq = ug.get_segment_sequence("unitig_1")
+>>> seq
 Seq('ATGCGTACGGGGTAAGTGAGCCTG')
+>>> seq.reverse_complement()
+Seq('CAGGCTCACTTACCCCGTACGCAT')
 ```
 
 !!! note

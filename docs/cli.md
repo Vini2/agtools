@@ -45,6 +45,14 @@ Options:
   -h, --help         Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* Text file with the statistics
+
 ## `rename`
 
 Rename segments, paths and walks in a GFA file.
@@ -58,10 +66,19 @@ Usage: agtools rename [OPTIONS]
 
 Options:
   -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -p, --prefix TEXT  prefix for the output file  [default: ""]
+  -p, --prefix TEXT  prefix for the graph elements  [default: ""]
   -o, --output PATH  path to the output folder  [required]
   -h, --help         Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+* Prefix to prepend segments, paths and walks in a GFA file
+
+**Outputs**
+
+* Assembly graph file in GFA format with renamed elements
 
 ## `concat`
 
@@ -79,6 +96,14 @@ Options:
   -o, --output PATH  path to the output folder  [required]
   -h, --help         Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph files in GFA format. You can provide each file followed by `-g`
+
+**Outputs**
+
+* Concatenated assembly graph file in GFA format
 
 ## `filter`
 
@@ -99,6 +124,15 @@ Options:
   -h, --help                Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in GFA format
+* Minimum length of segments to keep
+
+**Outputs**
+
+* Filtered assembly graph file in GFA format
+
 ## `clean`
 
 Clean a GFA file based on segments in a FASTA file.
@@ -118,6 +152,16 @@ Options:
   -h, --help            Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in GFA format
+* FASTA file with segment sequences
+* Name of the assembler
+
+**Outputs**
+
+* Cleaned assembly graph file in GFA format. Removes segments which are not found in the FASTA file and adds the sequences if they are not present in the GFA file (to be compatible with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html)).
+
 ## `component`
 
 Extract a component containing a given segment.
@@ -135,6 +179,15 @@ Options:
   -o, --output PATH   path to the output folder  [required]
   -h, --help          Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+* Segment ID of interest
+
+**Outputs**
+
+* Assembly graph file of the constituent component in GFA format
 
 ## `fastg2gfa`
 
@@ -155,6 +208,15 @@ Options:
   -h, --help           Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in FASTG format
+* k-mer size used for the assembly
+
+**Outputs**
+
+* Assembly graph file in GFA format
+
 ## `asqg2gfa`
 
 Convert a ASQG file to GFA format.
@@ -172,6 +234,14 @@ Options:
   -h, --help         Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in ASQG format
+
+**Outputs**
+
+* Assembly graph file in GFA format
+
 ## `gfa2fastg`
 
 Convert a GFA file to FASTG format.
@@ -188,6 +258,14 @@ Options:
   -o, --output PATH  path to the output folder  [required]
   -h, --help         Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* Assembly graph file in FASTG format
 
 ## `gfa2dot`
 
@@ -207,6 +285,14 @@ Options:
   -h, --help         Show this message and exit.
 ```
 
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* Assembly graph file in [GraphViz DOT](https://graphviz.org/doc/info/lang.html) format or [ABySS DOT](https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot) format.
+
 ## `gfa2fasta`
 
 Get segments from a GFA file in FASTA format
@@ -223,6 +309,14 @@ Options:
   -o, --output PATH  path to the output folder  [required]
   -h, --help         Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* Segment sequences in FASTA format
 
 ## `gfa2adj`
 
@@ -242,3 +336,11 @@ Options:
   -o, --output PATH        path to the output folder  [required]
   -h, --help               Show this message and exit.
 ```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* A delimited file of the adjancency matrix

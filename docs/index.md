@@ -22,16 +22,17 @@ Further details are available in the [Installation Guide](install.md).
 
 **Tutorials**
 
-* [CLI examples](examples.md)
+* [CLI examples](examples/stats.md)
 * [API tutorial](tutorial.md)
 
 ### References
 
 * [CLI reference](cli.md)
 * [API reference](api.md)
+* [File formats](fileformats.md)
 * [Source code](https://github.com/Vini2/agtools)
 
-### Versions and support
+### Support
 
 * [Changelog](changelog.md)
 * [FAQ](faq.md)

@@ -24,11 +24,25 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 nav:
-    - Introduction: index.md
-    - Installing agtools: install.md
-    - Examples: examples.md
-    - Tutorial: tutorial.md
-    - CLI Reference: cli.md
-    - API Reference: api.md
-    - Changelog: changelog.md
-    - FAQs: faq.md
+  - Home:
+      - Introduction: index.md
+  - Getting Started:
+      - Installation: install.md
+      - Quick Start: quickstart.md
+  - Guides:
+      - CLI Examples:
+        - Obtaining stats: examples/stats.md
+        - Renaming elements: examples/rename.md
+        - Concatenating multiple graphs: examples/concat.md
+        - Filtering segments: examples/filter.md
+        - Cleaning a graph file: examples/clean.md
+        - Get component of a segment: examples/component.md
+        - Format conversion: examples/formatconv.md
+      - API Tutorial: tutorial.md
+  - Reference:
+      - CLI Commands: cli.md
+      - API Documentation: api.md
+      - File Formats: fileformats.md
+  - Support:
+      - FAQ: faq.md
+      - Changelog: changelog.md

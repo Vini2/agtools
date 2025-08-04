@@ -1,31 +1,3 @@
-# Usage examples
-
-## Obtaining stats of an assembly graph
-
-*agtools* can generate basic graph and sequence-based statistics for an assembly graph. You can use the `stats` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `stats` subcommand.
-
-```bash
-agtools stats -g tests/data/ESC/assembly_graph_with_scaffolds.gfa -o ./
-```
-
-A text file with the following details will be generated.
-
-```text
-Basic graph statistics for tests/data/ESC/assembly_graph_with_scaffolds.gfa:
-Number of segments: 982
-Number of links: 1265
-Number of self-loops: 1
-Number of connected components: 4
-Average node degree: 2
-
-Sequence-based statistics for tests/data/ESC/assembly_graph_with_scaffolds.gfa:
-Total length of segments: 8337494 bp
-Average segment length: 8490 bp
-N50: 60706 bp
-L50: 36 segment(s)
-GC content: 43.52%
-```
-
 ## Renaming elements of an assembly graph
 
 *agtools* can rename segment IDs, path IDs and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `rename` subcommand.
@@ -65,7 +37,7 @@ W	seqread2	0	*	<seq1>seq2<seq3
 You can run the following command to rename using the prefix `TEST`.
 
 ```bash
-agtools rename -g tests/data/test_graph_1.gfa -p TEST -o ./
+agtools rename -g test_graph.gfa -p TEST -o ./
 ```
 
 The renamed graph will look as follows.
