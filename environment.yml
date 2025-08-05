@@ -10,4 +10,5 @@ dependencies:
   - bidict
   - biopython
   - python-igraph
+  - pycairo
   - pandas
