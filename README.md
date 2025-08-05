@@ -9,7 +9,7 @@
 
 `agtools` is a toolkit for manipulating assembly graphs for downstream metagenomic applications, with a focus on the [Graphical Fragment Assembly (GFA) format](https://github.com/GFA-spec/GFA-spec). It offers a command-line interface for tasks such as graph format conversion, segment filtering, and component extraction. Supported formats include [GFA](https://github.com/pmelsted/GFA-spec/blob/master/GFA-spec.md), [FASTG](https://web.archive.org/web/20211209213905/http://fastg.sourceforge.net/FASTG_Spec_v1.00.pdf), [ASQG](https://github.com/jts/sga/wiki/ASQG-Format) and [GraphViz DOT](http://www.graphviz.org/content/dot-language). Additionally, it provides a Python package interface that exposes assembler-specific functionality for advanced analysis and integration based on the GFA format.
 
-For detailed instructions on installation and usage, please refer to the [documentation hosted at Read the Docs](https://agtools.readthedocs.io).
+For detailed instructions on installation and usage, please refer to the [**documentation hosted at Read the Docs**](https://agtools.readthedocs.io).
 
 ## Installing `agtools`
 
@@ -23,7 +23,11 @@ pip install agtools
 
 ### Using conda
 
-Conda support coming soon!
+You can install agtools from [Bioconda](https://anaconda.org/bioconda/agtools) using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
+
+```bash
+mamba install -c bioconda agtools
+```
 
 ### For development
 
