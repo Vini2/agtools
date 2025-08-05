@@ -23,9 +23,9 @@ class UnitigGraph:
     file_path : str
         Path to the original GFA file.
     oriented_links : dict
-        Mapping from (from_seg, to_seg) -> list of (from_orient, to_orient).
+        Mapping from [from_seg][to_seg] -> list of (from_orient, to_orient).
     link_overlap : dict
-        Mapping from oriented segment pair to overlap length.
+        Mapping from oriented segment pair ({from_seg}{from_orient}, {to_seg}{to_orient}) to overlap length.
     paths: dict
         Mapping from path name to (segment names, overlaps)
     segment_names : bidict
