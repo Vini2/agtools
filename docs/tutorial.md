@@ -179,10 +179,14 @@ You can call different functions to calculate graph and sequence based statistic
 ```python
 >>> cg.calculate_average_node_degree()
 4
+>>> cg.calculate_total_length()
+8341464
 >>> cg.calculate_average_contig_length()
 44134
 >>> cg.calculate_n50_l50()
 (220639, 14)
+>>> cg.get_gc_content()
+0.4350709899365387
 ```
 
 You can retrieve a sequence given the segment ID as follows. A Bio.Seq.Seq object will be returned.
@@ -190,6 +194,13 @@ You can retrieve a sequence given the segment ID as follows. A Bio.Seq.Seq objec
 ```python
 >>> cg.get_contig_sequence("NODE_189_length_56_cov_33.000000")
 Seq('TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG')
+```
+
+You can get the neighbours of a contig as follows.
+
+```python
+>>> cg.get_neighbors("NODE_1_length_488682_cov_86.190505")
+['NODE_4_length_346431_cov_86.228266', 'NODE_9_length_265823_cov_88.260370', 'NODE_14_length_220639_cov_88.091915', 'NODE_19_length_193605_cov_88.758791', 'NODE_21_length_158927_cov_87.573997', 'NODE_23_length_117248_cov_87.447902', 'NODE_29_length_97556_cov_86.828022', 'NODE_33_length_87414_cov_86.098490', 'NODE_42_length_49567_cov_91.112902', 'NODE_44_length_45842_cov_86.030074', 'NODE_46_length_42994_cov_88.472018', 'NODE_47_length_42793_cov_92.771094', 'NODE_50_length_41992_cov_86.797863', 'NODE_63_length_17530_cov_92.904492', 'NODE_89_length_395_cov_158.788235', 'NODE_95_length_284_cov_84.877729', 'NODE_108_length_160_cov_106.523810', 'NODE_118_length_129_cov_90.905405', 'NODE_136_length_114_cov_87.813559', 'NODE_139_length_111_cov_73.875000', 'NODE_146_length_99_cov_86.818182', 'NODE_148_length_98_cov_74.906977', 'NODE_154_length_88_cov_148.030303', 'NODE_156_length_85_cov_89.700000', 'NODE_164_length_65_cov_81.100000', 'NODE_167_length_63_cov_149.000000']
 ```
 
 You can check if two contigs are connected by a path as follows.
