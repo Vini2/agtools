@@ -281,7 +281,7 @@ class UnitigGraph:
         -------
         list of str
             List of neighboring segment IDs.
-        
+
         Examples
         --------
         >>> ug.get_neighbors("unitig_1")
@@ -358,7 +358,7 @@ class UnitigGraph:
         bool
             True if there is a path connecting `from_seg` to `to_seg`,
             False otherwise.
-        
+
         Examples
         --------
         >>> ug.is_connected("unitig_1", "unitig_2")
@@ -409,7 +409,7 @@ class UnitigGraph:
         ------
         ValueError
             If the graph does not have any segments.
-        
+
         Examples
         --------
         >>> ug.calculate_average_node_degree()
@@ -431,7 +431,7 @@ class UnitigGraph:
         -------
         int
             Total length of all segments.
-        
+
         Examples
         --------
         >>> ug.calculate_total_length()
@@ -452,7 +452,7 @@ class UnitigGraph:
         ------
         ValueError
             If the graph does not have any segments.
-        
+
         Examples
         --------
         >>> ug.calculate_average_segment_length()

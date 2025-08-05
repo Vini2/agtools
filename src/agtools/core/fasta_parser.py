@@ -24,7 +24,7 @@ class FastaParser:
         Mapping of sequence ID -> file offset for the header line.
     gzipped : bool
         True if the file is gzip-compressed.
-    
+
     Methods
     -------
     get_sequence(seq_id)

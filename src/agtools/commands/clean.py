@@ -2,15 +2,12 @@
 
 import re
 
-from agtools.core.unitig_graph import UnitigGraph
 from agtools.core.fasta_parser import FastaParser
+from agtools.core.unitig_graph import UnitigGraph
 
 
 def _write_filtered_graph(
-    segments_to_remove: set, 
-    parser: FastaParser, 
-    gfa_file: str, 
-    output_path: str
+    segments_to_remove: set, parser: FastaParser, gfa_file: str, output_path: str
 ) -> str:
     """
     Write a cleaned GFA file by excluding lines that involve specified segments.
@@ -48,7 +45,7 @@ def _write_filtered_graph(
                 seg_id = parts[1]
 
                 if seg_id not in segments_to_remove:
-                    if parts[2] == '':
+                    if parts[2] == "":
                         parts[2] = str(parser.get_sequence(seg_id))
                         line = "\t".join(parts) + "\n"
                     cleaned_gfa.write(line)
@@ -122,6 +119,8 @@ def clean(gfa_file: str, fasta: str, assembler: str, output_path: str) -> str:
         if segment not in parser.index:
             segments_to_remove.add(segment)
 
-    output_file = _write_filtered_graph(segments_to_remove, parser, gfa_file, output_path)
+    output_file = _write_filtered_graph(
+        segments_to_remove, parser, gfa_file, output_path
+    )
 
     return output_file
