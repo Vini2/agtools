@@ -174,6 +174,16 @@ You can view the different attributes of the contig graphs obtained using the as
 394
 ```
 
+You can get the mapping of the internal node ID to the contig names as follows.
+
+```python
+>>> cg.contig_names
+bidict({0: 'NODE_1_length_488682_cov_86.190505', 1: 'NODE_2_length_472233_cov_17.669606', 2: 'NODE_3_length_354360_cov_17.661738', 3: 'NODE_4_length_346431_cov_86.228266', ...})
+```
+
+!!! note
+    The internal ID starting from 0 is used to index the nodes in the `igraph` object. The corresponding contig name can be obtained from the `contig_names` attribute of the contig graph object. This is useful when traversing nodes using the `igraph` object.
+
 You can call different functions to calculate graph and sequence based statistics.
 
 ```python
