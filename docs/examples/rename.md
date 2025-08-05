@@ -1,6 +1,6 @@
 ## Renaming elements of an assembly graph
 
-*agtools* can rename segment IDs, path IDs and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `rename` subcommand.
+*agtools* can rename segment IDs, path IDs and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `rename` subcommand.
 
 Here is an example GFA file.
 

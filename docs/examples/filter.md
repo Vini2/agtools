@@ -1,6 +1,6 @@
 ## Filtering segments from an assembly graph
 
-*agtools* can filter sequences given a minimum segment length. Sequences that are shorted than minimum length will be removed along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `filter` subcommand.
+*agtools* can filter sequences given a minimum segment length. Sequences that are shorted than minimum length will be removed along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
 
 Here is an example GFA file.
 

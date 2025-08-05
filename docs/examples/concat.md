@@ -1,6 +1,6 @@
 ## Concatenating multiple assembly graphs
 
-*agtools* can concatenate multiple GFA files. This can be useful for downstream analysis of assemblies with multiple samples. You can use the `concat` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `concat` subcommand.
+*agtools* can concatenate multiple GFA files. This can be useful for downstream analysis of assemblies with multiple samples. You can use the `concat` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `concat` subcommand.
 
 !!! note
     The `concat` subcommand will NOT merge similar segments. It simply concatenates the segments and other elements in the GFA files.

@@ -1,6 +1,6 @@
 ## Cleaning an assembly graph file
 
-*agtools* can clean a GFA file given a FASTA file of the segments. It will remove any segments that are not found in the FASTA file, along with other elements that contain the segments. It will also add the segment sequences to the GFA file if they are missing, to be consistent with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html). You can use the `clean` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `clean` subcommand.
+*agtools* can clean a GFA file given a FASTA file of the segments. It will remove any segments that are not found in the FASTA file, along with other elements that contain the segments. It will also add the segment sequences to the GFA file if they are missing, to be consistent with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html). You can use the `clean` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `clean` subcommand.
 
 Here is an example GFA file. The lines starting with the `S` tags are missing the segment sequences.
 

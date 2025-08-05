@@ -1,6 +1,6 @@
 ## Get constituent component of a segment
 
-*agtools* can separate out the constituent component of a given segment and output the GFA file of that component. You can use the `component` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `component` subcommand.
+*agtools* can separate out the constituent component of a given segment and output the GFA file of that component. You can use the `component` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `component` subcommand.
 
 Here is an example GFA file.
 

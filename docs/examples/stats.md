@@ -1,6 +1,6 @@
 ## Obtaining stats of an assembly graph
 
-*agtools* can generate basic graph and sequence-based statistics for an assembly graph. You can use the `stats` subcommand provided through the command-line interface. Please refer to the [CLI reference](cli.md) for further details on the `stats` subcommand.
+*agtools* can generate basic graph and sequence-based statistics for an assembly graph. You can use the `stats` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `stats` subcommand.
 
 ```bash
 agtools stats -g assembly_graph_with_scaffolds.gfa -o ./
