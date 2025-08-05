@@ -10,10 +10,10 @@ Install using [pip](https://pypi.org/project/agtools/):
 pip install agtools
 ```
 
-Install using conda:
+Install from the [Bioconda](https://anaconda.org/bioconda/agtools) distribution using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html):
 
 ```shell
-conda install -c bioconda agtools
+mamba install -c bioconda agtools
 ```
 
 Further details are available in the [Installation Guide](install.md).

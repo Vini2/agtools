@@ -1,6 +1,6 @@
 # Installing *agtools*
 
-It is recommended to install *agtools* using either [PyPI](https://pypi.org/project/agtools/) or Conda.
+It is recommended to install *agtools* using either [PyPI](https://pypi.org/project/agtools/) or [Conda](https://anaconda.org/bioconda/agtools).
 
 ## PyPI
 
@@ -12,25 +12,25 @@ pip install agtools
 
 ## Conda
 
-You can install *agtools* through Bioconda.
+You can install *agtools* through [Bioconda](https://anaconda.org/bioconda/agtools) using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
 
 ```bash
-conda install -c bioconda agtools
+mamba install -c bioconda agtools
 ```
 
 If you prefer to install *agtools* in your own environment, you can do so as follows.
 
 ```bash
-conda create -n agtools
-conda activate agtools
-conda install -c bioconda agtools
+mamba create -n agtools
+mamba activate agtools
+mamba install -c bioconda agtools
 ```
 
 OR
 
 ```bash
-conda create -n agtools -c bioconda agtools
-conda activate agtools
+mamba create -n agtools -c bioconda agtools
+mamba activate agtools
 ```
 
 ## Installing *agtools* from source
