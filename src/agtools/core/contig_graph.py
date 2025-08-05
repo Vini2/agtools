@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+import pandas as pd
 import warnings
 
-import pandas as pd
-
+from Bio.Seq import Seq
 
 class ContigGraph:
     """
@@ -36,6 +36,8 @@ class ContigGraph:
     
     Methods
     -------
+    get_contig_sequence(contig_id)
+        Retrieve a DNA sequence for a contig.
     get_neighbors(contig_id)
         Get neighboring contigs of a given contig.
     get_adjacency_matrix(type="matrix")
@@ -87,6 +89,38 @@ class ContigGraph:
         )
         self.self_loops = self_loops
 
+    def get_contig_sequence(self, contig_name: str) -> Seq:
+        """
+        Retrieve a DNA sequence for a contig.
+
+        This method retrieves the sequence of a contig from the contigs file
+        using byte offsets, without loading all sequences into memory at once.
+
+        Parameters
+        ----------
+        contig_name : str
+            The contig identifier whose DNA sequence should be retrieved.
+
+        Returns
+        -------
+        Bio.Seq.Seq
+            The DNA sequence corresponding to the given contig.
+
+        Raises
+        ------
+        KeyError
+            If the contig name does not exist in the graph.
+
+        Examples
+        --------
+        >>> cg.get_contig_sequence("contig_1")
+        Seq('TTGATGCGACGTACGG')
+        """
+        if contig_name not in self.contig_parser.index:
+            raise KeyError("Contig name does not exist in the assembly")
+        else:
+            return self.contig_parser.get_sequence(contig_name)
+    
     def get_neighbors(self, contig_id: str) -> list:
         """
         Get neighboring contigs of a given contig.
@@ -132,24 +166,34 @@ class ContigGraph:
             True if there is a path connecting `from_contig` to `to_contig`,
             False otherwise.
 
+        Raises
+        ------
+        KeyError
+            If the contig names do not exist in the assembly.
+
         Examples
         --------
         >>> cg.is_connected("contig_1", "contig_2")
         True
         """
         contig_names_rev = self.contig_names.inverse
-        from_id = contig_names_rev[from_contig]
-        to_id = contig_names_rev[to_contig]
 
-        with warnings.catch_warnings():
-            # Suppress igraph's "RuntimeWarning: Couldn't reach some vertices"
-            warnings.simplefilter("ignore")
-            results = self.graph.get_shortest_paths(from_id, to=to_id)
+        if from_contig in contig_names_rev and to_contig in contig_names_rev:
+            from_id = contig_names_rev[from_contig]
+            to_id = contig_names_rev[to_contig]
+            
+            with warnings.catch_warnings():
+                # Suppress igraph's "RuntimeWarning: Couldn't reach some vertices"
+                warnings.simplefilter("ignore")
+                results = self.graph.get_shortest_paths(from_id, to=to_id)
 
-        if len(results[0]) > 0:
-            return True
+            if len(results[0]) > 0:
+                return True
+            else:
+                return False
+            
         else:
-            return False
+            raise KeyError("Contig names do not exist in the assembly")
 
     def get_adjacency_matrix(self, type="matrix"):
         """
@@ -230,7 +274,7 @@ class ContigGraph:
         Raises
         ------
         ValueError
-            If the graph does not have any segments.
+            If the graph does not have any contigs.
 
         Examples
         --------
@@ -240,7 +284,7 @@ class ContigGraph:
 
         if self.graph.vcount() == 0:
             raise ValueError(
-                "Graph does not have any segments, cannot calculate average node degree"
+                "Graph does not have any contigs, cannot calculate average node degree"
             )
 
         return int(sum(self.graph.degree()) / self.graph.vcount())
