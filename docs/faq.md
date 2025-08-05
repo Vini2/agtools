@@ -15,12 +15,12 @@ Below are answers to common questions about using `agtools` for working with ass
 
 Assembly graphs are gaining popularity, especially in the metagenomics space as it holds valuable connectivity information of the assembled sequences. This information can be extremely useful in downstream applications such as 
 
-* Metagenomic binning - GraphBin, MetaCoAG, GraphMB
-* Resolving bacterial strains - STRONG
-* Resolving viral strains - VStrains, Phables
-* Identifying plasmids - GraphPlas
-* Sequence classification - 3CAC, 4CAC
+* Metagenomic binning - [GraphBin](https://doi.org/10.1093/bioinformatics/btaa180), [MetaCoAG](https://doi.org/10.1007/978-3-031-04749-7_5), [GraphMB](https://doi.org/10.1093/bioinformatics/btac557)
+* Resolving bacterial strains - [STRONG](https://doi.org/10.1186/s13059-021-02419-7)
+* Resolving viral strains - [VStrains](https://doi.org/10.1007/978-3-031-29119-7_1), [Phables](https://doi.org/10.1093/bioinformatics/btad586)
+* Identifying plasmids - [GraphPlas](https://doi.org/10.1109/TCBB.2021.3082915)
+* Sequence classification - [3CAC](https://doi.org/10.1093/bioinformatics/btac468), [4CAC](https://doi.org/10.1093/nar/gkae799)
 
 where many solutions that use assembly graphs have been published.
 
-Many applications require a programmatic and modular way to explore and manipulate assembly graphs. However, no standardiszed solution currently exists and developers often resort to writing custom, one-off code. `agtools` bridges this gap by offering a reusable and extensible toolkit for working with assembly graphs in a consistent and accessible manner.
+Many applications require a programmatic and modular way to explore and manipulate assembly graphs. However, no standardised solution currently exists and developers often resort to writing custom, one-off code. `agtools` bridges this gap by offering a reusable and extensible toolkit for working with assembly graphs in a consistent and accessible manner.
