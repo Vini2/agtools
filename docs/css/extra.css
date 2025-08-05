@@ -1,0 +1,30 @@
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-button {
+  display: inline-block;
+  background: linear-gradient(to bottom, #ffffcc, #ffee99);
+  padding: 12px 20px;
+  margin: 12px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 15px;
+  color: black;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.download-button:hover {
+  background: linear-gradient(to bottom, #ffee99, #ffdd66);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-button i {
+  margin-right: 8px;
+  font-size: 1.1em;
+  vertical-align: middle;
+}

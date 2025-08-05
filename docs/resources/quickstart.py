@@ -1,41 +1,3 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-# Quick Start Guide
-
-For those of you who are eager too get started, this quick start guide will cover the following basic operations with assembly graphs.
-
-* Load an assembly graph
-* Get basic graph-based statistics
-* Get basic sequence-based statistics
-* Get paths
-* Query neighbours of a segment
-* Get the adjacency matrix
-* Query segment sequences
-* Plot the graph
-
-We will use the following assembly graph.
-
-```text
-H	VN:Z:1.0
-S	1	ACGTACGT
-S	2	CGTACGTA
-S	3	GTACGTAG
-S	4	GTACGTAC
-S	5	TACGTACC
-L	1	+	2	+	7M
-L	2	+	3	+	7M
-L	2	+	4	+	7M
-L	3	+	5	+	7M
-L	4	+	5	+	7M
-P	path1	1+,2+,3+,5+	7M,7M,7M
-P	path2	1+,2+,4+,5+	7M,7M,7M
-```
-
-If you visualise this graph using [Bandage](https://rrwick.github.io/Bandage/), it will look as follows.
-
-![](images/assembly_graph.png)
-
-```python
 from agtools.core.unitig_graph import UnitigGraph
 
 import igraph as ig
@@ -88,20 +50,4 @@ ig.plot(
     vertex_frame_width=2.0,             #vertex frame width
     vertex_label_size=20.0,             # vertex label size
 )
-```
 
-The plotted graph will be as below.
-
-![](images/graph_plot.png)
-
-<div class="button-container">
-  <a href="resources/quickstart.ipynb" download class="download-button">
-    <i class="bi bi-download"></i> Download Jupyter notebook: quickstart.ipynb
-  </a><br>
-  <a href="resources/quickstart.py" download class="download-button">
-    <i class="bi bi-download"></i> Download Python source code: quickstart.py
-  </a><br>
-  <a href="resources/quickstart.zip" download class="download-button">
-    <i class="bi bi-download"></i> Download zipped: quickstart.zip
-  </a>
-</div>
