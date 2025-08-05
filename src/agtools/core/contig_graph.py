@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import pandas as pd
 import warnings
 
+import pandas as pd
 from Bio.Seq import Seq
+
 
 class ContigGraph:
     """
@@ -33,7 +34,7 @@ class ContigGraph:
         Dictionary mapping from unitig-level node IDs to contig identifiers
     self_loops : list[str], optional
         List of contig names that form self-loops in the graph.
-    
+
     Methods
     -------
     get_contig_sequence(contig_id)
@@ -56,11 +57,6 @@ class ContigGraph:
         Calculate N50 and L50 for the contigs in the graph.
     get_gc_content()
         Calculate the GC content of contig sequences.
-
-    Examples
-    --------
-    >>> from agtools.core.contig_graph import ContigGraph
-    >>> cg = ContigGraph(graph, 20, 35, "assembly.gfa", contig_names, parser)
     """
 
     def __init__(
@@ -106,21 +102,13 @@ class ContigGraph:
         Bio.Seq.Seq
             The DNA sequence corresponding to the given contig.
 
-        Raises
-        ------
-        KeyError
-            If the contig name does not exist in the graph.
-
         Examples
         --------
         >>> cg.get_contig_sequence("contig_1")
         Seq('TTGATGCGACGTACGG')
         """
-        if contig_name not in self.contig_parser.index:
-            raise KeyError("Contig name does not exist in the assembly")
-        else:
-            return self.contig_parser.get_sequence(contig_name)
-    
+        return self.contig_parser.get_sequence(contig_name)
+
     def get_neighbors(self, contig_id: str) -> list:
         """
         Get neighboring contigs of a given contig.
@@ -181,7 +169,7 @@ class ContigGraph:
         if from_contig in contig_names_rev and to_contig in contig_names_rev:
             from_id = contig_names_rev[from_contig]
             to_id = contig_names_rev[to_contig]
-            
+
             with warnings.catch_warnings():
                 # Suppress igraph's "RuntimeWarning: Couldn't reach some vertices"
                 warnings.simplefilter("ignore")
@@ -191,7 +179,7 @@ class ContigGraph:
                 return True
             else:
                 return False
-            
+
         else:
             raise KeyError("Contig names do not exist in the assembly")
 
