@@ -65,10 +65,10 @@ def test_is_connected(contig_graph):
 
 def test_contig_sequences(contig_graph):
 
-    assert contig_graph.contig_parser.get_sequence(
+    assert contig_graph.get_contig_sequence(
         "NODE_11761_length_301_cov_1.0000_ID_23521"
     ).startswith("GCCGATGCCGCC")
-    assert contig_graph.contig_parser.get_sequence(
+    assert contig_graph.get_contig_sequence(
         "NODE_1_length_205_cov_1.0000_ID_1"
     ).endswith("AAAATGACCCGAA")
 

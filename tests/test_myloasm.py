@@ -46,10 +46,10 @@ def test_is_connected(contig_graph):
 
 def test_contig_sequences(contig_graph):
 
-    assert contig_graph.contig_parser.get_sequence("u913838ctg").startswith(
+    assert contig_graph.get_contig_sequence("u913838ctg").startswith(
         "ATCCTTGCGCATTTTC"
     )
-    assert contig_graph.contig_parser.get_sequence("u579439ctg").endswith("GGCGTCGGT")
+    assert contig_graph.get_contig_sequence("u579439ctg").endswith("GGCGTCGGT")
 
 
 def test_contig_index(contig_graph):

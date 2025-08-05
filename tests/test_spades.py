@@ -61,11 +61,11 @@ def test_is_connected(contig_graph):
 def test_contig_sequences(contig_graph):
 
     assert (
-        contig_graph.contig_parser.get_sequence("NODE_174_length_58_cov_650.333333")
+        contig_graph.get_contig_sequence("NODE_174_length_58_cov_650.333333")
         == "GAACTATTATCATTAGCTAAGGTAATAGACAATCAAAGGCTTACCTATTGCTATGCGT"
     )
     assert (
-        contig_graph.contig_parser.get_sequence("NODE_189_length_56_cov_33.000000")
+        contig_graph.get_contig_sequence("NODE_189_length_56_cov_33.000000")
         == "TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG"
     )
 
