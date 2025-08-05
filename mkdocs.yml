@@ -41,6 +41,7 @@ nav:
         - Get component of a segment: examples/component.md
         - Format conversion: examples/formatconv.md
       - API Tutorial: tutorial.md
+      - Assembler examples: assemblerexamples.md
   - Reference:
       - CLI Commands: cli.md
       - API Documentation: api.md
