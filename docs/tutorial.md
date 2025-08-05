@@ -71,7 +71,7 @@ Seq('CAGGCTCACTTACCCCGTACGCAT')
     Assembly graphs can be huge (10-100 GB in size). Hence, segment sequences are not loaded in to memory when creating the graph object. Instead, file pointers are kept for quick retrieval of sequences when needed. 
 
 
-## Loading graphs from different assemblers
+## Loading contig graphs from different assemblers
 
 Different assemblers have different ways of representing assembly graphs. Some assemblers generated a unitig graph and resolved contigs from it where as some assemblers directly generate a contig graph. *agtools* currently supports two short-read assemblers SPAdes and MEGAHIT, and two long-read assemblers Flye and myloasm. 
 
@@ -90,7 +90,7 @@ You can load a SPAdes contig graph as follows.
 >>> graph_file = "tests/data/ESC/assembly_graph_with_scaffolds.gfa"
 >>> contigs_file = "tests/data/ESC/contigs.fasta"
 >>> contig_paths_file = "tests/data/ESC/contigs.paths"
->>> contig_graph = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+>>> cg = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
 !!! note
@@ -117,7 +117,7 @@ Once you have the GFA file of the assembly graph and the contigs file, you can l
 >>> from agtools.assemblers import megahit
 >>> graph_file = "tests/data/5G/final.gfa"
 >>> contig_file = "tests/data/5G/final.contigs.fa"
->>> contig_graph = megahit.get_contig_graph(graph_file, contig_file)
+>>> cg = megahit.get_contig_graph(graph_file, contig_file)
 ```
 
 ### Loading a Flye graph
@@ -135,7 +135,7 @@ You can load a Flye contig graph as follows.
 >>> graph_file = "tests/data/1Y3B/assembly_graph.gfa"
 >>> contigs_file = "tests/data/1Y3B/assembly.fasta"
 >>> contig_paths_file = "tests/data/1Y3B/assembly_info.txt"
->>> contig_graph = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
+>>> cg = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
 !!! note
@@ -158,5 +158,43 @@ You can load a myloasm contig graph as follows.
 >>> from agtools.assemblers import myloasm
 >>> graph_file = "tests/data/myloasm/final_contig_graph.gfa"
 >>> contigs_file = "tests/data/myloasm/assembly_primary.fa"
->>> contig_graph = myloasm.get_contig_graph(graph_file, contigs_file)
+>>> cg = myloasm.get_contig_graph(graph_file, contigs_file)
+```
+
+## Querying contig graphs
+
+You can view the different attributes of the contig graphs obtained using the assembler-specific modules as follows.
+
+```python
+>>> cg.file_path
+'tests/data/ESC/assembly_graph_with_scaffolds.gfa'
+>>> cg.vcount
+189
+>>> cg.ecount
+394
+```
+
+You can call different functions to calculate graph and sequence based statistics.
+
+```python
+>>> cg.calculate_average_node_degree()
+4
+>>> cg.calculate_average_contig_length()
+44134
+>>> cg.calculate_n50_l50()
+(220639, 14)
+```
+
+You can retrieve a sequence given the segment ID as follows. A Bio.Seq.Seq object will be returned.
+
+```python
+>>> cg.get_contig_sequence("NODE_189_length_56_cov_33.000000")
+Seq('TGGCTCTTCAGGATCCAGGGTGTAGTCGGGGTCTGAATCCTCCGGTCTCCAGGAGG')
+```
+
+You can check if two contigs are connected by a path as follows.
+
+```python
+>>> cg.is_connected("NODE_1_length_488682_cov_86.190505", "NODE_146_length_99_cov_86.818182")
+True
 ```
