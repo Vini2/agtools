@@ -95,13 +95,13 @@ The plotted graph will be as below.
 ![](images/graph_plot.png)
 
 <div class="button-container">
-  <a href="resources/quickstart.ipynb" download class="download-button">
+  <a href="../resources/quickstart.ipynb" download class="download-button">
     <i class="bi bi-download"></i> Download Jupyter notebook: quickstart.ipynb
   </a><br>
-  <a href="resources/quickstart.py" download class="download-button">
+  <a href="../resources/quickstart.py" download class="download-button">
     <i class="bi bi-download"></i> Download Python source code: quickstart.py
   </a><br>
-  <a href="resources/quickstart.zip" download class="download-button">
+  <a href="../resources/quickstart.zip" download class="download-button">
     <i class="bi bi-download"></i> Download zipped: quickstart.zip
   </a>
 </div>
