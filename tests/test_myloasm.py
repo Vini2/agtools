@@ -58,10 +58,13 @@ def test_contig_index(contig_graph):
     assert contig_graph.contig_parser.index["u913838ctg"] == 39374
 
 
-def test_adjacency_matrix(contig_graph):
-
+def test_adjacency_matrix_raw(contig_graph):
     assert len(contig_graph.get_adjacency_matrix()) == 2
     assert contig_graph.get_adjacency_matrix()[0, 1] == 1
+
+
+def test_adjacency_matrix_pandas(contig_graph):
+    assert contig_graph.get_adjacency_matrix(type="pandas").shape == (2, 2)
 
 
 def test_connected_components(contig_graph):

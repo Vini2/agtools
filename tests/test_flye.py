@@ -59,10 +59,13 @@ def test_contig_mappings(contig_graph):
     assert contig_graph.contig_names[5] == "contig_6"
 
 
-def test_adjacency_matrix(contig_graph):
-
+def test_adjacency_matrix_raw(contig_graph):
     assert len(contig_graph.get_adjacency_matrix()) == 67
     assert contig_graph.get_adjacency_matrix()[8, 61] == 1
+
+
+def test_adjacency_matrix_pandas(contig_graph):
+    assert contig_graph.get_adjacency_matrix(type="pandas").shape == (67, 67)
 
 
 def test_connected_components(contig_graph):
