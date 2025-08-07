@@ -2,7 +2,7 @@
 
 *agtools* can clean a GFA file given a FASTA file of the segments. It will remove any segments that are not found in the FASTA file, along with other elements that contain the segments. It will also add the segment sequences to the GFA file if they are missing, to be consistent with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html). You can use the `clean` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `clean` subcommand.
 
-Here is an example GFA file. The lines starting with the `S` tags are missing the segment sequences.
+Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/clean_ex_graph.gfa). The lines starting with the `S` tags are missing the segment sequences.
 
 ```text
 # GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
@@ -34,7 +34,7 @@ W	seqread1	0	*	<seq6<seqX>seq9
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
-We have the following segments file in FASTA format. It is missing `segX`.
+We have the following [segments file in FASTA format](https://github.com/Vini2/agtools/tree/main/docs/data/clean_ex_segments.fasta). It is missing `segX`.
 
 ```text
 >seq1

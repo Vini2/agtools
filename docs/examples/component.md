@@ -2,7 +2,7 @@
 
 *agtools* can separate out the constituent component of a given segment and output the GFA file of that component. You can use the `component` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `component` subcommand.
 
-Here is an example GFA file.
+Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/component_ex_graph.gfa).
 
 ```text
 H	VN:Z:1.0

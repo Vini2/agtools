@@ -13,7 +13,7 @@ For those of you who are eager too get started, this quick start guide will cove
 * Query segment sequences
 * Plot the graph
 
-We will use the following assembly graph.
+We will use the following [example assembly graph](https://github.com/Vini2/agtools/tree/main/docs/data/quickstart_assembly_graph.gfa).
 
 ```text
 H	VN:Z:1.0

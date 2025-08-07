@@ -1,0 +1,27 @@
+# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+H   VN:Z:1.0
+# Segments
+S   seq1        DP:f:1.0
+S   seq2        DP:f:1.0
+S   seq3        DP:f:1.0
+S   seq4        DP:f:1.0
+S   seq5        DP:f:1.0
+S   seq6        DP:f:1.0
+S   seq7        DP:f:1.0
+S   seq8        DP:f:1.0
+S   seq9        DP:f:1.0
+S   seq10       DP:f:1.0
+S   seqX        DP:f:1.0
+L   seqX    +   seq2    -   5M
+L   seq4    +   seq5    +   10M
+L   seq6    -   seq7    +   7M
+L   seq9    +   seq10   -   5M
+J   seq5    +   seqX    -   *
+J   seq3    -   seq8    +   *
+J   seq7    +   seq2    +   *
+C   seq1    +   seqX    -   10M 5   0
+C   seq2    +   seqX    +   10M 2   0
+P   seqpath1    seq1+,seqX+,seq3-   20M,10M,20M
+P   seqpath2    seq4+,seq5+,seq6+   20M,20M,20M
+W   seqread1    0   *   <seq6<seqX>seq9
+W   seqread2    0   *   <seq1>seq2<seq3

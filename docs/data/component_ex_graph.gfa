@@ -1,0 +1,15 @@
+H   VN:Z:1.0
+S   A1  ACGTAC
+S   A2  CGTACG
+S   A3  GTACGT
+S   A4  TACGTA
+S   B1  TTGCAA
+S   B2  TGCAAG
+S   B3  GCAAGT
+L   A1  +   A2  +   5M
+L   A2  +   A3  +   5M
+L   A3  +   A4  +   5M
+L   B1  +   B2  +   5M
+L   B2  +   B3  +   5M
+P   contig_A    A1+,A2+,A3+,A4+ 5M,5M,5M
+P   contig_B    B1+,B2+,B3+ 5M,5M

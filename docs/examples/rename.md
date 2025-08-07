@@ -2,7 +2,7 @@
 
 *agtools* can rename segment IDs, path IDs and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `rename` subcommand.
 
-Here is an example GFA file.
+Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
 ```text
 # GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)

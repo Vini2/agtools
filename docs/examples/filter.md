@@ -2,7 +2,7 @@
 
 *agtools* can filter sequences given a minimum segment length. Sequences that are shorted than minimum length will be removed along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
 
-Here is an example GFA file.
+Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
 ```text
 # Test GFA file
