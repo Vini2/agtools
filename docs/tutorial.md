@@ -71,9 +71,9 @@ Seq('CAGGCTCACTTACCCCGTACGCAT')
     Assembly graphs can be huge (10-100 GB in size). Hence, segment sequences are not loaded in to memory when creating the graph object. Instead, file pointers are kept for quick retrieval of sequences when needed. 
 
 
-## Loading contig graphs from different assemblers
+## Loading contig graphs
 
-Different assemblers have different ways of representing assembly graphs. Some assemblers generated a unitig graph and resolved contigs from it where as some assemblers directly generate a contig graph. *agtools* currently supports two short-read assemblers SPAdes and MEGAHIT, and two long-read assemblers Flye and myloasm. 
+Different assemblers have different ways of representing assembly graphs. Some assemblers generated a unitig graph and resolved contigs from it where as some assemblers directly generate a contig graph. *agtools* currently supports two short-read assemblers SPAdes and MEGAHIT, and two long-read assemblers Flye and myloasm. Please refer to the [assembler-specific examples](assemblerexamples.md) for further details on the graph representations and more details examples.
 
 ### Loading a SPAdes graph
 
