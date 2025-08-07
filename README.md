@@ -8,6 +8,7 @@
 [![Downloads](https://static.pepy.tech/badge/agtools)](https://pepy.tech/project/agtools)
 [![CI](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml)
 [![codecov](https://codecov.io/gh/Vini2/agtools/graph/badge.svg?token=nYzx0Pd0h6)](https://codecov.io/gh/Vini2/agtools)
+[![CodeQL Advanced](https://github.com/Vini2/agtools/actions/workflows/codeql.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/codeql.yml)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Vini2/agtools/main?color=8a35da)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
