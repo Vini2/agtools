@@ -172,3 +172,6 @@ demo/*.gv
 demo/*.fasta
 demo/*.tsv
 demo/*.csv
+
+# Profiling data
+notebooks/data/*
