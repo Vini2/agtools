@@ -12,7 +12,7 @@ Python 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clan
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import agtools
 >>> print(agtools.__version__)
-0.1.0
+0.1.1
 ```
 
 *agtools* provides two graph classes: `UnitigGraph` and `ContigGraph`. You can import them as follows.
@@ -73,7 +73,14 @@ Seq('CAGGCTCACTTACCCCGTACGCAT')
 
 ## Loading contig graphs
 
-Different assemblers have different ways of representing assembly graphs. Some assemblers generated a unitig graph and resolved contigs from it where as some assemblers directly generate a contig graph. *agtools* currently supports two short-read assemblers SPAdes and MEGAHIT, and two long-read assemblers Flye and myloasm. Please refer to the [assembler-specific examples](assemblerexamples.md) for further details on the graph representations and more details examples.
+Different assemblers have different ways of representing assembly graphs. Some assemblers generated a unitig graph and resolved contigs from it where as some assemblers directly generate a contig graph. *agtools* currently supports the following short-read and long-read assemblers. 
+
+* [SPAdes](https://github.com/ablab/spades)
+* [MEGAHIT](https://github.com/voutcn/megahit)
+* [Flye](https://github.com/mikolmogorov/Flye)
+* [myloasm](https://github.com/bluenote-1577/myloasm)
+
+Please refer to the [assembler-specific examples](assemblerexamples.md) for further details on the graph representations and more details examples.
 
 ### Loading a SPAdes graph
 
