@@ -12,7 +12,7 @@ Python 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clan
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import agtools
 >>> print(agtools.__version__)
-0.1.1
+0.1.2
 ```
 
 *agtools* provides two graph classes: `UnitigGraph` and `ContigGraph`. You can import them as follows.
