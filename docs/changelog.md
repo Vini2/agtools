@@ -1,6 +1,11 @@
 # Changelog
 
 ```
+== 0.1.2 ==
+
+- third alpha release
+- major bug fix for fastg2gfa subcommand
+
 == 0.1.1 ==
 
 - second alpha release
