@@ -1,3 +1,4 @@
 tests/ export-ignore
 docs/ export-ignore
 demo/ export-ignore
+profiling/ export-ignore

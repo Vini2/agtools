@@ -174,4 +174,4 @@ demo/*.tsv
 demo/*.csv
 
 # Profiling data
-notebooks/data/*
+profiling/data/*
