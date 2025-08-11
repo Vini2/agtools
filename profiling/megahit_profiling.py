@@ -100,16 +100,16 @@ def batch_profile(folders, runs=10):
     return pd.DataFrame(results)
 
 folders = [
-    "Tara_Oceans_data/assemblies/ERR2752163/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752147/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752151/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752146/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752150/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752145/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752149/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752153/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752144/megahit_output",
-    "Tara_Oceans_data/assemblies/ERR2752143/megahit_output",
+    "data/MEGAHIT/ERR2752163",
+    "data/MEGAHIT/ERR2752147",
+    "data/MEGAHIT/ERR2752151",
+    "data/MEGAHIT/ERR2752146",
+    "data/MEGAHIT/ERR2752150",
+    "data/MEGAHIT/ERR2752145",
+    "data/MEGAHIT/ERR2752149",
+    "data/MEGAHIT/ERR2752153",
+    "data/MEGAHIT/ERR2752144",
+    "data/MEGAHIT/ERR2752143",
 ]
 
 # Run profiling
