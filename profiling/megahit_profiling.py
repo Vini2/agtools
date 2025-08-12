@@ -127,9 +127,10 @@ x = df_results["size_graph_MB"]
 y = df_results["time_mean"]
 yerr = df_results["time_std"]
 
-# Fit a simple linear regression for the trend line
-m, b = np.polyfit(x, y, 1)  # slope, intercept
-trend_y = m * x + b
+# Force regression through (0,0)
+m = (x * y).sum() / (x**2).sum()
+b = 0
+trend_y = m * x  # no intercept
 
 plt.figure(figsize=(8, 5))
 plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
@@ -142,7 +143,6 @@ plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}
 plt.xlabel("Size of the graph file (MB)")
 plt.ylabel("Running time (s)")
 plt.title("Running time vs size of the graph file for MEGAHIT contig graph")
-plt.legend()
 plt.grid(True)
 
 # Save to file
@@ -155,9 +155,10 @@ x = df_results["size_graph_MB"]
 y = df_results["peak_mem_mean"]
 yerr = df_results["peak_mem_std"]
 
-# Fit a simple linear regression for the trend line
-m, b = np.polyfit(x, y, 1)  # slope, intercept
-trend_y = m * x + b
+# Force regression through (0,0)
+m = (x * y).sum() / (x**2).sum()
+b = 0
+trend_y = m * x  # no intercept
 
 plt.figure(figsize=(8, 5))
 plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
@@ -170,7 +171,6 @@ plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}
 plt.xlabel("Size of the graph file (MB)")
 plt.ylabel("Peak Memory (MB)")
 plt.title("Peak memory vs size of the graph file for MEGAHIT contig graph")
-plt.legend()
 plt.grid(True)
 
 # Save to file

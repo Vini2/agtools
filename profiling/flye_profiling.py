@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import gc
 import os
 import time
@@ -9,11 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from memory_profiler import memory_usage
-from agtools.core.unitig_graph import UnitigGraph
+from agtools.assemblers import flye
 
-__author__ = "Vijini Mallawaarachchi"
-__copyright__ = "Copyright 2025, agtools Project"
-__credits__ = ["Vijini Mallawaarachchi"]
 
 # GFA Line Count
 def grep_count(line_prefix, file_path):
@@ -28,11 +23,12 @@ def get_file_size(path):
         return os.path.getsize(path) / (1024 * 1024)  # Convert to MB
     return 0.0
 
-def profile_get_unitig_graph(graph_file):
+# Main profiling code
+def profile_get_contig_graph(graph_file, contigs_file, contig_paths_file):
     start = time.perf_counter()
     
     mem_trace, _ = memory_usage(
-        (UnitigGraph.from_gfa, (graph_file,)),
+        (flye.get_contig_graph, (graph_file, contigs_file, contig_paths_file)),
         retval=True,
         interval=0.01,
         timeout=None
@@ -45,27 +41,31 @@ def profile_get_unitig_graph(graph_file):
     
     return elapsed, peak_mem
 
-def profile_folder(file_path, runs=10):
-    graph_file = file_path
+def profile_folder(folder_path, runs=10):
+    graph_file = os.path.join(folder_path, "assembly_graph.gfa")
+    contigs_file = os.path.join(folder_path, "assembly.fasta")
+    contig_paths_file = os.path.join(folder_path, "assembly_info.txt")
 
     times = []
     peak_mems = []
 
     for _ in range(runs):
-        elapsed, peak = profile_get_unitig_graph(file_path)
+        elapsed, peak = profile_get_contig_graph(graph_file, contigs_file, contig_paths_file)
         times.append(elapsed)
         peak_mems.append(peak)
 
     # GFA line stats
-    count_S = grep_count("S", file_path)
-    count_L = grep_count("L", file_path)
-    count_P = grep_count("P", file_path)
+    count_S = grep_count("S", graph_file)
+    count_L = grep_count("L", graph_file)
+    count_P = grep_count("P", graph_file)
 
     # File sizes in MB
-    size_graph = get_file_size(file_path)
+    size_graph = get_file_size(graph_file)
+    size_fasta = get_file_size(contigs_file)
+    size_paths = get_file_size(contig_paths_file) 
 
     return {
-        "folder": file_path,
+        "folder": os.path.basename(folder_path),
         "time_min": min(times),
         "time_max": max(times),
         "time_mean": statistics.mean(times),
@@ -78,16 +78,18 @@ def profile_folder(file_path, runs=10):
         "gfa_L": count_L,
         "gfa_P": count_P,
         "size_graph_MB": size_graph,
+        "size_fasta_MB": size_fasta,
+        "size_paths_MB": size_paths,
     }
 
-def batch_profile(files, runs=10):
+def batch_profile(folders, runs=10):
     results = []
     
-    for file in files:
+    for folder in folders:
         
-        print(f"Profiling: {file}")
+        print(f"Profiling: {folder}")
         
-        stats = profile_folder(file, runs)
+        stats = profile_folder(folder, runs)
         results.append(stats)
         
         # Manually trigger garbage collection
@@ -95,44 +97,33 @@ def batch_profile(files, runs=10):
         
     return pd.DataFrame(results)
 
-
-files_list = [
-    "data/SPAdes/ERR2752151/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752163/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752162/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752160/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752150/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752154/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2752153/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR594355/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR599362/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR594375/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR594362/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR594361/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2750828/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR599357/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR2750826/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR594360/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR599383/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR599370/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR321017/assembly_graph_after_simplification.gfa",
-    "data/SPAdes/ERR321018/assembly_graph_after_simplification.gfa",
+folders = [
+    "data/Flye/SRR18490951",
+    "data/Flye/SRR18490961",
+    "data/Flye/SRR18491036",
+    "data/Flye/SRR18491148",
+    "data/Flye/SRR18491176",
+    "data/Flye/SRR18491204",
+    "data/Flye/SRR18491300",
+    "data/Flye/SRR18491309",
+    "data/Flye/SRR18491312",
+    "data/Flye/SRR18491319",
 ]
 
 # Run profiling
-df_results = batch_profile(files_list, runs=20)
+df_results = batch_profile(folders, runs=20)
 
 # Save to CSV
-df_results.to_csv("data/profiling_unitig_graphs.csv", index=False)
+df_results.to_csv("data/profiling_flye.csv", index=False)
 
 # Read the profiling results from CSV file
-df_results = pd.read_csv("data/profiling_unitig_graphs.csv")
+df_results = pd.read_csv("data/profiling_flye.csv")
 
 # Plot running time with error bars
 # -----------------------------------------------------------
-x = df_results["size_graph_MB"].to_numpy()
-y = df_results["time_mean"].to_numpy()
-yerr = df_results["time_std"].to_numpy()
+x = df_results["size_graph_MB"]
+y = df_results["time_mean"]
+yerr = df_results["time_std"]
 
 # Force regression through (0,0)
 m = (x * y).sum() / (x**2).sum()
@@ -149,11 +140,11 @@ plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}
 
 plt.xlabel("Size of the graph file (MB)")
 plt.ylabel("Running time (s)")
-plt.title("Running time vs size of the graph file for unitig graph")
+plt.title("Running time vs size of the graph file for Flye contig graph")
 plt.grid(True)
 
 # Save to file
-plt.savefig("plots/unitig_time.png", dpi=300, bbox_inches='tight')
+plt.savefig("plots/flye_time.png", dpi=300, bbox_inches='tight')
 plt.show()
 
 # Plot Peak Memory with error bars
@@ -169,7 +160,7 @@ trend_y = m * x  # no intercept
 
 plt.figure(figsize=(8, 5))
 plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
-             ecolor='lightsalmon', elinewidth=2, capsize=4,
+             ecolor='lightblue', elinewidth=2, capsize=4,
              label='Peak Memory Mean ± Std')
 
 # Plot trend line
@@ -177,9 +168,9 @@ plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}
 
 plt.xlabel("Size of the graph file (MB)")
 plt.ylabel("Peak Memory (MB)")
-plt.title("Peak memory vs size of the graph file for unitig graph")
+plt.title("Peak memory vs size of the graph file for Flye contig graph")
 plt.grid(True)
 
 # Save to file
-plt.savefig("plots/unitig_mem.png", dpi=300, bbox_inches='tight')
+plt.savefig("plots/flye_mem.png", dpi=300, bbox_inches='tight')
 plt.show()
