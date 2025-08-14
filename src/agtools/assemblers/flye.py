@@ -10,39 +10,89 @@ from agtools.core.fasta_parser import FastaParser
 from agtools.core.unitig_graph import UnitigGraph
 
 
-def _get_links(contig_paths_file: str) -> tuple:
+def _get_segments(graph_file):
     """
-    Parse contig paths file to extract paths and segment-contig mappings.
+    Parse a GFA file to extract segment names and their corresponding IDs.
 
     Parameters
     ----------
-    contig_paths_file : str
-        Path to the file containing contig path information.
+    graph_file : str
+        Path to the GFA file.
 
     Returns
     -------
     tuple
-        A tuple of:
-        - contig_names : dict
-            Bidict mapping contig indices to contig names.
-        - paths : dict
-            Mapping from contig index to list of segment identifiers.
-        - segment_contigs : dict
-            Mapping from segment ID to a set of contig indices it belongs to.
+        A tuple containing:
+        - segment_name_to_id : dict[str, int]
+            Mapping from segment name to its internal ID.
+        - segment_names : list[str]
+            List of segment names in the order they appear in the GFA file.
     """
 
-    contig_names = bidict()
-    contig_num = 0
+    segment_name_to_id = dict()
+    segment_names = list()
 
-    paths = {}
-    segment_contigs = {}
+    with open(graph_file) as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
 
-    with open(contig_paths_file, "r") as file:
+            tag = line[0]
+
+            if not line:
+                continue
+
+            if tag == "S":  # Segment line
+                parts = line.rstrip().split("\t")
+                seg_name = parts[1]
+                seg_id = len(segment_names)
+                segment_name_to_id[seg_name] = seg_id
+                segment_names.append(seg_name)
+
+    return segment_name_to_id, segment_names
+
+
+def _get_segment_paths_and_contig_mapping(contig_paths, segment_name_to_id):
+    """
+    Parse a contig paths file and extract segment-contig relationships.
+
+    Parameters
+    ----------
+    contig_paths : str
+        Path to the contig paths file (e.g. contigs.paths of scaffolds.paths).
+    segment_name_to_id : dict[str, int]
+        Mapping from segment name to its internal ID.
+
+    Returns
+    -------
+    tuple
+        A tuple containing:
+        - paths : dict[str, list[str]]
+            Mapping from contig number (as str) to list of segment identifiers.
+        - segment_contigs : dict[str, set[str]]
+            Mapping from segment ID to the set of contig numbers it appears in.
+        - contig_names : bidict[int, str]
+            Mapping from node ID to contig name string.
+        - contig_name_to_id : dict[str, int]
+            Mapping from contig name to its internal ID.
+    """
+
+    contig_names = []
+    contig_name_to_id = dict()
+    contig_id = -1
+
+    segment_contigs = defaultdict(set)
+
+    with open(contig_paths) as file:
         for line in file.readlines():
             if not (line.startswith("#") or line.startswith("seq_name")):
                 strings = line.strip().split()
 
                 contig_name = strings[0]
+                contig_id = len(contig_names)
+                contig_name_to_id[contig_name] = contig_id
+                contig_names.append(contig_name)
 
                 path = strings[-1]
                 path = path.replace("*", "")
@@ -55,42 +105,39 @@ def _get_links(contig_paths_file: str) -> tuple:
 
                 segments = path.rstrip().split(",")
 
-                contig_names[contig_num] = contig_name
-
-                if contig_num not in paths:
-                    paths[contig_num] = segments
-
                 for segment in segments:
-                    if segment not in segment_contigs:
-                        segment_contigs[segment] = set([contig_num])
+                    if segment[0] == "-":
+                        segment_contigs[segment_name_to_id[f"edge_{segment[1:]}"]].add(contig_id)
                     else:
-                        segment_contigs[segment].add(contig_num)
+                        segment_contigs[segment_name_to_id[f"edge_{segment}"]].add(contig_id)
 
-                contig_num += 1
-
-    return contig_names, paths, segment_contigs
+    return segment_contigs, contig_names, contig_name_to_id
 
 
-def _get_graph_edges(graph_file: str, paths: dict, segment_contigs: dict) -> list:
+def _get_graph_edges(graph_file, segment_contigs, segment_name_to_id):
     """
-    Generate edges for a contig-level graph based on GFA link information and segment-to-contig mappings.
+    Construct edges between contigs based on shared segment links in the GFA file.
 
     Parameters
     ----------
     graph_file : str
-        Path to the GFA file containing link (`L`) lines.
-    paths : dict
-        Mapping from contig index to list of segment IDs in the path.
-    segment_contigs : dict
-        Mapping from segment ID to set of contig indices that contain it.
+        Path to the GFA file.
+    contigs_map : bidict[int, int]
+        Mapping from internal node ID to contig number.
+    paths : dict[str, list[str]]
+        Mapping from contig number to list of segments.
+    segment_contigs : dict[str, set[str]]
+        Mapping from segment ID to contigs containing them.
 
     Returns
     -------
-    list of tuple
-        List of edges as (source_index, target_index) pairs.
+    list of tuple[int, int]
+        List of edges as (source_node_id, target_node_id).
     """
 
-    links_map = defaultdict(set)
+    lcount = 0
+    self_loops = set()
+    edge_list = set()
 
     # Get links from assembly_graph_with_scaffolds.gfa
     with open(graph_file) as file:
@@ -99,84 +146,34 @@ def _get_graph_edges(graph_file: str, paths: dict, segment_contigs: dict) -> lis
         while line != "":
             # Identify lines with link information
             if "L" in line:
+                lcount += 1
                 strings = line.split("\t")
+                source = segment_name_to_id[strings[1]]
+                target = segment_name_to_id[strings[3]]
 
-                f1, f2 = "", ""
+                source_contigs = None
+                target_contigs = None
 
-                if strings[2] == "+":
-                    f1 = strings[1][5:]
-                if strings[2] == "-":
-                    f1 = "-" + strings[1][5:]
-                if strings[4] == "+":
-                    f2 = strings[3][5:]
-                if strings[4] == "-":
-                    f2 = "-" + strings[3][5:]
+                if source in segment_contigs:
+                    source_contigs = segment_contigs[source]
 
-                links_map[f1].add(f2)
-                links_map[f2].add(f1)
+                if target in segment_contigs:
+                    target_contigs = segment_contigs[target]
+
+                if source_contigs and target_contigs:
+                    for source_contig in source_contigs:
+                        for target_contig in target_contigs:
+                            if (
+                                source_contig != target_contig
+                                and (source_contig, target_contig) not in edge_list
+                            ):
+                                edge_list.add((source_contig, target_contig))
+                            else:
+                                self_loops.add(source_contig)
 
             line = file.readline()
 
-    # Create list of edges
-    edge_list = []
-
-    for i in paths:
-        segments = paths[i]
-
-        new_links = []
-
-        for segment in segments:
-            my_segment = segment
-            my_segment_num = ""
-
-            my_segment_rev = ""
-
-            if my_segment.startswith("-"):
-                my_segment_rev = my_segment[1:]
-                my_segment_num = my_segment[1:]
-            else:
-                my_segment_rev = "-" + my_segment
-                my_segment_num = my_segment
-
-            if my_segment in links_map:
-                new_links.extend(list(links_map[my_segment]))
-
-            if my_segment_rev in links_map:
-                new_links.extend(list(links_map[my_segment_rev]))
-
-            if my_segment in segment_contigs:
-                for contig in segment_contigs[my_segment]:
-                    if i != contig:
-                        # Add edge to list of edges
-                        edge_list.append((i, contig))
-
-            if my_segment_rev in segment_contigs:
-                for contig in segment_contigs[my_segment_rev]:
-                    if i != contig:
-                        # Add edge to list of edges
-                        edge_list.append((i, contig))
-
-            if my_segment_num in segment_contigs:
-                for contig in segment_contigs[my_segment_num]:
-                    if i != contig:
-                        # Add edge to list of edges
-                        edge_list.append((i, contig))
-
-        for new_link in new_links:
-            if new_link in segment_contigs:
-                for contig in segment_contigs[new_link]:
-                    if i != contig:
-                        # Add edge to list of edges
-                        edge_list.append((i, contig))
-
-            if new_link.startswith("-"):
-                if new_link[1:] in segment_contigs:
-                    for contig in segment_contigs[new_link[1:]]:
-                        if i != contig:
-                            # Add edge to list of edges
-                            edge_list.append((i, contig))
-
-    return edge_list
+    return list(edge_list), list(self_loops), lcount
 
 
 def get_contig_graph(
@@ -204,12 +201,14 @@ def get_contig_graph(
         An object representing the contig-level graph with node metadata.
     """
 
-    # Get contigs map, links and contigs of the assembly graph
-    (
-        contig_names,
-        paths,
-        segment_contigs,
-    ) = _get_links(contig_paths_file)
+    # Get segment names and their IDs from the GFA file
+    segment_name_to_id, segment_names = _get_segments(graph_file)
+
+    # Get paths, segments, links and contigs of the assembly graph
+    (segment_contigs, contig_names, contig_name_to_id) = (
+        _get_segment_paths_and_contig_mapping(contig_paths_file, segment_name_to_id)
+    )
+
     node_count = len(contig_names)
 
     # Create graph
@@ -220,13 +219,13 @@ def get_contig_graph(
 
     # Name vertices with contig identifiers
     for i in range(node_count):
-        graph.vs[i]["id"] = i
         graph.vs[i]["label"] = contig_names[i]
 
-    edge_list = _get_graph_edges(
+     # Get list of edges
+    edge_list, self_loops, lcount = _get_graph_edges(
         graph_file=graph_file,
-        paths=paths,
         segment_contigs=segment_contigs,
+        segment_name_to_id=segment_name_to_id,
     )
 
     # Add edges to the graph
@@ -241,10 +240,15 @@ def get_contig_graph(
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),
+        lcount=lcount,
         ecount=graph.ecount(),
         file_path=graph_file,
         contig_names=contig_names,
+        contig_name_to_id=contig_name_to_id,
         contig_parser=parser,
+        contig_descriptions=None,
+        graph_to_contig_map=None,
+        self_loops=self_loops,
     )
 
     return contig_graph
