@@ -28,7 +28,7 @@ def test_get_contig_graph(contig_graph):
 
     assert len(contig_graph.contig_names) == 67
 
-    assert "contig_6" in contig_graph.contig_names.values()
+    assert "contig_6" in contig_graph.contig_names
 
 
 def test_is_connected(contig_graph):
