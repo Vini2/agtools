@@ -111,7 +111,7 @@ class UnitigGraph:
         self.segment_name_to_id = dict()  # segment name -> internal ID
         self.segment_lengths = dict()  # segment_id -> length
         self.segment_offsets = dict()  # segment_id -> byte offset in file
-        self.oriented_links = defaultdict(lambda: defaultdict(list))
+        self.oriented_links = defaultdict(lambda: defaultdict(set))
         self.link_overlap = dict()
         self.paths = dict()  # path_id -> segment names
         self.self_loops = []
@@ -182,13 +182,13 @@ class UnitigGraph:
                     else:
                         edge_list.append((source, target))
 
-                    ug.oriented_links[source][target].append((from_orient, to_orient))
+                    ug.oriented_links[source][target].add((from_orient, to_orient))
                     ug.link_overlap[(source, from_orient, target, to_orient)] = overlap
 
                     # Add symmetric reverse
                     rev1 = "+" if from_orient == "-" else "-"
                     rev2 = "+" if to_orient == "-" else "-"
-                    ug.oriented_links[target][source].append((rev2, rev1))
+                    ug.oriented_links[target][source].add((rev2, rev1))
                     ug.link_overlap[(target, rev2, source, rev1)] = overlap
 
                 elif tag == "P":  # Path line
@@ -196,7 +196,7 @@ class UnitigGraph:
                     parts = line.rstrip().split("\t")
                     path_name = parts[1]
                     segment_tokens = parts[2].split(",")
-                    # segment_ids = [f"{ug.segment_name_to_id[segment[:-1]]}{segment[-1]}" for segment in segment_tokens]
+                    
                     overlaps = [
                         int(x[:-1]) if x.endswith(("M", "m")) else x
                         for x in parts[3].split(",")
