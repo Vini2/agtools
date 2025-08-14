@@ -7,7 +7,7 @@ from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 
 
-def _get_links_myloasm(gfa_file: str, contig_index: dict) -> tuple:
+def _get_links_and_contig_mapping(gfa_file: str, contig_index: dict):
     """
     Parse a GFA file to extract contig information and connectivity
     information (links) between contigs.
@@ -16,88 +16,68 @@ def _get_links_myloasm(gfa_file: str, contig_index: dict) -> tuple:
     ----------
     gfa_file : str
         Path to the myloasm-style GFA file.
+    contig_index: dict
+        Dictionary of contigs in the FASTA file.
 
     Returns
     -------
-    node_count : int
-        Number of unique segments.
-    links : list of list
-        List of 2-element lists representing linked segment IDs.
-    contig_names : bidict
-        Mapping of numeric node ID -> contig ID.
+    contig_names : list
+        List of contig names
+    contig_name_to_id : dict
+        Mapping from contig name to internal ID
+    edge_list : list
+        List of edges
+    self_loops : list
+        List of self loops
+    lcount : int
+        The number of links (lines starting with tag "L") in the graph
     """
-    node_count = 0
+    lcount = 0
+    contig_names = list()
+    contig_name_to_id = dict()
+    edge_list = set()
+    self_loops = set()
 
-    links = []
+    with open(gfa_file) as f:
+        while True:
+            pos = f.tell()
+            line = f.readline()
+            if not line:
+                break
 
-    contig_names = bidict()
+            tag = line[0]
 
-    # Get links from .gfa file
-    with open(gfa_file) as file:
-        for line in file.readlines():
-            # Identify lines with link information
-            if line.startswith("L"):
-                link = []
+            if not line:
+                continue
 
-                strings = line.strip().split("\t")
+            if tag == "S":  # Segment line
+                parts = line.rstrip().split("\t")
+                contig_name = parts[1]
+                seq = parts[2]
 
-                link1 = strings[1]
-                link1_orient = strings[2]
-                link2 = strings[3]
-                link2_orient = strings[4]
+                if contig_name in contig_index:
+                    contig_id = len(contig_names)
+                    contig_name_to_id[contig_name] = contig_id
+                    contig_names.append(contig_name)
 
-                if link1 in contig_index and link2 in contig_index:
+            elif tag == "L":  # Link line
+                lcount += 1
+                parts = line.rstrip().split("\t")
+                from_seg, from_orient = parts[1], parts[2]
+                to_seg, to_orient = parts[3], parts[4]
+                overlap = int(parts[5][:-1])  # Remove trailing M
 
-                    link.append(link1)
-                    link.append(link1_orient)
-                    link.append(link2)
-                    link.append(link2_orient)
+                if from_seg in contig_index and to_seg in contig_index:
 
-                    links.append(link)
+                    source = contig_name_to_id[from_seg]
+                    target = contig_name_to_id[to_seg]
 
-            # Identify lines with contig information
-            elif line.startswith("S"):
-                strings = line.strip().split("\t")
+                    if source == target:
+                        self_loops.add(source)
+                    else:
+                        edge_list.add((source, target))
 
-                if strings[1] in contig_index:
-                    contig_names[node_count] = strings[1]
-                    node_count += 1
-
-    return node_count, links, contig_names
-
-
-def _get_graph_edges_myloasm(links: list, contig_names_rev: bidict) -> tuple:
-    """
-    Convert a list of segment links into igraph-compatible edges.
-
-    Parameters
-    ----------
-    links : list of list
-        Pairs of linked segment IDs.
-    contig_names_rev : bidict
-        Mapping of segment ID -> numeric node ID.
-
-    Returns
-    -------
-    edge_list : list of tuple
-        List of edges as tuples of node IDs.
-    self_loops : list of int
-        List of node IDs that form self-loops.
-    """
-
-    edge_list = []
-    self_loops = []
-
-    # Iterate links
-    for link in links:
-        # Remove self loops
-        if link[0] != link[2]:
-            # Add edge to list of edges
-            edge_list.append((contig_names_rev[link[0]], contig_names_rev[link[2]]))
-        else:
-            self_loops.append(contig_names_rev[link[0]])
-
-    return edge_list, self_loops
+    return contig_names, contig_name_to_id, list(edge_list), list(self_loops), lcount
 
 
 def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
@@ -121,23 +101,16 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     parser = FastaParser(contigs_file, assembler="myloasm")
 
     # Get links and contigs of the assembly graph
-    node_count, links, contig_names = _get_links_myloasm(gfa_file, parser.index)
-
-    # Get list of edges and self loops
-    edge_list, self_loops = _get_graph_edges_myloasm(
-        links=links, contig_names_rev=contig_names.inverse
-    )
+    contig_names, contig_name_to_id, edge_list, self_loops, lcount = _get_links_and_contig_mapping(gfa_file, parser.index)
 
     # Create graph
     graph = Graph()
 
     # Add vertices
-    graph.add_vertices(node_count)
+    graph.add_vertices(len(contig_names))
 
     # Name vertices with contig identifiers
-    for i in range(node_count):
-        graph.vs[i]["id"] = i
-        graph.vs[i]["label"] = contig_names[i]
+    graph.vs["label"] = contig_names
 
     # Add edges to the graph
     graph.add_edges(edge_list)
@@ -145,12 +118,15 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     # Simplify the graph
     graph.simplify(multiple=True, loops=False, combine_edges=None)
 
+    # Create ContigGraph object
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),
+        lcount=lcount,
         ecount=graph.ecount(),
         file_path=gfa_file,
         contig_names=contig_names,
+        contig_name_to_id=contig_name_to_id,
         contig_parser=parser,
         contig_descriptions=None,
         graph_to_contig_map=None,

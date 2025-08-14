@@ -24,6 +24,7 @@ def test_get_contig_graph(contig_graph):
 
     assert contig_graph.vcount == 2
     assert contig_graph.ecount == 1
+    assert contig_graph.lcount == 2
 
     assert len(contig_graph.contig_names) == 2
 
