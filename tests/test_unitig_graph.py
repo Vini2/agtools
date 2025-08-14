@@ -70,8 +70,8 @@ def test_oriented_links_and_overlap():
     os.unlink(f_path)
 
     # Oriented links should be symmetric
-    assert ug.oriented_links[ug.segment_name_to_id["segA"]][ug.segment_name_to_id["segB"]] == [("+", "-")]
-    assert ug.oriented_links[ug.segment_name_to_id["segB"]][ug.segment_name_to_id["segA"]] == [("+", "-")]
+    assert ug.oriented_links[ug.segment_name_to_id["segA"]][ug.segment_name_to_id["segB"]] == {("+", "-")}
+    assert ug.oriented_links[ug.segment_name_to_id["segB"]][ug.segment_name_to_id["segA"]] == {("+", "-")}
 
     # Overlap stored in both orientations
     assert ug.link_overlap[(ug.segment_name_to_id["segA"], "+", ug.segment_name_to_id["segB"], "-")] == 5
