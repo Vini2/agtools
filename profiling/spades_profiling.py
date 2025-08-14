@@ -128,7 +128,7 @@ def main():
     ]
 
     # Run profiling
-    df_results = batch_profile(folders, runs=20)
+    df_results = batch_profile(folders, runs=21)
 
     # Save to CSV
     df_results.to_csv("profiling_spades.csv", index=False)

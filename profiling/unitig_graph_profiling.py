@@ -122,7 +122,7 @@ def main():
     ]
 
     # Run profiling
-    df_results = batch_profile(files_list, runs=1)
+    df_results = batch_profile(files_list, runs=10)
 
     # Save to CSV
     df_results.to_csv("data/profiling_unitig_graphs.csv", index=False)

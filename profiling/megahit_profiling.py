@@ -115,7 +115,7 @@ def main():
     ]
 
     # Run profiling
-    df_results = batch_profile(folders, runs=20)
+    df_results = batch_profile(folders, runs=10)
 
     # Save to CSV
     df_results.to_csv("profiling_megahit.csv", index=False)
