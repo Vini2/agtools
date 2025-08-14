@@ -8,9 +8,10 @@ from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 
 
-def _get_links_megahit(gfa_file: str) -> tuple:
+def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
     """
-    Parse a GFA file to extract segment sequences and connectivity (links) between segments.
+    Parse a GFA file to extract contig information and connectivity
+    information (links) between contigs.
 
     Parameters
     ----------
@@ -19,88 +20,84 @@ def _get_links_megahit(gfa_file: str) -> tuple:
 
     Returns
     -------
-    node_count : int
-        Number of unique segments.
+    tuple
+    contig_names : list
+        List of contig names
+    contig_name_to_id : dict
+        Mapping from contig name to internal ID
     graph_contig_seqs : dict
         Mapping of segment ID -> sequence length in graph file.
-    links : list of list
-        List of 2-element lists representing linked segment IDs.
-    contig_names : bidict
-        Mapping of numeric node ID -> segment ID.
+    edge_list : list
+        List of edges
+    self_loops : list
+        List of self loops
+    lcount : int
+        The number of links (lines starting with tag "L") in the graph
     """
-
-    node_count = 0
+    lcount = 0
+    contig_names = list()
+    contig_name_to_id = dict()
+    edge_list = set()
+    self_loops = set()
 
     graph_contig_seqs = {}
 
-    links = []
+    with open(gfa_file) as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
 
-    contig_names = bidict()
+            tag = line[0]
 
-    # Get links from .gfa file
-    with open(gfa_file) as file:
-        line = file.readline()
+            if not line:
+                continue
 
-        while line != "":
-            # Identify lines with link information
-            if line.startswith("L"):
-                link = []
+            if tag == "S":  # Segment line
+                parts = line.rstrip().split("\t")
+                contig_name = parts[1]
+                seq = parts[2]
 
-                strings = line.split("\t")
+                contig_id = len(contig_names)
+                contig_name_to_id[contig_name] = contig_id
+                contig_names.append(contig_name)
 
-                link1 = strings[1]
-                link2 = strings[3]
+                graph_contig_seqs[contig_name] = len(seq)
 
-                link.append(link1)
-                link.append(link2)
-                links.append(link)
+    with open(gfa_file) as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
 
-            elif line.startswith("S"):
-                strings = line.split()
+            tag = line[0]
 
-                contig_names[node_count] = strings[1]
+            if not line:
+                continue
 
-                graph_contig_seqs[strings[1]] = len(strings[2])
+            if tag == "L":  # Link line
+                lcount += 1
+                parts = line.rstrip().split("\t")
+                from_seg, from_orient = parts[1], parts[2]
+                to_seg, to_orient = parts[3], parts[4]
+                overlap = int(parts[5][:-1])  # Remove trailing M
 
-                node_count += 1
+                source = contig_name_to_id[from_seg]
+                target = contig_name_to_id[to_seg]
 
-            line = file.readline()
+                if source == target:
+                    self_loops.add(source)
+                else:
+                    edge_list.add((source, target))
 
-    return node_count, graph_contig_seqs, links, contig_names
-
-
-def _get_graph_edges_megahit(links: list, contig_names_rev: bidict) -> tuple:
-    """
-    Convert a list of segment links into igraph-compatible edges.
-
-    Parameters
-    ----------
-    links : list of list
-        Pairs of linked segment IDs.
-    contig_names_rev : bidict
-        Mapping of segment ID -> numeric node ID.
-
-    Returns
-    -------
-    edge_list : list of tuple
-        List of edges as tuples of node IDs.
-    self_loops : list of int
-        List of node IDs that form self-loops.
-    """
-
-    edge_list = []
-    self_loops = []
-
-    # Iterate links
-    for link in links:
-        # Remove self loops
-        if link[0] != link[1]:
-            # Add edge to list of edges
-            edge_list.append((contig_names_rev[link[0]], contig_names_rev[link[1]]))
-        else:
-            self_loops.append(contig_names_rev[link[0]])
-
-    return edge_list, self_loops
+    return (
+        contig_names,
+        contig_name_to_id,
+        graph_contig_seqs,
+        list(edge_list),
+        list(self_loops),
+        lcount,
+    )
 
 
 def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
@@ -131,29 +128,23 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
         original_contig_seqs[record.id] = len(record.seq)
         contig_descriptions[record.id] = record.description
 
-    # Get links and contigs of the assembly graph
     (
-        node_count,
-        graph_contig_seqs,
-        links,
         contig_names,
-    ) = _get_links_megahit(gfa_file)
-
-    # Get list of edges and self loops
-    edge_list, self_loops = _get_graph_edges_megahit(
-        links=links, contig_names_rev=contig_names.inverse
-    )
+        contig_name_to_id,
+        graph_contig_seqs,
+        edge_list,
+        self_loops,
+        lcount,
+    ) = _get_links_and_contig_mapping_myloasm(gfa_file)
 
     # Create graph
     graph = Graph()
 
     # Add vertices
-    graph.add_vertices(node_count)
+    graph.add_vertices(len(contig_names))
 
     # Name vertices with contig identifiers
-    for i in range(node_count):
-        graph.vs[i]["id"] = i
-        graph.vs[i]["label"] = contig_names[i]
+    graph.vs["label"] = contig_names
 
     # Add edges to the graph
     graph.add_edges(edge_list)
@@ -180,9 +171,11 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),
+        lcount=lcount,
         ecount=graph.ecount(),
         file_path=gfa_file,
         contig_names=contig_names,
+        contig_name_to_id=contig_name_to_id,
         contig_parser=parser,
         contig_descriptions=contig_descriptions,
         graph_to_contig_map=graph_to_contig_map,
