@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import gc
 import os
 import time
@@ -9,6 +11,9 @@ import matplotlib.pyplot as plt
 from memory_profiler import memory_usage
 from agtools.assemblers import flye
 
+__author__ = "Vijini Mallawaarachchi"
+__copyright__ = "Copyright 2025, agtools Project"
+__credits__ = ["Vijini Mallawaarachchi"]
 
 # GFA Line Count
 def grep_count(line_prefix, file_path):
@@ -97,80 +102,86 @@ def batch_profile(folders, runs=10):
         
     return pd.DataFrame(results)
 
-folders = [
-    "data/Flye/SRR18490951",
-    "data/Flye/SRR18490961",
-    "data/Flye/SRR18491036",
-    "data/Flye/SRR18491148",
-    "data/Flye/SRR18491176",
-    "data/Flye/SRR18491204",
-    "data/Flye/SRR18491300",
-    "data/Flye/SRR18491309",
-    "data/Flye/SRR18491312",
-    "data/Flye/SRR18491319",
-]
 
-# Run profiling
-df_results = batch_profile(folders, runs=20)
+def main():
+    folders = [
+        "data/Flye/SRR18490951",
+        "data/Flye/SRR18490961",
+        "data/Flye/SRR18491036",
+        "data/Flye/SRR18491148",
+        "data/Flye/SRR18491176",
+        "data/Flye/SRR18491204",
+        "data/Flye/SRR18491300",
+        "data/Flye/SRR18491309",
+        "data/Flye/SRR18491312",
+        "data/Flye/SRR18491319",
+    ]
 
-# Save to CSV
-df_results.to_csv("data/profiling_flye.csv", index=False)
+    # Run profiling
+    df_results = batch_profile(folders, runs=20)
 
-# Read the profiling results from CSV file
-df_results = pd.read_csv("data/profiling_flye.csv")
+    # Save to CSV
+    df_results.to_csv("data/profiling_flye.csv", index=False)
 
-# Plot running time with error bars
-# -----------------------------------------------------------
-x = df_results["size_graph_MB"]
-y = df_results["time_mean"]
-yerr = df_results["time_std"]
+    # Read the profiling results from CSV file
+    df_results = pd.read_csv("data/profiling_flye.csv")
 
-# Force regression through (0,0)
-m = (x * y).sum() / (x**2).sum()
-b = 0
-trend_y = m * x  # no intercept
+    # Plot running time with error bars
+    # -----------------------------------------------------------
+    x = df_results["size_graph_MB"]
+    y = df_results["time_mean"]
+    yerr = df_results["time_std"]
 
-plt.figure(figsize=(8, 5))
-plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
-             ecolor='lightblue', elinewidth=2, capsize=4,
-             label='Running time Mean ± Std')
+    # Force regression through (0,0)
+    m = (x * y).sum() / (x**2).sum()
+    b = 0
+    trend_y = m * x  # no intercept
 
-# Plot trend line
-plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.figure(figsize=(8, 5))
+    plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
+                ecolor='lightblue', elinewidth=2, capsize=4,
+                label='Running time Mean ± Std')
 
-plt.xlabel("Size of the graph file (MB)")
-plt.ylabel("Running time (s)")
-plt.title("Running time vs size of the graph file for Flye contig graph")
-plt.grid(True)
+    # Plot trend line
+    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-# Save to file
-plt.savefig("plots/flye_time.png", dpi=300, bbox_inches='tight')
-plt.show()
+    plt.xlabel("Size of the graph file (MB)")
+    plt.ylabel("Running time (s)")
+    plt.title("Running time vs size of the graph file for Flye contig graph")
+    plt.grid(True)
 
-# Plot Peak Memory with error bars
-# -----------------------------------------------------------
-x = df_results["size_graph_MB"]
-y = df_results["peak_mem_mean"]
-yerr = df_results["peak_mem_std"]
+    # Save to file
+    plt.savefig("plots/flye_time.png", dpi=300, bbox_inches='tight')
+    plt.show()
 
-# Force regression through (0,0)
-m = (x * y).sum() / (x**2).sum()
-b = 0
-trend_y = m * x  # no intercept
+    # Plot Peak Memory with error bars
+    # -----------------------------------------------------------
+    x = df_results["size_graph_MB"]
+    y = df_results["peak_mem_mean"]
+    yerr = df_results["peak_mem_std"]
 
-plt.figure(figsize=(8, 5))
-plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
-             ecolor='lightblue', elinewidth=2, capsize=4,
-             label='Peak Memory Mean ± Std')
+    # Force regression through (0,0)
+    m = (x * y).sum() / (x**2).sum()
+    b = 0
+    trend_y = m * x  # no intercept
 
-# Plot trend line
-plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.figure(figsize=(8, 5))
+    plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
+                ecolor='lightblue', elinewidth=2, capsize=4,
+                label='Peak Memory Mean ± Std')
 
-plt.xlabel("Size of the graph file (MB)")
-plt.ylabel("Peak Memory (MB)")
-plt.title("Peak memory vs size of the graph file for Flye contig graph")
-plt.grid(True)
+    # Plot trend line
+    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-# Save to file
-plt.savefig("plots/flye_mem.png", dpi=300, bbox_inches='tight')
-plt.show()
+    plt.xlabel("Size of the graph file (MB)")
+    plt.ylabel("Peak Memory (MB)")
+    plt.title("Peak memory vs size of the graph file for Flye contig graph")
+    plt.grid(True)
+
+    # Save to file
+    plt.savefig("plots/flye_mem.png", dpi=300, bbox_inches='tight')
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()

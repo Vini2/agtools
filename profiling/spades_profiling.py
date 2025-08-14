@@ -102,90 +102,96 @@ def batch_profile(folders, runs=10):
         
     return pd.DataFrame(results)
 
-folders = [
-    "data/SPAdes/ERR2752151",
-    "data/SPAdes/ERR2752163",
-    "data/SPAdes/ERR2752162",
-    "data/SPAdes/ERR2752160",
-    "data/SPAdes/ERR2752150",
-    "data/SPAdes/ERR2752154",
-    "data/SPAdes/ERR2752153",
-    "data/SPAdes/ERR594355",
-    "data/SPAdes/ERR599362",
-    "data/SPAdes/ERR594375",
-    "data/SPAdes/ERR594362",
-    "data/SPAdes/ERR594361",
-    "data/SPAdes/ERR2750828",
-    "data/SPAdes/ERR599357",
-    "data/SPAdes/ERR2750826",
-    "data/SPAdes/ERR594360",
-    "data/SPAdes/ERR599383",
-    "data/SPAdes/ERR599370",
-    "data/SPAdes/ERR321017",
-    "data/SPAdes/ERR321018",
-]
 
-# Run profiling
-df_results = batch_profile(folders, runs=20)
+def main():
+    folders = [
+        "data/SPAdes/ERR2752151",
+        "data/SPAdes/ERR2752163",
+        "data/SPAdes/ERR2752162",
+        "data/SPAdes/ERR2752160",
+        "data/SPAdes/ERR2752150",
+        "data/SPAdes/ERR2752154",
+        "data/SPAdes/ERR2752153",
+        "data/SPAdes/ERR594355",
+        "data/SPAdes/ERR599362",
+        "data/SPAdes/ERR594375",
+        "data/SPAdes/ERR594362",
+        "data/SPAdes/ERR594361",
+        "data/SPAdes/ERR2750828",
+        "data/SPAdes/ERR599357",
+        "data/SPAdes/ERR2750826",
+        "data/SPAdes/ERR594360",
+        "data/SPAdes/ERR599383",
+        "data/SPAdes/ERR599370",
+        "data/SPAdes/ERR321017",
+        "data/SPAdes/ERR321018",
+    ]
 
-# Save to CSV
-df_results.to_csv("profiling_spades.csv", index=False)
+    # Run profiling
+    df_results = batch_profile(folders, runs=20)
 
-# Read the profiling results from CSV file
-df_results = pd.read_csv("data/profiling_spades.csv")
+    # Save to CSV
+    df_results.to_csv("profiling_spades.csv", index=False)
 
-# Plot running time with error bars
-# -----------------------------------------------------------
-x = df_results["size_graph_MB"]
-y = df_results["time_mean"]
-yerr = df_results["time_std"]
+    # Read the profiling results from CSV file
+    df_results = pd.read_csv("data/profiling_spades.csv")
 
-# Fit a simple linear regression for the trend line
-m, b = np.polyfit(x, y, 1)  # slope, intercept
-trend_y = m * x + b
+    # Plot running time with error bars
+    # -----------------------------------------------------------
+    x = df_results["size_graph_MB"]
+    y = df_results["time_mean"]
+    yerr = df_results["time_std"]
 
-plt.figure(figsize=(8, 5))
-plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
-             ecolor='lightblue', elinewidth=2, capsize=4,
-             label='Running time Mean ± Std')
+    # Fit a simple linear regression for the trend line
+    m, b = np.polyfit(x, y, 1)  # slope, intercept
+    trend_y = m * x + b
 
-# Plot trend line
-plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.figure(figsize=(8, 5))
+    plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
+                ecolor='lightblue', elinewidth=2, capsize=4,
+                label='Running time Mean ± Std')
 
-plt.xlabel("Size of the graph file (MB)")
-plt.ylabel("Running time (s)")
-plt.title("Running time vs size of the graph file for SPAdes contig graph")
-plt.legend()
-plt.grid(True)
+    # Plot trend line
+    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-# Save to file
-plt.savefig("plots/spades_time.png", dpi=300, bbox_inches='tight')
-plt.show()
+    plt.xlabel("Size of the graph file (MB)")
+    plt.ylabel("Running time (s)")
+    plt.title("Running time vs size of the graph file for SPAdes contig graph")
+    plt.legend()
+    plt.grid(True)
 
-# Plot Peak Memory with error bars
-# -----------------------------------------------------------
-x = df_results["size_graph_MB"]
-y = df_results["peak_mem_mean"]
-yerr = df_results["peak_mem_std"]
+    # Save to file
+    plt.savefig("plots/spades_time.png", dpi=300, bbox_inches='tight')
+    plt.show()
 
-# Fit a simple linear regression for the trend line
-m, b = np.polyfit(x, y, 1)  # slope, intercept
-trend_y = m * x + b
+    # Plot Peak Memory with error bars
+    # -----------------------------------------------------------
+    x = df_results["size_graph_MB"]
+    y = df_results["peak_mem_mean"]
+    yerr = df_results["peak_mem_std"]
 
-plt.figure(figsize=(8, 5))
-plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
-             ecolor='lightblue', elinewidth=2, capsize=4,
-             label='Peak Memory Mean ± Std')
+    # Fit a simple linear regression for the trend line
+    m, b = np.polyfit(x, y, 1)  # slope, intercept
+    trend_y = m * x + b
 
-# Plot trend line
-plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.figure(figsize=(8, 5))
+    plt.errorbar(x, y, yerr=yerr, fmt='o', color='red',
+                ecolor='lightsalmon', elinewidth=2, capsize=4,
+                label='Peak Memory Mean ± Std')
 
-plt.xlabel("Size of the graph file (MB)")
-plt.ylabel("Peak Memory (MB)")
-plt.title("Peak memory vs size of the graph file for SPAdes contig graph")
-plt.legend()
-plt.grid(True)
+    # Plot trend line
+    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-# Save to file
-plt.savefig("plots/spades_mem.png", dpi=300, bbox_inches='tight')
-plt.show()
+    plt.xlabel("Size of the graph file (MB)")
+    plt.ylabel("Peak Memory (MB)")
+    plt.title("Peak memory vs size of the graph file for SPAdes contig graph")
+    plt.legend()
+    plt.grid(True)
+
+    # Save to file
+    plt.savefig("plots/spades_mem.png", dpi=300, bbox_inches='tight')
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
