@@ -59,7 +59,7 @@ _output = click.option(
     "--output",
     "-o",
     help="path to the output folder",
-    type=click.Path(dir_okay=True, writable=True, readable=True),
+    type=click.Path(exists=True, dir_okay=True, writable=True, readable=True),
     required=True,
 )
 
