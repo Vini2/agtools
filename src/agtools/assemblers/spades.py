@@ -10,7 +10,7 @@ from agtools.core.fasta_parser import FastaParser
 from agtools.core.unitig_graph import UnitigGraph
 
 
-def _get_segments(graph_file):
+def _get_segments(graph_file: str) -> tuple:
     """
     Parse a GFA file to extract segment names and their corresponding IDs.
 
@@ -22,11 +22,8 @@ def _get_segments(graph_file):
     Returns
     -------
     tuple
-        A tuple containing:
-        - segment_name_to_id : dict[str, int]
-            Mapping from segment name to its internal ID.
-        - segment_names : list[str]
-            List of segment names in the order they appear in the GFA file.
+    segment_name_to_id : dict[str, int]
+        Mapping from segment name to its internal ID.
     """
 
     segment_name_to_id = dict()
@@ -50,10 +47,12 @@ def _get_segments(graph_file):
                 segment_name_to_id[seg_name] = seg_id
                 segment_names.append(seg_name)
 
-    return segment_name_to_id, segment_names
+    return segment_name_to_id
 
 
-def _get_segment_paths_and_contig_mapping(contig_paths, segment_name_to_id):
+def _get_segment_paths_and_contig_mapping(
+    contig_paths: str, segment_name_to_id: dict
+) -> tuple:
     """
     Parse a contig paths file and extract segment-contig relationships.
 
@@ -67,15 +66,12 @@ def _get_segment_paths_and_contig_mapping(contig_paths, segment_name_to_id):
     Returns
     -------
     tuple
-        A tuple containing:
-        - paths : dict[str, list[str]]
-            Mapping from contig number (as str) to list of segment identifiers.
-        - segment_contigs : dict[str, set[str]]
-            Mapping from segment ID to the set of contig numbers it appears in.
-        - contig_names : bidict[int, str]
-            Mapping from node ID to contig name string.
-        - contig_name_to_id : dict[str, int]
-            Mapping from contig name to its internal ID.
+    segment_contigs : dict[str, set[str]]
+        Mapping from segment ID to the set of contig numbers it appears in.
+    contig_names : list
+        List of contig names.
+    contig_name_to_id : dict[str, int]
+        Mapping from contig name to its internal ID.
     """
 
     contig_names = []
@@ -117,7 +113,9 @@ def _get_segment_paths_and_contig_mapping(contig_paths, segment_name_to_id):
     return segment_contigs, contig_names, contig_name_to_id
 
 
-def _get_graph_edges(graph_file, segment_contigs, segment_name_to_id):
+def _get_graph_edges(
+    graph_file: str, segment_contigs: dict, segment_name_to_id: dict
+) -> tuple:
     """
     Construct edges between contigs based on shared segment links in the GFA file.
 
@@ -125,17 +123,20 @@ def _get_graph_edges(graph_file, segment_contigs, segment_name_to_id):
     ----------
     graph_file : str
         Path to the GFA file.
-    contigs_map : bidict[int, int]
-        Mapping from internal node ID to contig number.
-    paths : dict[str, list[str]]
-        Mapping from contig number to list of segments.
     segment_contigs : dict[str, set[str]]
         Mapping from segment ID to contigs containing them.
+    segment_name_to_id : dict[str, int]
+        Mapping from segment name to its internal ID.
 
     Returns
     -------
-    list of tuple[int, int]
+    tuple
+    list : tuple[int, int]
         List of edges as (source_node_id, target_node_id).
+    self_loops : list
+        List of self loops
+    lcount : int
+        The number of links (lines starting with tag "L") in the graph
     """
 
     lcount = 0
@@ -201,7 +202,7 @@ def get_contig_graph(
     """
 
     # Get segment names and their IDs from the GFA file
-    segment_name_to_id, segment_names = _get_segments(graph_file)
+    segment_name_to_id = _get_segments(graph_file)
 
     # Get paths, segments, links and contigs of the assembly graph
     (segment_contigs, contig_names, contig_name_to_id) = (
@@ -217,8 +218,7 @@ def get_contig_graph(
     graph.add_vertices(node_count)
 
     # Name vertices with contig identifiers
-    for i in range(node_count):
-        graph.vs[i]["label"] = contig_names[i]
+    graph.vs["label"] = contig_names
 
     # Get list of edges
     edge_list, self_loops, lcount = _get_graph_edges(
@@ -236,6 +236,7 @@ def get_contig_graph(
     # Get parser for contigs.fasta
     parser = FastaParser(contigs_file)
 
+    # Create ContigGraph object
     contig_graph = ContigGraph(
         graph=graph,
         vcount=graph.vcount(),

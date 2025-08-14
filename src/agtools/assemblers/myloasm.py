@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from bidict import bidict
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 
 
-def _get_links_and_contig_mapping(gfa_file: str, contig_index: dict):
+def _get_links_and_contig_mapping(gfa_file: str, contig_index: dict) -> tuple:
     """
     Parse a GFA file to extract contig information and connectivity
     information (links) between contigs.
@@ -21,6 +20,7 @@ def _get_links_and_contig_mapping(gfa_file: str, contig_index: dict):
 
     Returns
     -------
+    tuple
     contig_names : list
         List of contig names
     contig_name_to_id : dict
@@ -101,7 +101,9 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     parser = FastaParser(contigs_file, assembler="myloasm")
 
     # Get links and contigs of the assembly graph
-    contig_names, contig_name_to_id, edge_list, self_loops, lcount = _get_links_and_contig_mapping(gfa_file, parser.index)
+    contig_names, contig_name_to_id, edge_list, self_loops, lcount = (
+        _get_links_and_contig_mapping(gfa_file, parser.index)
+    )
 
     # Create graph
     graph = Graph()
