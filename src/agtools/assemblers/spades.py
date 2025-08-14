@@ -3,7 +3,6 @@
 import re
 from collections import defaultdict
 
-from bidict import bidict
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
@@ -44,7 +43,7 @@ def _get_segments(graph_file):
             if not line:
                 continue
 
-            if tag == "S":      # Segment line
+            if tag == "S":  # Segment line
                 parts = line.rstrip().split("\t")
                 seg_name = parts[1]
                 seg_id = len(segment_names)
@@ -154,7 +153,7 @@ def _get_graph_edges(graph_file, segment_contigs, segment_name_to_id):
                 strings = line.split("\t")
                 source = segment_name_to_id[strings[1]]
                 target = segment_name_to_id[strings[3]]
-                
+
                 source_contigs = None
                 target_contigs = None
 
@@ -167,13 +166,16 @@ def _get_graph_edges(graph_file, segment_contigs, segment_name_to_id):
                 if source_contigs and target_contigs:
                     for source_contig in source_contigs:
                         for target_contig in target_contigs:
-                            if source_contig != target_contig and (source_contig, target_contig) not in edge_list:
+                            if (
+                                source_contig != target_contig
+                                and (source_contig, target_contig) not in edge_list
+                            ):
                                 edge_list.add((source_contig, target_contig))
                             else:
                                 self_loops.add(source_contig)
 
             line = file.readline()
-    
+
     return list(edge_list), list(self_loops), lcount
 
 
@@ -202,13 +204,10 @@ def get_contig_graph(
     segment_name_to_id, segment_names = _get_segments(graph_file)
 
     # Get paths, segments, links and contigs of the assembly graph
-    (
-        segment_contigs, 
-        contig_names, 
-        contig_name_to_id
-    ) = _get_segment_paths_and_contig_mapping(contig_paths_file, 
-                                              segment_name_to_id)
-    
+    (segment_contigs, contig_names, contig_name_to_id) = (
+        _get_segment_paths_and_contig_mapping(contig_paths_file, segment_name_to_id)
+    )
+
     node_count = len(contig_names)
 
     # Create graph

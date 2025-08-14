@@ -107,13 +107,13 @@ class UnitigGraph:
         self.ecount = 0
         self.pcount = 0
         self.file_path = None
-        self.segment_names = list()         # list of segment names
-        self.segment_name_to_id = dict()    # segment name -> internal ID
-        self.segment_lengths = dict()       # segment_id -> length
-        self.segment_offsets = dict()       # segment_id -> byte offset in file
+        self.segment_names = list()  # list of segment names
+        self.segment_name_to_id = dict()  # segment name -> internal ID
+        self.segment_lengths = dict()  # segment_id -> length
+        self.segment_offsets = dict()  # segment_id -> byte offset in file
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.paths = dict()                 # path_id -> segment names
+        self.paths = dict()  # path_id -> segment names
         self.self_loops = []
 
     @classmethod
@@ -156,8 +156,8 @@ class UnitigGraph:
 
                 if not line:
                     continue
-                
-                if tag == "S":      # Segment line
+
+                if tag == "S":  # Segment line
                     parts = line.rstrip().split("\t")
                     seg_name = parts[1]
                     seq = parts[2]
@@ -167,7 +167,7 @@ class UnitigGraph:
                     ug.segment_offsets[seg_name] = pos
                     ug.segment_lengths[seg_name] = len(seq)
 
-                elif tag == "L":    # Link line
+                elif tag == "L":  # Link line
                     ug.lcount += 1
                     parts = line.rstrip().split("\t")
                     from_seg, from_orient = parts[1], parts[2]
@@ -190,14 +190,17 @@ class UnitigGraph:
                     rev2 = "+" if to_orient == "-" else "-"
                     ug.oriented_links[target][source].append((rev2, rev1))
                     ug.link_overlap[(target, rev2, source, rev1)] = overlap
-                    
-                elif tag == "P":    # Path line
+
+                elif tag == "P":  # Path line
                     ug.pcount += 1
                     parts = line.rstrip().split("\t")
                     path_name = parts[1]
                     segment_tokens = parts[2].split(",")
                     # segment_ids = [f"{ug.segment_name_to_id[segment[:-1]]}{segment[-1]}" for segment in segment_tokens]
-                    overlaps = [int(x[:-1]) if x.endswith(("M", "m")) else x for x in parts[3].split(",")]
+                    overlaps = [
+                        int(x[:-1]) if x.endswith(("M", "m")) else x
+                        for x in parts[3].split(",")
+                    ]
                     ug.paths[path_name] = (segment_tokens, overlaps)
 
         # Add vertices
@@ -211,7 +214,6 @@ class UnitigGraph:
         ug.ecount = ug.graph.ecount()
 
         return ug
-    
 
     def get_segment_sequence(self, seg_name: str) -> Seq:
         """

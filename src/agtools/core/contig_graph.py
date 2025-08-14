@@ -97,7 +97,7 @@ class ContigGraph:
         self.lcount = lcount
         self.ecount = ecount
         self.file_path = file_path
-        self.contig_names = contig_names            # list of contig names
+        self.contig_names = contig_names  # list of contig names
         self.contig_name_to_id = contig_name_to_id  # contig_name -> node_id
         self.contig_parser = contig_parser
         self.contig_descriptions = (
@@ -187,7 +187,10 @@ class ContigGraph:
         True
         """
 
-        if from_contig in self.contig_name_to_id and to_contig in self.contig_name_to_id:
+        if (
+            from_contig in self.contig_name_to_id
+            and to_contig in self.contig_name_to_id
+        ):
             from_id = self.contig_name_to_id[from_contig]
             to_id = self.contig_name_to_id[to_contig]
 
@@ -313,8 +316,7 @@ class ContigGraph:
         120000
         """
         contig_lengths = [
-            len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names
+            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
         ]
         return sum(contig_lengths)
 
@@ -339,8 +341,7 @@ class ContigGraph:
         """
 
         contig_lengths = [
-            len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names
+            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
         ]
         if len(contig_lengths) == 0:
             raise ValueError(
@@ -369,8 +370,7 @@ class ContigGraph:
         """
 
         contig_lengths = [
-            len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names
+            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
         ]
         sorted_lengths = sorted(contig_lengths, reverse=True)
         total_length = sum(sorted_lengths)
