@@ -115,7 +115,7 @@ def clean(gfa_file: str, fasta: str, assembler: str, output_path: str) -> str:
 
     segments_to_remove = set()
 
-    for segment in ug.segment_names.values():
+    for segment in ug.segment_names:
         if segment not in parser.index:
             segments_to_remove.add(segment)
 

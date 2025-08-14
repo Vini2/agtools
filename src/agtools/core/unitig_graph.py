@@ -318,7 +318,7 @@ class UnitigGraph:
         if type == "matrix":
             return adj
         elif type == "pandas":
-            labels = list(self.segment_names.values())
+            labels = self.segment_names
             adj_df = pd.DataFrame(adj, index=labels, columns=labels)
             return adj_df
         else:

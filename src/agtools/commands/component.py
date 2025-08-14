@@ -112,7 +112,7 @@ def component(gfa_file: str, segment: str, output_path: str) -> str:
 
     connected_components = ug.graph.components()
 
-    segment_id = ug.segment_names.inverse[segment]
+    segment_id = ug.segment_name_to_id[segment]
 
     component_segments = set()
 
