@@ -41,6 +41,7 @@ def test_from_gfa_basic_segments_and_links():
     # Check segments
     assert "seg1" in ug.segment_lengths
     assert "seg2" in ug.segment_lengths
+    assert ug.vcount == ug.graph.vcount()
     assert ug.graph.vcount() == len(ug.segment_lengths)
 
     # Check segment lengths
@@ -51,9 +52,11 @@ def test_from_gfa_basic_segments_and_links():
     assert ug.get_neighbors("seg1") == ["seg2"]
     assert ug.get_neighbors("seg2") == ["seg1"]
 
-    # Check edge presence
-    assert ug.graph.ecount() == 1
-    assert ug.graph.vcount() == 2
+    # Check count of vertices, edges, links and paths
+    assert ug.ecount == 1
+    assert ug.vcount == 2
+    assert ug.lcount == 1
+    assert ug.pcount == 0
 
 
 def test_oriented_links_and_overlap():
@@ -67,12 +70,12 @@ def test_oriented_links_and_overlap():
     os.unlink(f_path)
 
     # Oriented links should be symmetric
-    assert ug.oriented_links["segA"]["segB"] == [("+", "-")]
-    assert ug.oriented_links["segB"]["segA"] == [("+", "-")]
+    assert ug.oriented_links[ug.segment_name_to_id["segA"]][ug.segment_name_to_id["segB"]] == [("+", "-")]
+    assert ug.oriented_links[ug.segment_name_to_id["segB"]][ug.segment_name_to_id["segA"]] == [("+", "-")]
 
     # Overlap stored in both orientations
-    assert ug.link_overlap[("segA+", "segB-")] == 5
-    assert ug.link_overlap[("segB+", "segA-")] == 5
+    assert ug.link_overlap[(ug.segment_name_to_id["segA"], "+", ug.segment_name_to_id["segB"], "-")] == 5
+    assert ug.link_overlap[(ug.segment_name_to_id["segB"], "+", ug.segment_name_to_id["segA"], "-")] == 5
 
 
 def test_self_loops_are_recorded():
@@ -85,7 +88,7 @@ def test_self_loops_are_recorded():
     ug = UnitigGraph.from_gfa(f_path)
     os.unlink(f_path)
 
-    assert "segX" in ug.self_loops
+    assert ug.segment_name_to_id["segX"] in ug.self_loops
     assert ug.graph.ecount() == 0  # loop removed by simplify()
     assert ug.graph.vcount() == 1
 
