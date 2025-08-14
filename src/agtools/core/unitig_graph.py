@@ -3,7 +3,6 @@
 from collections import defaultdict
 
 import pandas as pd
-from bidict import bidict
 from Bio.Seq import Seq
 from igraph import Graph
 
@@ -15,25 +14,32 @@ class UnitigGraph:
     Attributes
     ----------
     graph : igraph.Graph
-        The undirected graph representing the unitig-level assembly graph.
+        The undirected graph representing the unitig-level assembly graph
     vcount : int
-        The number of vertices in the graph.
+        The number of vertices (segments) in the graph
+    lcount : int
+        The number of links (lines starting with tag "L") in the graph
     ecount : int
-        The number of edges in the graph.
+        The number of edges in the graph after simplification
+    pcount : int
+        The number of paths (lines starting with tag "P") in the graph
     file_path : str
-        Path to the original GFA file.
-    oriented_links : dict
-        Mapping from [from_seg][to_seg] -> list of (from_orient, to_orient).
-    link_overlap : dict
-        Mapping from oriented segment pair ({from_seg}{from_orient}, {to_seg}{to_orient}) to overlap length.
-    paths: dict
-        Mapping from path name to (segment names, overlaps)
-    segment_names : bidict
-        Maps internal node IDs (starting from 0) to Segment IDs.
+        Path to the original GFA file
+    segment_names : list
+        List of segment names
+    segment_name_to_id : dict
+        Mapping from segment name to internal ID
+        This is used to map segment names to their vertex IDs in the graph
     segment_lengths : dict
-        Segment ID -> length of sequence.
+        Mapping from segment name to length of sequence
     segment_offsets : dict
-        Segment ID -> byte offset to the segment line in the gfa file.
+        Mapping from segment name to byte offset of the segment line in the gfa file
+    oriented_links : dict
+        Mapping from [from segment id][to segment id] -> list of (from orientation, to orientation)
+    link_overlap : dict
+        Mapping from oriented segment pair (from segment id, from orientation, to segment id, to orientarion) -> overlap length
+    paths: dict
+        Mapping from path name -> (segment names, overlaps)
     self_loops : list
         List of segment IDs that form self-loops.
 
@@ -77,17 +83,37 @@ class UnitigGraph:
     https://github.com/GFA-spec/GFA-spec
     """
 
+    __slots__ = (
+        "graph",
+        "vcount",
+        "lcount",
+        "ecount",
+        "pcount",
+        "file_path",
+        "oriented_links",
+        "link_overlap",
+        "paths",
+        "segment_names",
+        "segment_name_to_id",
+        "segment_lengths",
+        "segment_offsets",
+        "self_loops",
+    )
+
     def __init__(self):
         self.graph = Graph(directed=False)
         self.vcount = 0
+        self.lcount = 0
         self.ecount = 0
+        self.pcount = 0
         self.file_path = None
+        self.segment_names = list()         # list of segment names
+        self.segment_name_to_id = dict()    # segment name -> internal ID
+        self.segment_lengths = dict()       # segment_id -> length
+        self.segment_offsets = dict()       # segment_id -> byte offset in file
         self.oriented_links = defaultdict(lambda: defaultdict(list))
         self.link_overlap = dict()
-        self.paths = dict()  # path_id -> segment names
-        self.segment_names = bidict()  # node_id -> segment name
-        self.segment_lengths = dict()  # segment_id -> length
-        self.segment_offsets = dict()  # segment_id -> byte offset in file
+        self.paths = dict()                 # path_id -> segment names
         self.self_loops = []
 
     @classmethod
@@ -115,8 +141,7 @@ class UnitigGraph:
         """
 
         ug = cls()
-        node_count = 0
-        links = []
+        edge_list = []
 
         ug.file_path = file_path
 
@@ -127,103 +152,66 @@ class UnitigGraph:
                 if not line:
                     break
 
-                if line.startswith("S"):
-                    parts = line.strip().split("\t")
+                tag = line[0]
+
+                if not line:
+                    continue
+                
+                if tag == "S":      # Segment line
+                    parts = line.rstrip().split("\t")
                     seg_name = parts[1]
                     seq = parts[2]
-                    ug.segment_names[node_count] = seg_name
+                    seg_id = len(ug.segment_names)
+                    ug.segment_name_to_id[seg_name] = seg_id
+                    ug.segment_names.append(seg_name)
                     ug.segment_offsets[seg_name] = pos
                     ug.segment_lengths[seg_name] = len(seq)
-                    node_count += 1
-                elif line.startswith("L"):
-                    parts = line.strip().split("\t")
+
+                elif tag == "L":    # Link line
+                    ug.lcount += 1
+                    parts = line.rstrip().split("\t")
                     from_seg, from_orient = parts[1], parts[2]
                     to_seg, to_orient = parts[3], parts[4]
                     overlap = int(parts[5][:-1])  # Remove trailing M
 
-                    links.append((from_seg, to_seg))
-                    ug._add_oriented_links(
-                        from_seg, to_seg, from_orient, to_orient, overlap
-                    )
-                elif line.startswith("P"):
-                    parts = line.strip().split("\t")
+                    source = ug.segment_name_to_id[from_seg]
+                    target = ug.segment_name_to_id[to_seg]
+
+                    if source == target:
+                        ug.self_loops.append(source)
+                    else:
+                        edge_list.append((source, target))
+
+                    ug.oriented_links[source][target].append((from_orient, to_orient))
+                    ug.link_overlap[(source, from_orient, target, to_orient)] = overlap
+
+                    # Add symmetric reverse
+                    rev1 = "+" if from_orient == "-" else "-"
+                    rev2 = "+" if to_orient == "-" else "-"
+                    ug.oriented_links[target][source].append((rev2, rev1))
+                    ug.link_overlap[(target, rev2, source, rev1)] = overlap
+                    
+                elif tag == "P":    # Path line
+                    ug.pcount += 1
+                    parts = line.rstrip().split("\t")
                     path_name = parts[1]
-                    segments = parts[2]
-                    overlaps = parts[3]
-                    ug.paths[path_name] = (segments, overlaps)
+                    segment_tokens = parts[2].split(",")
+                    # segment_ids = [f"{ug.segment_name_to_id[segment[:-1]]}{segment[-1]}" for segment in segment_tokens]
+                    overlaps = [int(x[:-1]) if x.endswith(("M", "m")) else x for x in parts[3].split(",")]
+                    ug.paths[path_name] = (segment_tokens, overlaps)
 
-        ug.graph.add_vertices(node_count)
+        # Add vertices
+        ug.vcount = len(ug.segment_names)
+        ug.graph.add_vertices(ug.vcount)
+        ug.graph.vs["name"] = ug.segment_names
 
-        for i in range(node_count):
-            seg_name = ug.segment_names[i]
-            ug.graph.vs[i]["id"] = i
-            ug.graph.vs[i]["name"] = seg_name
-
-        edge_list, ug.self_loops = ug._get_graph_edges(links)
+        # Add edges
         ug.graph.add_edges(edge_list)
         ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
-
-        ug.vcount = ug.graph.vcount()
         ug.ecount = ug.graph.ecount()
 
         return ug
-
-    def _add_oriented_links(self, from_seg, to_seg, from_orient, to_orient, overlap):
-        """
-        Store oriented link and its overlap, along with its symmetric reverse.
-
-        Parameters
-        ----------
-        from_seg : str
-            Source segment ID.
-        to_seg : str
-            Destination segment ID.
-        from_orient : str
-            Orientation of source ('+' or '-').
-        to_orient : str
-            Orientation of destination.
-        overlap : int
-            Overlap length in base pairs.
-        """
-
-        key1 = f"{from_seg}{from_orient}"
-        key2 = f"{to_seg}{to_orient}"
-        self.oriented_links[from_seg][to_seg].append((from_orient, to_orient))
-        self.link_overlap[(key1, key2)] = overlap
-
-        # Add symmetric reverse
-        rev1 = "+" if from_orient == "-" else "-"
-        rev2 = "+" if to_orient == "-" else "-"
-        self.oriented_links[to_seg][from_seg].append((rev2, rev1))
-        self.link_overlap[(f"{to_seg}{rev2}", f"{from_seg}{rev1}")] = overlap
-
-    def _get_graph_edges(self, links):
-        """
-        Convert parsed segment links into edge list for igraph.
-
-        Parameters
-        ----------
-        links : list of tuple
-            Pairs of segment IDs representing links.
-
-        Returns
-        -------
-        tuple
-            (edges, self_loops) where edges is a list of (src_id, tgt_id),
-            and self_loops is a list of segment IDs forming loops.
-        """
-
-        edges = []
-        loops = []
-        segment_names_rev = self.segment_names.inverse
-        for from_edge, to_edge in links:
-            if from_edge == to_edge:
-                loops.append(from_edge)
-            else:
-                src = segment_names_rev[from_edge]
-                tgt = segment_names_rev[to_edge]
-                edges.append((src, tgt))
-        return edges, loops
+    
 
     def get_segment_sequence(self, seg_name: str) -> Seq:
         """
@@ -259,7 +247,7 @@ class UnitigGraph:
         with open(self.file_path, "r") as f:
             f.seek(pos)
             line = f.readline()
-            seq = line.strip().split("\t")[2]
+            seq = line.rstrip().split("\t")[2]
 
             if seg_name not in self.segment_lengths:
                 raise KeyError("Segment name does not exist in the graph")
@@ -287,10 +275,8 @@ class UnitigGraph:
         >>> ug.get_neighbors("unitig_1")
         ['unitig_2', 'unitig_3']
         """
-        segment_names_rev = self.segment_names.inverse
-        vid = segment_names_rev[seg_id]
-        neighbor_ids = self.graph.neighbors(vid)
-        return [self.segment_names[nid] for nid in neighbor_ids]
+        vid = self.segment_name_to_id[seg_id]
+        return [self.segment_names[nid] for nid in self.graph.neighbors(vid)]
 
     def get_adjacency_matrix(self, type="matrix"):
         """
@@ -364,9 +350,8 @@ class UnitigGraph:
         >>> ug.is_connected("unitig_1", "unitig_2")
         True
         """
-        segments_names_rev = self.segment_names.inverse
-        from_id = segments_names_rev[from_seg]
-        to_id = segments_names_rev[to_seg]
+        from_id = self.segment_name_to_id[from_seg]
+        to_id = self.segment_name_to_id[to_seg]
 
         results = self.graph.get_shortest_paths(from_id, to=to_id)
 
