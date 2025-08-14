@@ -19,13 +19,18 @@ class ContigGraph:
     graph : igraph.Graph
         The undirected graph representing the contig-level assembly graph.
     vcount : int
-        The number of vertices in the graph.
+        The number of vertices (contigs) in the graph.
+    lcount : int
+        The number of links (lines starting with tag "L") in the graph
     ecount : int
-        The number of edges in the graph.
+        The number of edges in the graph after simplification
     file_path : str
         Path to the GFA file.
-    contig_names : bidict
-        Mapping from internal node IDs (starting from 0) to contig name.
+    contig_names : list
+        List of contig names
+    contig_name_to_id : dict
+        Mapping from contig name to internal ID
+        This is used to map contig names to their vertex IDs in the graph
     contig_parser : FastaParser
         FastaParser object containing the file pointers to contig sequences
     contig_descriptions : dict[str, str], optional
@@ -59,13 +64,29 @@ class ContigGraph:
         Calculate the GC content of contig sequences.
     """
 
+    __slots__ = (
+        "graph",
+        "vcount",
+        "lcount",
+        "ecount",
+        "file_path",
+        "contig_names",
+        "contig_name_to_id",
+        "contig_parser",
+        "contig_descriptions",
+        "graph_to_contig_map",
+        "self_loops",
+    )
+
     def __init__(
         self,
         graph,
         vcount,
+        lcount,
         ecount,
         file_path,
         contig_names,
+        contig_name_to_id,
         contig_parser,
         contig_descriptions=None,
         graph_to_contig_map=None,
@@ -73,9 +94,11 @@ class ContigGraph:
     ):
         self.graph = graph
         self.vcount = vcount
+        self.lcount = lcount
         self.ecount = ecount
         self.file_path = file_path
-        self.contig_names = contig_names  # node_id -> contig_name
+        self.contig_names = contig_names            # list of contig names
+        self.contig_name_to_id = contig_name_to_id  # contig_name -> node_id
         self.contig_parser = contig_parser
         self.contig_descriptions = (
             contig_descriptions  # name in contigs.fa (for MEGAHIT)
@@ -128,8 +151,7 @@ class ContigGraph:
         >>> cg.get_neighbors("contig_1")
         ['contig_2', 'contig_3']
         """
-        contig_names_rev = self.contig_names.inverse
-        vid = contig_names_rev[contig_id]
+        vid = self.contig_name_to_id[contig_id]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.contig_names[nid] for nid in neighbor_ids]
 
@@ -164,11 +186,10 @@ class ContigGraph:
         >>> cg.is_connected("contig_1", "contig_2")
         True
         """
-        contig_names_rev = self.contig_names.inverse
 
-        if from_contig in contig_names_rev and to_contig in contig_names_rev:
-            from_id = contig_names_rev[from_contig]
-            to_id = contig_names_rev[to_contig]
+        if from_contig in self.contig_name_to_id and to_contig in self.contig_name_to_id:
+            from_id = self.contig_name_to_id[from_contig]
+            to_id = self.contig_name_to_id[to_contig]
 
             with warnings.catch_warnings():
                 # Suppress igraph's "RuntimeWarning: Couldn't reach some vertices"
@@ -223,7 +244,7 @@ class ContigGraph:
         if type == "matrix":
             return adj
         elif type == "pandas":
-            labels = list(self.contig_names.values())
+            labels = self.contig_names
             adj_df = pd.DataFrame(adj, index=labels, columns=labels)
             return adj_df
         else:
@@ -293,7 +314,7 @@ class ContigGraph:
         """
         contig_lengths = [
             len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names.values()
+            for seq in self.contig_names
         ]
         return sum(contig_lengths)
 
@@ -319,7 +340,7 @@ class ContigGraph:
 
         contig_lengths = [
             len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names.values()
+            for seq in self.contig_names
         ]
         if len(contig_lengths) == 0:
             raise ValueError(
@@ -349,7 +370,7 @@ class ContigGraph:
 
         contig_lengths = [
             len(self.contig_parser.get_sequence(seq))
-            for seq in self.contig_names.values()
+            for seq in self.contig_names
         ]
         sorted_lengths = sorted(contig_lengths, reverse=True)
         total_length = sum(sorted_lengths)
@@ -381,7 +402,7 @@ class ContigGraph:
         """
 
         contig_sequences = [
-            self.contig_parser.get_sequence(seq) for seq in self.contig_names.values()
+            self.contig_parser.get_sequence(seq) for seq in self.contig_names
         ]
         total_length = self.calculate_total_length()
 
