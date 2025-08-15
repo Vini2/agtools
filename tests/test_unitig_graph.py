@@ -104,6 +104,12 @@ def test_get_sequence_segment(unitig_graph):
     assert unitig_graph.get_segment_sequence("seg1") == "ATGCGTATGCGTATGCGTAA"
 
 
+def test_get_path(spades_unitig_graph):
+    segments, overlaps = spades_unitig_graph.get_path("NODE_71_length_545_cov_640.912245_1")
+    assert segments == "8896870+,8896654-,8922750+"
+    assert overlaps == "*"
+
+
 def test_graph_stats(spades_unitig_graph):
     assert spades_unitig_graph.vcount == 982
     assert spades_unitig_graph.ecount == 1265
