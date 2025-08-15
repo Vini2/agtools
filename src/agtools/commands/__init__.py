@@ -19,6 +19,5 @@ from .filter import filter
 from .gfa2adj import gfa2adj
 from .gfa2dot import gfa2dot
 from .gfa2fasta import gfa2fasta
-from .gfa2fastg import gfa2fastg
 from .rename import rename
 from .stats import stats
