@@ -1,4 +1,4 @@
-tests/ export-ignore
-docs/ export-ignore
+.github/ export-ignore
 demo/ export-ignore
 profiling/ export-ignore
+tests/ export-ignore
