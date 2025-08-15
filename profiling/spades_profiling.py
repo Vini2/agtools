@@ -157,7 +157,6 @@ def main():
     plt.xlabel("Size of the graph file (MB)")
     plt.ylabel("Running time (s)")
     plt.title("Running time vs size of the graph file for SPAdes contig graph")
-    plt.legend()
     plt.grid(True)
 
     # Save to file
@@ -185,7 +184,6 @@ def main():
     plt.xlabel("Size of the graph file (MB)")
     plt.ylabel("Peak Memory (MB)")
     plt.title("Peak memory vs size of the graph file for SPAdes contig graph")
-    plt.legend()
     plt.grid(True)
 
     # Save to file
