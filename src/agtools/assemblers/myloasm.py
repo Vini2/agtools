@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import io
+
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
@@ -38,7 +40,7 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str, contig_index: dict) -> 
     edge_list = set()
     self_loops = set()
 
-    with open(gfa_file) as f:
+    with io.open(gfa_file, mode="r", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:

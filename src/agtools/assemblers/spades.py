@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import io
 import re
 from collections import defaultdict
 
@@ -29,7 +30,7 @@ def _get_segments(graph_file: str) -> tuple:
     segment_name_to_id = dict()
     segment_names = list()
 
-    with open(graph_file) as f:
+    with io.open(graph_file, mode="r", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -82,7 +83,7 @@ def _get_segment_paths_and_contig_mapping(
 
     current_contig_num = -1
 
-    with open(contig_paths) as file:
+    with io.open(contig_paths, mode="r", buffering=1024 * 1024) as file:
         name = file.readline().rstrip()
         path = file.readline().rstrip("\n")
 
@@ -144,7 +145,7 @@ def _get_graph_edges(
     edge_list = set()
 
     # Get links from assembly_graph_with_scaffolds.gfa
-    with open(graph_file) as file:
+    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
         line = file.readline()
 
         while line != "":

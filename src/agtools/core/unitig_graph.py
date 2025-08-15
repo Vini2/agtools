@@ -2,7 +2,10 @@
 
 from collections import defaultdict
 
+import io
 import pandas as pd
+import sys
+
 from Bio.Seq import Seq
 from igraph import Graph
 
@@ -38,8 +41,8 @@ class UnitigGraph:
         Mapping from [from segment id][to segment id] -> list of (from orientation, to orientation)
     link_overlap : dict
         Mapping from oriented segment pair (from segment id, from orientation, to segment id, to orientarion) -> overlap length
-    paths: dict
-        Mapping from path name -> (segment names, overlaps)
+    path_index: dict
+        Mapping from path name to byte offset of the path line in the gfa file
     self_loops : list
         List of segment IDs that form self-loops.
 
@@ -92,7 +95,7 @@ class UnitigGraph:
         "file_path",
         "oriented_links",
         "link_overlap",
-        "paths",
+        "path_index",
         "segment_names",
         "segment_name_to_id",
         "segment_lengths",
@@ -113,7 +116,7 @@ class UnitigGraph:
         self.segment_offsets = dict()  # segment_id -> byte offset in file
         self.oriented_links = defaultdict(lambda: defaultdict(set))
         self.link_overlap = dict()
-        self.paths = dict()  # path_id -> segment names
+        self.path_index = dict()  # path_id -> byte offset in file
         self.self_loops = []
 
     @classmethod
@@ -139,13 +142,15 @@ class UnitigGraph:
         >>> ug.ecount
         80
         """
+        
+        EDGE_BATCH = 1_000_000
 
         ug = cls()
-        edge_list = []
+        edge_list_batch = []
 
         ug.file_path = file_path
 
-        with open(file_path) as f:
+        with io.open(file_path, mode="r", buffering=1024 * 1024) as f:
             while True:
                 pos = f.tell()
                 line = f.readline()
@@ -159,7 +164,7 @@ class UnitigGraph:
 
                 if tag == "S":  # Segment line
                     parts = line.rstrip().split("\t")
-                    seg_name = parts[1]
+                    seg_name = sys.intern(parts[1])
                     seq = parts[2]
                     seg_id = len(ug.segment_names)
                     ug.segment_name_to_id[seg_name] = seg_id
@@ -167,11 +172,28 @@ class UnitigGraph:
                     ug.segment_offsets[seg_name] = pos
                     ug.segment_lengths[seg_name] = len(seq)
 
-                elif tag == "L":  # Link line
+        # Add vertices
+        ug.vcount = len(ug.segment_names)
+        ug.graph.add_vertices(ug.vcount)
+        ug.graph.vs["name"] = ug.segment_names
+
+        with io.open(file_path, mode="r", buffering=1024 * 1024) as f:
+            while True:
+                pos = f.tell()
+                line = f.readline()
+                if not line:
+                    break
+
+                tag = line[0]
+
+                if not line:
+                    continue
+
+                if tag == "L":  # Link line
                     ug.lcount += 1
                     parts = line.rstrip().split("\t")
-                    from_seg, from_orient = parts[1], parts[2]
-                    to_seg, to_orient = parts[3], parts[4]
+                    from_seg, from_orient = sys.intern(parts[1]), parts[2]
+                    to_seg, to_orient = sys.intern(parts[3]), parts[4]
                     overlap = int(parts[5][:-1])  # Remove trailing M
 
                     source = ug.segment_name_to_id[from_seg]
@@ -180,7 +202,10 @@ class UnitigGraph:
                     if source == target:
                         ug.self_loops.append(source)
                     else:
-                        edge_list.append((source, target))
+                        edge_list_batch.append((source, target))
+                        if len(edge_list_batch) >= EDGE_BATCH:
+                            ug.graph.add_edges(edge_list_batch)
+                            edge_list_batch.clear()
 
                     ug.oriented_links[source][target].add((from_orient, to_orient))
                     ug.link_overlap[(source, from_orient, target, to_orient)] = overlap
@@ -195,22 +220,15 @@ class UnitigGraph:
                     ug.pcount += 1
                     parts = line.rstrip().split("\t")
                     path_name = parts[1]
-                    segment_tokens = parts[2].split(",")
-                    
-                    overlaps = [
-                        int(x[:-1]) if x.endswith(("M", "m")) else x
-                        for x in parts[3].split(",")
-                    ]
-                    ug.paths[path_name] = (segment_tokens, overlaps)
-
-        # Add vertices
-        ug.vcount = len(ug.segment_names)
-        ug.graph.add_vertices(ug.vcount)
-        ug.graph.vs["name"] = ug.segment_names
+                    ug.path_index[path_name] = pos
 
         # Add edges
-        ug.graph.add_edges(edge_list)
+        if edge_list_batch:
+            ug.graph.add_edges(edge_list_batch)
+            edge_list_batch.clear()
+        
         ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
+
         ug.ecount = ug.graph.ecount()
 
         return ug
@@ -257,6 +275,50 @@ class UnitigGraph:
                 return Seq(seq)
             else:
                 raise ValueError("Wrong sequence retrieved")
+
+    def get_path(self, path_name: str) -> tuple:
+        """
+        Retrieve the segment string and overlaps string of a path.
+
+        This method retrieves the segment string and overlaps string of
+        a path from the original GFA file using byte offsets.
+
+        Parameters
+        ----------
+        path_name : str
+            The path identifier (ID) whose segment sequence should be retrieved.
+
+        Returns
+        -------
+        segments : str
+            The segment string for the path.
+        overlaps : str
+            The overlaps string for the path.
+
+        Raises
+        ------
+        KeyError
+            If the path does not exist in the graph.
+
+        Examples
+        --------
+        >>> ug.get_path("path_1")
+        ('unitig_1+,unitig_2+,unitig_3+', '*')
+        """
+        if path_name not in self.path_index:
+            raise KeyError(f"Unknown path: {path_name}")
+        
+        offset = self.path_index[path_name]
+
+        with io.open(self.file_path, "r", buffering=1024 * 1024) as f:
+            f.seek(offset)
+            line = f.readline().rstrip("\n")
+
+        parts = line.rstrip().split("\t")
+        segments = parts[2]
+        overlaps = parts[3]
+
+        return segments, overlaps
 
     def get_neighbors(self, seg_id: str) -> list:
         """

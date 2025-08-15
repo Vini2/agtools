@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import io
+
 from bidict import bidict
 from Bio import SeqIO
 from igraph import Graph
@@ -42,7 +44,7 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
 
     graph_contig_seqs = {}
 
-    with open(gfa_file) as f:
+    with io.open(gfa_file, mode="r", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -64,7 +66,7 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
 
                 graph_contig_seqs[contig_name] = len(seq)
 
-    with open(gfa_file) as f:
+    with io.open(gfa_file, mode="r", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import io
+
 from collections import defaultdict
 
 from igraph import Graph
@@ -27,7 +29,7 @@ def _get_segments(graph_file: str) -> dict:
     segment_name_to_id = dict()
     segment_names = list()
 
-    with open(graph_file) as f:
+    with io.open(graph_file, mode="r", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -78,7 +80,7 @@ def _get_segment_paths_and_contig_mapping(
 
     segment_contigs = defaultdict(set)
 
-    with open(contig_paths) as file:
+    with io.open(contig_paths, mode="r", buffering=1024 * 1024) as file:
         for line in file.readlines():
             if not (line.startswith("#") or line.startswith("seq_name")):
                 strings = line.strip().split()
@@ -143,7 +145,7 @@ def _get_graph_edges(
     edge_list = set()
 
     # Get links from assembly_graph_with_scaffolds.gfa
-    with open(graph_file) as file:
+    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
         line = file.readline()
 
         while line != "":
