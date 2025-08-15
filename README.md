@@ -1,5 +1,6 @@
 # agtools: Tools for manipulating assembly graphs
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16777546.svg)](https://doi.org/10.5281/zenodo.16777546)
 ![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](https://anaconda.org/bioconda/agtools)
