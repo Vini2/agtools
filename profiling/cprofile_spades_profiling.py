@@ -3,6 +3,7 @@ import os
 import pstats
 import time
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from statistics import mean, stdev
 from agtools.assemblers import spades
@@ -121,6 +122,37 @@ def main():
 
     # Save results
     df.to_csv("data/spades_cprofile_res.csv", index=False)
+
+    # Read the profiling results from CSV file
+    df_results = pd.read_csv("data/spades_cprofile_res.csv")
+
+    # Plot running time with error bars
+    # -----------------------------------------------------------
+    x = df_results["size_graph_MB"].to_numpy()
+    y = df_results["wall_mean"].to_numpy()
+    yerr = df_results["wall_std"].to_numpy()
+
+    # Force regression through (0,0)
+    m = (x * y).sum() / (x**2).sum()
+    b = 0
+    trend_y = m * x  # no intercept
+
+    plt.figure(figsize=(8, 5))
+    plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
+                ecolor='lightblue', elinewidth=2, capsize=4,
+                label='Running time Mean ± Std')
+
+    # Plot trend line
+    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+
+    plt.xlabel("Size of the graph file (MB)")
+    plt.ylabel("Running time (s)")
+    plt.title("Running time vs size of the graph file for SPAdes contig graph")
+    plt.grid(True)
+
+    # Save to file
+    plt.savefig("plots/spades_time.png", dpi=300, bbox_inches='tight')
+    plt.show()
 
 
 if __name__ == "__main__":
