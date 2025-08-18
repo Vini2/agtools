@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from matplotlib.ticker import FuncFormatter
 from statistics import mean, stdev
 from agtools.assemblers import megahit
 
@@ -113,11 +114,11 @@ def main():
     df.to_csv("data/megahit_cprofile_res.csv", index=False)
 
     # Read the profiling results from CSV file
-    df_results = pd.read_csv("data/myloamegahit_cprofile_ressm_cprofile_res.csv")
+    df_results = pd.read_csv("data/megahit_cprofile_res.csv")
 
     # Plot running time with error bars
     # -----------------------------------------------------------
-    x = df_results["size_graph_MB"].to_numpy()
+    x = df_results["gfa_S"].to_numpy() + df_results["gfa_L"].to_numpy() + df_results["gfa_P"].to_numpy()
     y = df_results["wall_mean"].to_numpy()
     yerr = df_results["wall_std"].to_numpy()
 
@@ -134,9 +135,12 @@ def main():
     # Plot trend line
     plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-    plt.xlabel("Size of the graph file (MB)")
+    # Format x-axis with thousands separators
+    plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v):,}"))
+
+    plt.xlabel("Number of GFA tags")
     plt.ylabel("Running time (s)")
-    plt.title("Running time vs size of the graph file for MEGAHIT contig graph")
+    plt.title("Running time vs number of GFA tags for MEGAHIT contig graph")
     plt.grid(True)
 
     # Save to file

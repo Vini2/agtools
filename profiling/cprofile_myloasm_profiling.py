@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from matplotlib.ticker import FuncFormatter
 from statistics import mean, stdev
 from agtools.assemblers import myloasm
 
@@ -114,7 +115,7 @@ def main():
 
     # Plot running time with error bars
     # -----------------------------------------------------------
-    x = df_results["size_graph_MB"].to_numpy()
+    x = df_results["gfa_S"].to_numpy() + df_results["gfa_L"].to_numpy() + df_results["gfa_P"].to_numpy()
     y = df_results["wall_mean"].to_numpy()
     yerr = df_results["wall_std"].to_numpy()
 
@@ -126,14 +127,17 @@ def main():
     plt.figure(figsize=(8, 5))
     plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
                 ecolor='lightblue', elinewidth=2, capsize=4,
-                label='Wall clock time Mean ± Std')
+                label='Running time Mean ± Std')
 
     # Plot trend line
     plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-    plt.xlabel("Size of the graph file (MB)")
-    plt.ylabel("Wall clock time (s)")
-    plt.title("Wall clock time vs size of the graph file for myloasm contig graph")
+    # Format x-axis with thousands separators
+    plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v):,}"))
+
+    plt.xlabel("Number of GFA tags")
+    plt.ylabel("Running time (s)")
+    plt.title("Running time vs number of GFA tags for myloasm contig graph")
     plt.grid(True)
 
     # Save to file
