@@ -15,7 +15,7 @@ __license__ = "MIT"
 __version__ = "1.0.0"
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
-__status__ = "Alpha"
+__status__ = "Production"
 
 
 class OrderedGroup(click.Group):
