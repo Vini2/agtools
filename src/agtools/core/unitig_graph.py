@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
+import io
+import sys
 from collections import defaultdict
 
-import io
 import pandas as pd
-import sys
-
 from Bio.Seq import Seq
 from igraph import Graph
 
@@ -17,32 +16,32 @@ class UnitigGraph:
     Attributes
     ----------
     graph : igraph.Graph
-        The undirected graph representing the unitig-level assembly graph
+        The undirected graph representing the unitig-level assembly graph.
     vcount : int
-        The number of vertices (segments) in the graph
+        The number of vertices (segments) in the graph.
     lcount : int
-        The number of links (lines starting with tag "L") in the graph
+        The number of links (lines starting with tag "L") in the GFA file.
     ecount : int
-        The number of edges in the graph after simplification
+        The number of edges in the graph after simplification.
     pcount : int
-        The number of paths (lines starting with tag "P") in the graph
+        The number of paths (lines starting with tag "P") in the GFA file.
     file_path : str
-        Path to the original GFA file
+        Path to the GFA file.
     segment_names : list
-        List of segment names
+        List of segment names.
     segment_name_to_id : dict
-        Mapping from segment name to internal ID
-        This is used to map segment names to their vertex IDs in the graph
+        Mapping from segment name to internal ID.
+        This is used to map segment names to their vertex IDs in the graph.
     segment_lengths : dict
-        Mapping from segment name to length of sequence
+        Mapping from segment name to length of sequence.
     segment_offsets : dict
-        Mapping from segment name to byte offset of the segment line in the gfa file
+        Mapping from segment name to byte offset of the segment line in the GFA file.
     oriented_links : dict
-        Mapping from [from segment id][to segment id] -> list of (from orientation, to orientation)
+        Mapping from [from segment id][to segment id] -> list of (from orientation, to orientation).
     link_overlap : dict
-        Mapping from oriented segment pair (from segment id, from orientation, to segment id, to orientarion) -> overlap length
+        Mapping from oriented segment pair (from segment id, from orientation, to segment id, to orientation) -> overlap length.
     path_index: dict
-        Mapping from path name to byte offset of the path line in the gfa file
+        Mapping from path name to byte offset of the path line in the GFA file.
     self_loops : list
         List of segment IDs that form self-loops.
 
@@ -52,10 +51,10 @@ class UnitigGraph:
         Parse a GFA file into a UnitigGraph object.
     get_segment_sequence(seg_name)
         Retrieve a DNA sequence for a segment.
-    get_neighbors(seg_id)
+    get_neighbors(seg_name)
         Get neighboring segments of a given segment.
     get_adjacency_matrix(type="matrix")
-        Return the adjacency matrix as igraph or pandas DataFrame.
+        Return the adjacency matrix as a matrix or a pandas DataFrame.
     is_connected(from_seg, to_seg)
         Check if there is a path between two segments in the graph.
     get_connected_components()
@@ -83,7 +82,7 @@ class UnitigGraph:
     References
     ----------
     GFA: Graphical Fragment Assembly (GFA) Format Specification
-    https://github.com/GFA-spec/GFA-spec
+    [https://github.com/GFA-spec/GFA-spec](https://github.com/GFA-spec/GFA-spec)
     """
 
     __slots__ = (
@@ -132,7 +131,7 @@ class UnitigGraph:
         Returns
         -------
         UnitigGraph
-            The constructed graph object with segments, links, and metadata.
+            The constructed unitig graph object.
 
         Examples
         --------
@@ -142,7 +141,7 @@ class UnitigGraph:
         >>> ug.ecount
         80
         """
-        
+
         EDGE_BATCH = 1_000_000
 
         ug = cls()
@@ -226,7 +225,7 @@ class UnitigGraph:
         if edge_list_batch:
             ug.graph.add_edges(edge_list_batch)
             edge_list_batch.clear()
-        
+
         ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
 
         ug.ecount = ug.graph.ecount()
@@ -243,7 +242,7 @@ class UnitigGraph:
         Parameters
         ----------
         seg_name : str
-            The segment identifier (ID) whose DNA sequence should be retrieved.
+            The segment name whose DNA sequence should be retrieved.
 
         Returns
         -------
@@ -286,7 +285,7 @@ class UnitigGraph:
         Parameters
         ----------
         path_name : str
-            The path identifier (ID) whose segment sequence should be retrieved.
+            The path identifier whose segment sequence should be retrieved.
 
         Returns
         -------
@@ -307,7 +306,7 @@ class UnitigGraph:
         """
         if path_name not in self.path_index:
             raise KeyError(f"Unknown path: {path_name}")
-        
+
         offset = self.path_index[path_name]
 
         with io.open(self.file_path, "r", buffering=1024 * 1024) as f:
@@ -320,26 +319,26 @@ class UnitigGraph:
 
         return segments, overlaps
 
-    def get_neighbors(self, seg_id: str) -> list:
+    def get_neighbors(self, seg_name: str) -> list:
         """
         Get neighboring segments of a given segment.
 
         Parameters
         ----------
-        seg_id : str
-            The segment ID.
+        seg_name : str
+            The segment name.
 
         Returns
         -------
         list of str
-            List of neighboring segment IDs.
+            List of neighboring segment names.
 
         Examples
         --------
         >>> ug.get_neighbors("unitig_1")
         ['unitig_2', 'unitig_3']
         """
-        vid = self.segment_name_to_id[seg_id]
+        vid = self.segment_name_to_id[seg_name]
         return [self.segment_names[nid] for nid in self.graph.neighbors(vid)]
 
     def get_adjacency_matrix(self, type="matrix"):
@@ -431,7 +430,7 @@ class UnitigGraph:
         Returns
         -------
         list
-            A list of the connected components
+            A list of the connected components with internal segment IDs
 
         Examples
         --------
@@ -525,9 +524,9 @@ class UnitigGraph:
         tuple of (int, int)
             A tuple containing:
             - N50 : int
-                The length N such that 50% of the total length is contained in segments of length ≥ N.
+                The length N such that 50% of the total length is contained in segments of length >= N.
             - L50 : int
-                The minimum number of segments whose summed length ≥ 50% of the total.
+                The minimum number of segments whose summed length >= 50% of the total length.
 
         Examples
         --------

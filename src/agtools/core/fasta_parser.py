@@ -8,8 +8,9 @@ class FastaParser:
     """
     A minimal, lightweight FASTA parser with on-demand sequence retrieval.
 
-    This parser builds an index mapping sequence IDs to byte offsets in the file,
-    allowing sequences to be fetched lazily without loading the entire FASTA into memory.
+    This parser builds an index mapping of sequence names to byte
+    offsets in the file, allowing sequences to be fetched lazily
+    without loading the entire FASTA file into memory.
     Works with both plain-text FASTA and gzip-compressed FASTA (.gz).
 
     Attributes
@@ -17,20 +18,20 @@ class FastaParser:
     file_path : str
         Path to the FASTA file (plain or gzipped).
     assembler : str
-        Assembler used to get the GFA file
+        Assembler used to get the GFA file.
     mapping : dict
-        Name mapping of contigs in graph and FASTA file (for MEGAHIT)
+        Name mapping of contigs in graph and FASTA file (MEGAHIT).
     index : dict
-        Mapping of sequence ID -> file offset for the header line.
+        Mapping of sequence name to file offset for the header line.
     gzipped : bool
         True if the file is gzip-compressed.
 
     Methods
     -------
-    get_sequence(seq_id)
-        Retrieve a DNA sequence by ID.
-    get_index(seq_id)
-        Retrieve the file pointer of the DNA sequence by ID.
+    get_sequence(seq_name)
+        Retrieve a DNA sequence by sequence name.
+    get_index(seq_name)
+        Retrieve the file pointer of the DNA sequence by sequence name.
 
     Examples
     --------
@@ -66,7 +67,7 @@ class FastaParser:
 
     def _build_index(self):
         """
-        Build an index mapping sequence IDs to byte offsets.
+        Build an index mapping sequence names to byte offsets.
 
         For each header line starting with '>', store the current file position.
         This allows seeking to the start of a sequence later.
@@ -77,26 +78,26 @@ class FastaParser:
             while line:
                 if line.startswith(">"):
                     if self.assembler == "myloasm":
-                        seq_id = line[1:].strip().split("_")[0]
+                        seq_name = line[1:].strip().split("_")[0]
                     else:
-                        seq_id = line[1:].strip().split()[0]
-                    self.index[seq_id] = pos
+                        seq_name = line[1:].strip().split()[0]
+                    self.index[seq_name] = pos
                 pos = f.tell() if not self.gzipped else f.fileobj.tell()
                 line = f.readline()
 
-    def get_sequence(self, seq_id: str) -> Seq:
+    def get_sequence(self, seq_name: str) -> Seq:
         """
-        Retrieve a DNA sequence by ID.
+        Retrieve a DNA sequence by sequence name.
 
         Parameters
         ----------
-        seq_id : str
-            The sequence ID to fetch (matching the FASTA header without '>').
+        seq_name : str
+            The sequence name to fetch (matching the FASTA header without '>').
 
         Returns
         -------
         Bio.Seq.Seq
-            The DNA sequence corresponding to the given sequence ID.
+            The DNA sequence corresponding to the given sequence name.
 
         Raises
         ------
@@ -111,10 +112,10 @@ class FastaParser:
         >>> seq[:10]
         Seq('TGGCTCTTCA')
         """
-        seq_id = self.mapping[seq_id] if self.assembler == "megahit" else seq_id
-        if seq_id not in self.index:
+        seq_name = self.mapping[seq_name] if self.assembler == "megahit" else seq_name
+        if seq_name not in self.index:
             warnings.warn(
-                f"The sequence {seq_id} is not found in the contigs FASTA file",
+                f"The sequence {seq_name} is not found in the contigs FASTA file",
                 RuntimeWarning,
             )
             return ""
@@ -123,10 +124,10 @@ class FastaParser:
 
         with self._open("rt") as f:
             if not self.gzipped:
-                f.seek(self.index[seq_id])
+                f.seek(self.index[seq_name])
             else:
                 # For gzip, use fileobj.seek
-                f.fileobj.seek(self.index[seq_id])
+                f.fileobj.seek(self.index[seq_name])
 
             f.readline()  # skip header line
             for line in f:
@@ -136,19 +137,19 @@ class FastaParser:
 
         return Seq("".join(seq_lines))
 
-    def get_index(self, seq_id: str) -> int:
+    def get_index(self, seq_name: str) -> int:
         """
-        Retrieve the file pointer of the DNA sequence by ID.
+        Retrieve the file pointer of the DNA sequence by sequence name.
 
         Parameters
         ----------
-        seq_id : str
-            The sequence ID to fetch (matching the FASTA header without '>').
+        seq_name : str
+            The sequence name to fetch (matching the FASTA header without '>').
 
         Returns
         -------
         int
-            The DNA sequence as a string, or None if the ID is not found.
+            The DNA sequence as a string, or None if the name is not found.
 
         Raises
         ------
@@ -160,7 +161,7 @@ class FastaParser:
         >>> parser.get_index("contig_1")
         8487228
         """
-        if seq_id in self.index:
-            return self.index[seq_id]
+        if seq_name in self.index:
+            return self.index[seq_name]
         else:
-            raise KeyError(f"{seq_id} not found in the index")
+            raise KeyError(f"{seq_name} not found in the index")

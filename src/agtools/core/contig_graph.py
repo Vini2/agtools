@@ -10,10 +10,6 @@ class ContigGraph:
     """
     Represents a contig-level assembly graph derived from a GFA file.
 
-    This class encapsulates structural and sequence metadata for contigs constructed
-    from GFA segment links, and optionally includes sequence, description, and
-    graph-contig mappings.
-
     Attributes
     ----------
     graph : igraph.Graph
@@ -21,22 +17,22 @@ class ContigGraph:
     vcount : int
         The number of vertices (contigs) in the graph.
     lcount : int
-        The number of links (lines starting with tag "L") in the graph
+        The number of links (lines starting with tag "L") in the GFA file.
     ecount : int
         The number of edges in the graph after simplification
     file_path : str
         Path to the GFA file.
     contig_names : list
-        List of contig names
+        List of contig names.
     contig_name_to_id : dict
-        Mapping from contig name to internal ID
-        This is used to map contig names to their vertex IDs in the graph
+        Mapping from contig name to internal ID.
+        This is used to map contig names to their vertex IDs in the graph.
     contig_parser : FastaParser
-        FastaParser object containing the file pointers to contig sequences
+        FastaParser object containing the file pointers to contig sequences.
     contig_descriptions : dict[str, str], optional
         Dictionary mapping contig names to additional descriptions in FASTA file.
-    graph_to_contig_map : dict[int, str], optional
-        Dictionary mapping from unitig-level node IDs to contig identifiers
+    graph_to_contig_map : bidict[int, str], optional
+        Bi-directional dictionary mapping from contig identifiers in the GFA file to FASTA file.
     self_loops : list[str], optional
         List of contig names that form self-loops in the graph.
 
@@ -44,7 +40,7 @@ class ContigGraph:
     -------
     get_contig_sequence(contig_id)
         Retrieve a DNA sequence for a contig.
-    get_neighbors(contig_id)
+    get_neighbors(contig_name)
         Get neighboring contigs of a given contig.
     get_adjacency_matrix(type="matrix")
         Return the adjacency matrix as igraph or pandas DataFrame.
@@ -132,26 +128,26 @@ class ContigGraph:
         """
         return self.contig_parser.get_sequence(contig_name)
 
-    def get_neighbors(self, contig_id: str) -> list:
+    def get_neighbors(self, contig_name: str) -> list:
         """
         Get neighboring contigs of a given contig.
 
         Parameters
         ----------
-        contig_id : str
-            The contig ID.
+        contig_name : str
+            The contig name.
 
         Returns
         -------
         list of str
-            List of neighboring contig IDs.
+            List of neighboring contig names.
 
         Examples
         --------
         >>> cg.get_neighbors("contig_1")
         ['contig_2', 'contig_3']
         """
-        vid = self.contig_name_to_id[contig_id]
+        vid = self.contig_name_to_id[contig_name]
         neighbor_ids = self.graph.neighbors(vid)
         return [self.contig_names[nid] for nid in neighbor_ids]
 
@@ -260,7 +256,7 @@ class ContigGraph:
         Returns
         -------
         list
-            A list of the connected components
+            A list of the connected components with internal contig IDs.
 
         Examples
         --------
@@ -359,9 +355,9 @@ class ContigGraph:
         tuple of (int, int)
             A tuple containing:
             - N50 : int
-                The length N such that 50% of the total length is contained in contigs of length ≥ N.
+                The length N such that 50% of the total length is contained in contigs of length >= N.
             - L50 : int
-                The minimum number of contigs whose summed length ≥ 50% of the total.
+                The minimum number of contigs whose summed length >= 50% of the total length.
 
         Examples
         --------

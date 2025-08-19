@@ -22,7 +22,7 @@ def _write_abyss_dot(graph, output_path):
     References
     ----------
     ABySS File Formats - DOT
-    https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot
+    [https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot](https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot)
     """
 
     output_file = f"{output_path}/graph.gv"

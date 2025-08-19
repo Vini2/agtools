@@ -30,7 +30,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
     References
     ----------
     ASQG Format
-    https://github.com/jts/sga/wiki/ASQG-Format
+    [https://github.com/jts/sga/wiki/ASQG-Format](https://github.com/jts/sga/wiki/ASQG-Format)
     """
 
     segments = {}

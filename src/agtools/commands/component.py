@@ -44,7 +44,7 @@ def _write_component_graph(
     References
     ----------
     The GFA Format Specification
-    https://gfa-spec.github.io/GFA-spec/GFA1.html
+    [https://gfa-spec.github.io/GFA-spec/GFA1.html](https://gfa-spec.github.io/GFA-spec/GFA1.html)
     """
 
     output_file = f"{output_path}/component_graph.gfa"
