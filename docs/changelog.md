@@ -1,6 +1,12 @@
 # Changelog
 
 ```
+== 1.0.0 ==
+
+- the first major release
+- major refactoring of UnitigGraph, ContigGraph and assembler specific functions to improve performance
+- removed gfa2fastg subcommand
+
 == 0.1.2 ==
 
 - third alpha release
@@ -9,8 +15,8 @@
 == 0.1.1 ==
 
 - second alpha release
-- add new methods get_contig_sequence to ContigGraph class.
-- minor updates to UnitigGraph class.
+- add new methods get_contig_sequence to ContigGraph class
+- minor updates to UnitigGraph class
 
 == 0.1.0 ==
 

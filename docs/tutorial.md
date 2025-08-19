@@ -1,6 +1,6 @@
 # API Tutorial
 
-This page is a detailed tutorial of *agtools*' API. If you want to get a quick idea on how the *agtools* API works, do check out the [Quick Start Guide](quickstart.md) If you have not installed *agtools* yet, refer to [Installing *agtools*](install.md).
+This page is a detailed tutorial of *agtools*' API. If you want to get a quick idea on how the *agtools* API works, do check out the [Quick Start Guide](quickstart.md). If you have not installed *agtools* yet, refer to [Installing *agtools*](install.md).
 
 ## Importing *agtools*
 
@@ -12,7 +12,7 @@ Python 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clan
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import agtools
 >>> print(agtools.__version__)
-0.1.2
+1.0.0
 ```
 
 *agtools* provides two graph classes: `UnitigGraph` and `ContigGraph`. You can import them as follows.
@@ -27,10 +27,10 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ## Loading a GFA file
 
-You can load a GFA file using the `from_gfa` method of the `UnitigGraph` class.
+You can load a GFA file using the `from_gfa` method of the `UnitigGraph` class. Let's load an example [GFA file](https://github.com/Vini2/agtools/tree/main/tests/data/ESC).
 
 ```python
-ug = UnitigGraph.from_gfa("assembly_graph.gfa")
+ug = UnitigGraph.from_gfa("assembly_graph_with_scaffolds.gfa")
 ```
 
 This will load the original segments (denoted by `S` tags) as vertices and links (denoted by `L` tags) as edges. If you are not familiar with the GFA format please refer to the [GFA Format Specification](https://gfa-spec.github.io/GFA-spec/GFA1.html).
@@ -39,11 +39,15 @@ You can view the different attributes of the graph.
 
 ```python
 >>> ug.file_path
-'assembly_graph.gfa'
->>> ug.vcount
-34
->>> ug.ecount
-23
+'assembly_graph_with_scaffolds.gfa'
+>>> ug.vcount   # number of vertices (segments) in the graph
+982
+>>> ug.ecount   # number of edges in the graph
+1265
+>>> ug.lcount   # number of lines starting with tag 'L'
+1318
+>>> ug.pcount   # number of lines starting with tag 'P'
+190
 ```
 
 You can call different functions to calculate graph and sequence based statistics.
@@ -52,19 +56,19 @@ You can call different functions to calculate graph and sequence based statistic
 >>> ug.calculate_average_node_degree()
 2
 >>> ug.calculate_average_segment_length()
-3494
+8490
 >>> ug.calculate_n50_l50()
-(15000, 12)
+(60706, 36)
 ```
 
 You can retrieve a sequence given the segment ID as follows. A `Bio.Seq.Seq` object will be returned.
 
 ```python
->>> seq = ug.get_segment_sequence("unitig_1")
+>>> seq = ug.get_segment_sequence("3042")
 >>> seq
-Seq('ATGCGTACGGGGTAAGTGAGCCTG')
+Seq('TGATTTTCGCGCGATTACTACGATGATTTCAAACGATTCCTCTGATTATTTCACGC')
 >>> seq.reverse_complement()
-Seq('CAGGCTCACTTACCCCGTACGCAT')
+Seq('GCGTGAAATAATCAGAGGAATCGTTTGAAATCATCGTAGTAATCGCGCGAAAATCA')
 ```
 
 !!! note
@@ -179,17 +183,26 @@ You can view the different attributes of the contig graphs obtained using the as
 189
 >>> cg.ecount
 394
+>>> cg.lcount
+1318
+```
+
+You can get the list of contig names as follows.
+
+```python
+>>> cg.contig_names
+['NODE_1_length_488682_cov_86.190505', 'NODE_2_length_472233_cov_17.669606', 'NODE_3_length_354360_cov_17.661738', ...]
 ```
 
 You can get the mapping of the internal node ID to the contig names as follows.
 
 ```python
->>> cg.contig_names
-bidict({0: 'NODE_1_length_488682_cov_86.190505', 1: 'NODE_2_length_472233_cov_17.669606', 2: 'NODE_3_length_354360_cov_17.661738', 3: 'NODE_4_length_346431_cov_86.228266', ...})
+>>> cg.contig_name_to_id
+{'NODE_1_length_488682_cov_86.190505': 0, 'NODE_2_length_472233_cov_17.669606': 1, 'NODE_3_length_354360_cov_17.661738': 2, ...}
 ```
 
 !!! note
-    The internal ID starting from 0 is used to index the nodes in the `igraph` object. The corresponding contig name can be obtained from the `contig_names` attribute of the contig graph object. This is useful when traversing nodes using the `igraph` object.
+    The internal ID starting from 0 is used to index the nodes in the `igraph` object. The internal ID of each contig can be obtained from `contig_name_to_id`. The corresponding contig name can be obtained from `contig_names`. These mappings are useful when traversing nodes using the `igraph` object.
 
 You can call different functions to calculate graph and sequence based statistics.
 

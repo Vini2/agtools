@@ -31,7 +31,7 @@ You can load a SPAdes contig graph as follows. We will use the [test data](https
 >>> cg = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
-You can check the number of vertices (contigs) and edges (overlaps).
+You can check the number of vertices (contigs) and edges (connections).
 ```python
 >>> cg.vcount
 189
@@ -43,14 +43,14 @@ You can check the number of vertices (contigs) and edges (overlaps).
     You will note that there are less number of contigs than segments (`S` tags) in the graph (189 contigs and 982 segments in this example). This is because SPAdes resolves longer segment paths as contigs. Each contig is made up of one or more segments.
 
 !!! note
-    You will note that there are less number of edges than links (`L` tags) in the graph (394 edges and 1318 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove duplicate edges.
+    You will note that there are less number of edges than links (`L` tags) in the graph (394 edges and 1318 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove multiple edges and self loops.
 
 
 ## MEGAHIT contig graph
 
 MEGAHIT assembly graphs represent contig sequences as segments and overlaps between contigs as links. So it is pretty straightforward to understand. However, when building the graph file from `megahit_core`, the contigs are renamed.
 
-For example this is how the first few lines of `final.contigs.fa` looks like.
+For example, this is how the first few lines of `final.contigs.fa` looks like.
 
 ```text
 >k141_4704 flag=0 multi=1.0000 len=301
@@ -63,9 +63,9 @@ GCAGTTAAGGCAGATCAAAATTTCAAGCGTACAGATGATAAGACTAAAGATGTTGAACTAAGTGATAATGATAAAAAATT
 And this is how the first few lines of `final.graph.fastg` looks like.
 
 ```text
->NODE_1_length_301_cov_1.0000_ID_1;
+>NODE_1_length_205_cov_1.0000_ID_1;
 TTCTGCAACACTTAAAGACATTCAAACTTTTTATGTTTGGGGTTACTGTAAAAACGATCAAATTAAGTGGTCCGTAGCCAAGGGTTTAATCGATAAAGAAGAATACACTTTGATCACTGGAGAAAAATATCCAGAAACAAAAGATGAAAAGTCACAGGTGTAATACTTGTGGCTTTTTAATTTGAATAAAGTGGGTGGCATAATGTTTGGATTTACCAAACGACATGAACAAGATTGGAGTTTAACGCGATTAGAAGAAAATGATAAGACTATGTTTGAAAAATTCGACAGAATAGAAGAT
->NODE_1_length_301_cov_1.0000_ID_1';
+>NODE_1_length_205_cov_1.0000_ID_1';
 ATCTTCTATTCTGTCGAATTTTTCAAACATAGTCTTATCATTTTCTTCTAATCGCGTTAAACTCCAATCTTGTTCATGTCGTTTGGTAAATCCAAACATTATGCCACCCACTTTATTCAAATTAAAAAGCCACAAGTATTACACCTGTGACTTTTCATCTTTTGTTTCTGGATATTTTTCTCCAGTGATCAAAGTGTATTCTTCTTTATCGATTAAACCCTTGGCTACGGACCACTTAATTTGATCGTTTTTACAGTAACCCCAAACATAAAAAGTTTGAATGTCTTTAAGTGTTGCAGAA
 >NODE_2_length_301_cov_1.0000_ID_3;
 GCAGTTAAGGCAGATCAAAATTTCAAGCGTACAGATGATAAGACTAAAGATGTTGAACTAAGTGATAATGATAAAAAATTACAAAAAACTATCAAGGTTGCTAAGAAGACTTTAGATTCGTTCGATAATGAAAAAGCAAAAGCTAAATTAGATGCTAAAATAGAAGATTTGAAACAAAAAGTATTAGAAGCAAGTTTTGAATTAAATCAATAAGATTCAAAAGAAGTTACACCAGAAGTTAAGTTAGAAAAACAAAAGTTAATTAAAGATATCACTGAAAAAGAAGCTAAGTTATCCGAAC
@@ -74,7 +74,7 @@ GTTCGGATAACTTAGCTTCTTTTTCAGTGATATCTTTAATTAACTTTTGTTTTTCTAACTTAACTTCTGGTGTAACTTCT
 ...
 ```
 
-`k141_4704` corresponds to `NODE_1_length_301_cov_1.0000_ID_1` and `k141_10879` corresponds to `NODE_2_length_301_cov_1.0000_ID_3`. Hence, the `megahit` module of *agtools* is designed to handle these differences in contig names as well.
+`k141_4704` corresponds to `NODE_1_length_205_cov_1.0000_ID_1` and `k141_10879` corresponds to `NODE_2_length_301_cov_1.0000_ID_3`. Hence, the `megahit` module of *agtools* is designed to handle these differences in contig names as well.
 
 Once you convert the FASTG file to GFA format, you can load a MEGAHIT contig graph as follows. We will use the [test data](https://github.com/Vini2/agtools/tree/main/tests/data/ESC) provided.
 
@@ -89,7 +89,7 @@ You can get the contig name mapping between the graph file and the FASTA file as
 
 ```python
 >>> cg.graph_to_contig_map
-bidict({'NODE_1_length_301_cov_1.0000_ID_1': 'k141_4704', 'NODE_2_length_301_cov_1.0000_ID_3': 'k141_10879', ...})
+bidict({'NODE_1_length_205_cov_1.0000_ID_1': 'k141_4704', 'NODE_2_length_301_cov_1.0000_ID_3': 'k141_10879', 'NODE_3_length_301_cov_1.0000_ID_5': 'k141_9891', ...})
 ```
 
 Given the contig name in the graph, you can get the contig name in the FASTA file as follows.
@@ -103,7 +103,7 @@ You can query the other way round as well. Given the contig name in the FASTA fi
 
 ```python
 >>> cg.graph_to_contig_map.inverse['k141_4704']
-['NODE_1_length_301_cov_1.0000_ID_1']
+['NODE_1_length_205_cov_1.0000_ID_1']
 ```
 
 !!! note 
@@ -112,15 +112,15 @@ You can query the other way round as well. Given the contig name in the FASTA fi
 You can get the contig sequences using the contig name in the graph as follows.
 
 ```python
->>> cg.get_contig_sequence('NODE_1_length_301_cov_1.0000_ID_1')
-Seq('TTCTGCAACACTTAAAGACATTCAAACTTTTTATGTTTGGGGTTACTGTAAAAA...GAT')
+>>> cg.get_contig_sequence('NODE_1_length_205_cov_1.0000_ID_1')
+Seq('CGCCCTCGCTCATGCACGATTGCGAAGGCTCCGGCATGCCATCTGAAGAAACAG...GAA')
 ```
 
 Note that the contigs have some descriptions after the name in the FASTA file. You can get them as follows.
 
 ```python
 >>> cg.contig_descriptions['k141_4704']
-'k141_4704 flag=0 multi=1.0000 len=301'
+'k141_4704 flag=0 multi=1.0000 len=205'
 ```
 
 ## Flye contig graph
@@ -137,12 +137,14 @@ You can load a Flye contig graph as follows. We will use the [test data](https:/
 >>> cg = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
-You can check the number of vertices (contigs) and edges (overlaps).
+You can check the number of vertices (contigs), edges (connections) and number of link lines in the GFA file.
 ```python
 >>> cg.vcount
 67
 >>> cg.ecount
 2
+>>> cg.lcount
+10
 ```
 
 !!! note
@@ -167,13 +169,17 @@ myloasm assembly graphs represent contig sequences as segments and overlaps betw
     Not all contigs in the `final_contig_graph.gfa` file appear in the `assembly_primary.fa` as contigs that are similar to larger contigs are removed (see [GitHub issue](https://github.com/bluenote-1577/myloasm/issues/5)). Also, the contig sequences are not present in the GFA file. This can raise warnings when retrieving contig sequences. Hence, it is recommended to run `agtools clean` to remove missing contigs and add back the contig sequences to the GFA file.
 
 
-You can check the number of vertices (contigs), edges (overlaps) and contig names.
+You can check the number of vertices (contigs), edges (connections), the number of link lines and contig names.
 
 ```python
 >>> cg.vcount
 2
 >>> cg.ecount
 1
+>>> cg.lcount
+2
 >>> cg.contig_names
-bidict({0: 'u913838ctg', 1: 'u579439ctg'})
+['u913838ctg', 'u579439ctg']
+>>> cg.contig_name_to_id
+{'u913838ctg': 0, 'u579439ctg': 1}
 ```

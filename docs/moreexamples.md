@@ -64,8 +64,8 @@ edge_list = []
 for from_link in ug.oriented_links:
     for to_link in ug.oriented_links[from_link]:
         for orient in ug.oriented_links[from_link][to_link]:
-            source = f"{from_link}{orient[0]}"
-            target = f"{to_link}{orient[1]}"
+            source = f"{ug.segment_names[from_link]}{orient[0]}"
+            target = f"{ug.segment_names[to_link]}{orient[1]}"
             edge_list.append((source, target))
 
 # Add oriented edges to the graph
