@@ -113,9 +113,6 @@ print(f"\nSaved: {out.resolve()}")
 Bacteriophages (or phages) tend to form circular components in the assembly graph. Here is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e., circular paths) and keeps the ones whose estimated genome length falls in a typical bacteriophage range (default 10–300 kb; most sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN`/`MAX_LEN` as needed.
 
 ```python
-# Strategy: find simple cycles in the oriented unitig graph and keep those in a phage-like size range.
-
-# deps: pip install agtools python-igraph bidict
 import igraph as ig
 from bidict import bidict
 
