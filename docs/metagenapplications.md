@@ -56,7 +56,7 @@ with open("contig_bins.tsv", "w") as out:
 
 ## Identifying plasmid candidates
 
-Here is a tiny, practical “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths—simple, fast, and a good first pass before deeper validation.
+Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths—simple, fast, and a good first pass before deeper validation.
 
 ```python
 # Choose the loader for your assembler (SPAdes shown here)
@@ -110,7 +110,7 @@ print(f"\nSaved: {out.resolve()}")
 
 ## Identify bacteriophage candidates from an assembly graph
 
-Bacteriophages (or phages) tend to form circular components in the assembly graph. Here is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e., circular paths) and keeps the ones whose estimated genome length falls in a typical bacteriophage range (default 10–300 kb; most sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN`/`MAX_LEN` as needed.
+Bacteriophages (or phages) with circular genomes tend to form circular components in the assembly graph. Here is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e., circular paths) and keeps the ones whose estimated genome length falls in a typical bacteriophage range (default 10–300 kb; most sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN`/`MAX_LEN` as needed.
 
 ```python
 import igraph as ig
@@ -214,3 +214,6 @@ with out.open("w") as fh:
         fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
 print(f"\nSaved: {out.resolve()}")
 ```
+
+!!! note
+    This is a graph-only heuristic. Circular sequences does not mean it's a phage (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using your favorite annotation pipeline after shortlisting candidates.
