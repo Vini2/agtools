@@ -40,7 +40,7 @@ ug = UnitigGraph.from_gfa("unitig_graph.gfa")
 # Get forward node (+) and reverse node (-) for each contig
 oriented_nodes = bidict()
 i = 0
-for segment in ug.segment_names.values():
+for segment in ug.segment_names:
     oriented_nodes[f"{segment}+"] = i
     oriented_nodes[f"{segment}-"] = i + 1
     i += 2
