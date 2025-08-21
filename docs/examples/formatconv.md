@@ -9,4 +9,6 @@
 * GFA to FASTA
 * GFA to adjacency matrix
 
+You can refer to the [CLI reference](../cli.md) for details on the commands you can use for these format conversions.
+
 Please refer to the [file formats](../fileformats.md) section for further details on the different assembly graph file formats.

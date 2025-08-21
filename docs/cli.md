@@ -20,6 +20,7 @@ Commands:
   filter     Filter segments from GFA file
   clean      Clean a GFA file based on segments in a FASTA file
   component  Extract a component containing a given segment
+  fastg2gfa  Convert FASTG file to GFA format
   asqg2gfa   Convert ASQG file to GFA format
   gfa2dot    Convert GFA file to DOT format (GraphViz)
   gfa2fasta  Get segments in FASTA format
@@ -186,6 +187,34 @@ Options:
 **Outputs**
 
 * Assembly graph file of the constituent component in GFA format
+
+## `fastg2gfa`
+
+Convert a FASTG file to GFA format.
+
+Run `agtools fastg2gfa --help` or `agtools fastg2gfa -h` to list the help message for agtools fastg2gfa.
+
+```bash
+Usage: agtools fastg2gfa [OPTIONS]
+
+  Convert FASTG file to GFA format
+
+Options:
+  -g, --graph PATH     path(s) to the assembly graph file(s)  [required]
+  -k, --ksize INTEGER  k-mer size used for the assembly  [default: 141;
+                       required]
+  -o, --output PATH    path to the output folder  [required]
+  -h, --help           Show this message and exit.
+```
+
+**Inputs**
+
+* Assembly graph file in FASTG format
+* k-mer size used for the assembly
+
+**Outputs**
+
+* Assembly graph file in GFA format
 
 ## `asqg2gfa`
 
