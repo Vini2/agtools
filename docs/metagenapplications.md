@@ -2,23 +2,23 @@
 
 ## Bin contigs by connected components
 
-Contigs of a genome ideally form connected components in the assembly graph. Here is a minimal, straightforward example using *agtools* that “bins” contigs by connected component (each bin = one connected component in the contig graph). It uses the assembler helper to load a contig graph and then `get_connected_components()` to group contig.
+Contigs of a genome ideally form connected components in the assembly graph. Here is a minimal, straightforward example using *agtools* that “bins” contigs by connected components (each bin = one connected component in the contig graph). It uses *agtools* to load a contig graph and then `get_connected_components()` to group contigs.
 
 ```python
 # 1) pick the assembler loader that matches your assembly
-#    (SPAdes shown here; MEGAHIT/Flye/myloasm loaders work the same way)
+#    (metaSPAdes shown here; MEGAHIT/Flye/myloasm loaders work the same way)
 from agtools.assemblers import spades
 # If you used MEGAHIT:
 #   from agtools.assemblers import megahit
-# If you used Flye:
+# If you used metaFlye:
 #   from agtools.assemblers import flye
 # If you used myloasm:
 #   from agtools.assemblers import myloasm
 
 # --- files produced by your assembler ---
-graph_file        = "assembly_graph_with_scaffolds.gfa"  # SPAdes GFA
-contigs_fasta     = "contigs.fasta"                      # SPAdes contigs
-contig_paths_file = "contigs.paths"                      # SPAdes contig paths
+graph_file        = "assembly_graph_with_scaffolds.gfa"  # metaSPAdes GFA
+contigs_fasta     = "contigs.fasta"                      # metaSPAdes contigs
+contig_paths_file = "contigs.paths"                      # metaSPAdes contig paths
 
 # 2) load the contig graph (ContigGraph)
 cg = spades.get_contig_graph(graph_file, contigs_fasta, contig_paths_file)
@@ -56,7 +56,7 @@ with open("contig_bins.tsv", "w") as out:
 
 ## Identifying plasmid candidates
 
-Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths—simple, fast, and a good first pass before deeper validation.
+Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a good first pass before deeper validation.
 
 ```python
 # Choose the loader for your assembler (SPAdes shown here)
@@ -105,7 +105,7 @@ print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
-    Circular contigs do not means plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
+    Circular contigs do not mean plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
 
 
 ## Identify bacteriophage candidates from an assembly graph
@@ -216,4 +216,4 @@ print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
-    This is a graph-only heuristic. Circular sequences does not mean it's a phage (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using your favorite annotation pipeline after shortlisting candidates.
+    This is a graph-only heuristic. Circular sequences do not mean they are always phages (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using tools like [Pharokka](https://github.com/gbouras13/pharokka), [Phold](https://github.com/gbouras13/phold) and [Phynteny](https://github.com/susiegriggo/Phynteny_transformer) after shortlisting candidates. If you want to get both circular and linear phage genomes accurately, please check out [Phables](https://github.com/Vini2/phables).
