@@ -54,7 +54,7 @@ with open("contig_bins.tsv", "w") as out:
 !!! note
     This example bins purely by graph connectivity (topology). If you want coverage and nucleotide composition-aware binning, you have to combine these bins with additional heuristics or downstream methods. Please take a look at [MetaCoAG](https://doi.org/10.1007/978-3-031-04749-7_5).
 
-## Identifying plasmid candidates
+## Identify plasmid candidates
 
 Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a good first pass before deeper validation.
 
