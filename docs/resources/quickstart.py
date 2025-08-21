@@ -8,7 +8,7 @@ ug = UnitigGraph.from_gfa("assembly_graph.gfa")
 # Print basic graph-based statistics
 print(f"Number of vertices (segments): {ug.vcount}")
 print(f"Number of edges (links): {ug.ecount}")
-print(f"Number of self-loops (repeats): {ug.self_loops}")
+print(f"Number of self-loops (repeats): {len(ug.self_loops)}")
 print(f"Average node degree: {ug.calculate_average_node_degree()}")
 print(f"Number of connected components: {len(ug.get_connected_components())}")
 
@@ -22,12 +22,12 @@ print(f"N50 and L50: {ug.calculate_n50_l50()}")
 for from_link in ug.oriented_links:
     for to_link in ug.oriented_links[from_link]:
         for orient in ug.oriented_links[from_link][to_link]:
-            print(from_link, orient[0], "->", to_link, orient[1])
+            print(ug.segment_names[from_link], orient[0], "->", ug.segment_names[to_link], orient[1])
 
 # Print paths
-for path in ug.paths:
+for path in ug.path_index:
     # Path name: path string, path overlaps
-    print(f"{path}: {ug.paths[path][0]}\t{ug.paths[path][1]}")
+    print(path, ":", ug.get_path(path))
 
 # Get neighbours of a segment
 print(f"Neighbours of segment 5: {ug.get_neighbors("5")}")
@@ -37,7 +37,7 @@ print("Adjancency matrix:")
 print(ug.get_adjacency_matrix())
 
 # Print segments
-for seg_id in ug.segment_names:
+for seg_id in range(len(ug.segment_names)):
     # internal segment ID, segment name, segment sequence, segment length
     print(seg_id, ug.segment_names[seg_id], ug.get_segment_sequence(ug.segment_names[seg_id]), ug.segment_lengths[ug.segment_names[seg_id]])
 
@@ -50,4 +50,3 @@ ig.plot(
     vertex_frame_width=2.0,             #vertex frame width
     vertex_label_size=20.0,             # vertex label size
 )
-
