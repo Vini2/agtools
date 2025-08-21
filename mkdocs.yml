@@ -43,6 +43,7 @@ nav:
       - API Tutorial: tutorial.md
       - Assembler examples: assemblerexamples.md
       - More examples: moreexamples.md
+      - Metagenomic Applications: metagenapplications.md
   - Reference:
       - CLI Commands: cli.md
       - API Documentation: api.md
