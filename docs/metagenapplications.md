@@ -208,4 +208,12 @@ candidates.sort(key=lambda r: -r["length_bp"])
 print(f"Phage-like circular candidates: {len(candidates)} (size window {MIN_LEN:,}-{MAX_LEN:,} bp)")
 for i, rec in enumerate(candidates, 1):
     print(f"{i:2d}. ~{rec['length_bp']:,} bp  | segments: {rec['n_segments']}\n    {rec['path_oriented']}\n")
+
+# Optional: write results to a TSV
+out = Path("phage_like_candidates.tsv")
+with out.open("w") as fh:
+    fh.write("path_number\tlength_bp\tn_segments\tpath_oriented\n")
+    for i, rec in enumerate(candidates, 1):
+        fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
+print(f"\nSaved: {out.resolve()}")
 ```
