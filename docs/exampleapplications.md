@@ -1,4 +1,4 @@
-# Using *agtools* in metagenomics
+# Example applications of *agtools*
 
 ## Bin contigs by connected components
 
@@ -217,3 +217,143 @@ print(f"\nSaved: {out.resolve()}")
 
 !!! note
     This is a graph-only heuristic. Circular sequences do not mean they are always phages (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using tools like [Pharokka](https://github.com/gbouras13/pharokka), [Phold](https://github.com/gbouras13/phold) and [Phynteny](https://github.com/susiegriggo/Phynteny_transformer) after shortlisting candidates. If you want to get both circular and linear phage genomes accurately, please check out [Phables](https://github.com/Vini2/phables).
+
+
+## Haplotype phasing from assembly graph bubbles
+
+Here’s a minimal local haplotype phasing example with graph-bubbles using the *agtools* API. It:
+
+1. loads a `UnitigGraph` from a GFA,
+2. builds the **oriented unitig graph** (the +/− version),
+3. detects simple **bubbles** (two vertex-disjoint paths that split at a source and re-join at a sink), and
+4. outputs the two **allele sequences** per bubble by stitching unitig sequences while subtracting per-edge overlaps.
+
+
+```python
+import igraph as ig
+from bidict import bidict
+
+from agtools.core.unitig_graph import UnitigGraph
+
+# ---- Input: unitig GFA from your assembler (SPAdes/Flye/etc.) ----
+gfa_path = "assembly_graph.gfa"
+
+# 1) Load unitig graph (agtools)
+ug = UnitigGraph.from_gfa(gfa_path)  # parses S/L/P lines; sequences fetched on demand
+# (See: API tutorial & reference for UnitigGraph and its attributes/methods)
+
+# 2) Build oriented (+/−) unitig graph (as in agtools "More examples")
+oriented_nodes = bidict()
+vid = 0
+for seg_name in ug.segment_names:
+    oriented_nodes[f"{seg_name}+"] = vid
+    oriented_nodes[f"{seg_name}-"] = vid + 1
+    vid += 2
+
+G = ig.Graph(directed=True)
+G.add_vertices(len(oriented_nodes))
+
+# label vertices with oriented names for convenience
+revmap = oriented_nodes.inverse
+for v in range(G.vcount()):
+    G.vs[v]["name"] = revmap[v]
+
+# add oriented edges using ug.oriented_links
+edges = []
+for from_id in ug.oriented_links:
+    for to_id in ug.oriented_links[from_id]:
+        for (from_or, to_or) in ug.oriented_links[from_id][to_id]:
+            s = f"{ug.segment_names[from_id]}{from_or}"
+            t = f"{ug.segment_names[to_id]}{to_or}"
+            edges.append((oriented_nodes[s], oriented_nodes[t]))
+G.add_edges(edges)
+
+# 3) Utilities for stitching sequences along an oriented path
+
+def oriented_name_parts(oname):
+    return oname[:-1], oname[-1]  # ("9001", "+") etc.
+
+def oriented_seq(oname):
+    seg, orient = oriented_name_parts(oname)
+    seq = ug.get_segment_sequence(seg)  # returns Bio.Seq.Seq
+    return str(seq if orient == "+" else seq.reverse_complement())
+
+def stitch_oriented_path(v_ids):
+    """Concatenate sequences for an oriented vertex path, subtracting edge overlaps."""
+    names = [G.vs[v]["name"] for v in v_ids]
+    if not names:
+        return ""
+    out = oriented_seq(names[0])
+    for a, b in zip(names, names[1:]):
+        sa, oa = oriented_name_parts(a)
+        sb, ob = oriented_name_parts(b)
+        key = (ug.segment_name_to_id[sa], oa, ug.segment_name_to_id[sb], ob)
+        ov = ug.link_overlap.get(key, 0)  # overlap in bp (agtools stores this)
+        out += oriented_seq(b)[ov:]
+    return out
+
+# 4) Find simple "bubbles" and phase them locally
+# Heuristic: for any vertex with out-degree ≥2, pick two distinct successors,
+# find the first reconvergence vertex t reachable from both, then take
+# the shortest disjoint paths s->t (one through each successor).
+MAX_DEPTH = 80     # limit search for reconvergence
+MAX_BUBBLES = 10   # cap for a quick demo
+
+def first_common_reconvergence(n1, n2, depth=MAX_DEPTH):
+    # BFS distance dicts from each start
+    d1 = G.shortest_paths_dijkstra(source=n1, target=None)[0]
+    d2 = G.shortest_paths_dijkstra(source=n2, target=None)[0]
+    candidates = [v for v in range(G.vcount())
+                  if d1[v] < float("inf") and d2[v] < float("inf")
+                  and d1[v] <= depth and d2[v] <= depth
+                  and G.indegree(v) >= 2]
+    if not candidates:
+        return None
+    # prefer earliest joint target by summed distance
+    return min(candidates, key=lambda v: (d1[v] + d2[v]))
+
+bubbles = []
+for s in range(G.vcount()):
+    succ = G.successors(s)
+    if len(succ) < 2:
+        continue
+    # try pairs of outgoing branches
+    for i in range(len(succ)):
+        for j in range(i + 1, len(succ)):
+            n1, n2 = succ[i], succ[j]
+            t = first_common_reconvergence(n1, n2)
+            if t is None:
+                continue
+            # shortest paths s->t that begin with the chosen successor
+            p1 = [s] + G.get_shortest_paths(n1, to=t, output="vpath")[0]
+            p2 = [s] + G.get_shortest_paths(n2, to=t, output="vpath")[0]
+            # ensure paths meet only at s and t (vertex-disjoint interiors)
+            if set(p1[1:-1]).isdisjoint(set(p2[1:-1])):
+                bubbles.append((s, t, p1, p2))
+            if len(bubbles) >= MAX_BUBBLES:
+                break
+        if len(bubbles) >= MAX_BUBBLES:
+            break
+    if len(bubbles) >= MAX_BUBBLES:
+        break
+
+# 5) Emit phased alleles (two sequences per bubble)
+print(f"Found {len(bubbles)} bubble(s) suitable for local phasing")
+for idx, (s, t, pA, pB) in enumerate(bubbles, 1):
+    hapA = stitch_oriented_path(pA)
+    hapB = stitch_oriented_path(pB)
+    s_name = G.vs[s]["name"]; t_name = G.vs[t]["name"]
+    print(f"\nBubble {idx}: {s_name}  →  {t_name}")
+    print(f" allele A length: {len(hapA):,} bp")
+    print(f" allele B length: {len(hapB):,} bp")
+
+    # Optional: write FASTA for downstream polishing/validation
+    # with open(f"bubble_{idx}_alleleA.fasta", "w") as fh:
+    #     fh.write(f">bubble_{idx}_alleleA\n{hapA}\n")
+    # with open(f"bubble_{idx}_alleleB.fasta", "w") as fh:
+    #     fh.write(f">bubble_{idx}_alleleB\n{hapB}\n")
+
+```
+
+!!! note
+    This is a very simple example that demonstrates the utility of *agtools*. For chromosome-scale phasing you have to incorporate read/link evidence (e.g., long reads, Hi-C) to chain many bubbles consistently.
