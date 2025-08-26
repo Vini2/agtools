@@ -108,7 +108,8 @@ def main():
         "data/Flye/SRR18491312",
         "data/Flye/SRR18491319",
         "data/Flye/ERR10750395",
-        "data/Flye/ERR11523645"
+        "data/Flye/ERR11523645",
+        "data/Flye/ERR11561019",
     ]
 
     df = profile_files(folders, runs=10)
