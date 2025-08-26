@@ -213,6 +213,8 @@ for i, rec in enumerate(candidates, 1):
 
 ## Haplotype phasing from assembly graph bubbles
 
+Haplotype phasing aims to distinguish and reconstruct the individual haplotypes present in a diploid or polyploid genome. In assembly graphs, this can often be approached by identifying and resolving **bubbles** which are alternative paths in the graph that correspond to sequence differences between haplotypes. 
+
 Here’s a minimal local haplotype phasing example with graph-bubbles using the *agtools* API. It:
 
 1. loads a `UnitigGraph` from a GFA,
