@@ -6,14 +6,8 @@ Contigs of a genome ideally form connected components in the assembly graph. Her
 
 ```python
 # 1) pick the assembler loader that matches your assembly
-#    (metaSPAdes shown here; MEGAHIT/Flye/myloasm loaders work the same way)
+#    (metaSPAdes shown here)
 from agtools.assemblers import spades
-# If you used MEGAHIT:
-#   from agtools.assemblers import megahit
-# If you used metaFlye:
-#   from agtools.assemblers import flye
-# If you used myloasm:
-#   from agtools.assemblers import myloasm
 
 # --- files produced by your assembler ---
 graph_file        = "assembly_graph_with_scaffolds.gfa"  # metaSPAdes GFA
@@ -22,9 +16,6 @@ contig_paths_file = "contigs.paths"                      # metaSPAdes contig pat
 
 # 2) load the contig graph (ContigGraph)
 cg = spades.get_contig_graph(graph_file, contigs_fasta, contig_paths_file)
-# For MEGAHIT: cg = megahit.get_contig_graph(graph_file, contigs_fasta)
-# For Flye:    cg = flye.get_contig_graph(graph_file, contigs_fasta, "assembly_info.txt")
-# For myloasm: cg = myloasm.get_contig_graph(graph_file, contigs_fasta)
 
 # 3) compute connected components (bins) at contig level
 components = cg.get_connected_components()   # list of lists of internal IDs
@@ -59,7 +50,8 @@ with open("contig_bins.tsv", "w") as out:
 Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a good first pass before deeper validation.
 
 ```python
-# Choose the loader for your assembler (SPAdes shown here)
+# 1) pick the assembler loader that matches your assembly
+#    (metaSPAdes shown here)
 from agtools.assemblers import spades
 from pathlib import Path
 
@@ -108,7 +100,7 @@ print(f"\nSaved: {out.resolve()}")
     Circular contigs do not mean plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
 
 
-## Identify bacteriophage candidates from an assembly graph
+## Identify bacteriophage candidates
 
 Bacteriophages (or phages) with circular genomes tend to form circular components in the assembly graph. Here is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e., circular paths) and keeps the ones whose estimated genome length falls in a typical bacteriophage range (default 10–300 kb; most sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN`/`MAX_LEN` as needed.
 
@@ -126,7 +118,7 @@ MIN_LEN = 10_000
 MAX_LEN = 300_000
 
 # 1) Load the unitig graph
-ug = UnitigGraph.from_gfa(gfa_path)  # parses GFA; sequences fetched lazily from file
+ug = UnitigGraph.from_gfa(gfa_path)
 
 # 2) Build an oriented (directed) version of the graph, as in the agtools example
 #    Each segment gets a forward (+) and reverse (-) node; edges carry orientation.
@@ -207,12 +199,12 @@ for i, rec in enumerate(candidates, 1):
     print(f"{i:2d}. ~{rec['length_bp']:,} bp  | segments: {rec['n_segments']}\n    {rec['path_oriented']}\n")
 
 # Optional: write results to a TSV
-out = Path("phage_like_candidates.tsv")
-with out.open("w") as fh:
-    fh.write("path_number\tlength_bp\tn_segments\tpath_oriented\n")
-    for i, rec in enumerate(candidates, 1):
-        fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
-print(f"\nSaved: {out.resolve()}")
+# out = Path("phage_like_candidates.tsv")
+# with out.open("w") as fh:
+#     fh.write("path_number\tlength_bp\tn_segments\tpath_oriented\n")
+#     for i, rec in enumerate(candidates, 1):
+#         fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
+# print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
@@ -239,10 +231,9 @@ from agtools.core.unitig_graph import UnitigGraph
 gfa_path = "assembly_graph.gfa"
 
 # 1) Load unitig graph (agtools)
-ug = UnitigGraph.from_gfa(gfa_path)  # parses S/L/P lines; sequences fetched on demand
-# (See: API tutorial & reference for UnitigGraph and its attributes/methods)
+ug = UnitigGraph.from_gfa(gfa_path)
 
-# 2) Build oriented (+/−) unitig graph (as in agtools "More examples")
+# 2) Build oriented (+/−) unitig graph
 oriented_nodes = bidict()
 vid = 0
 for seg_name in ug.segment_names:
