@@ -130,26 +130,27 @@ def main():
     # Plot running time with error bars
     # -----------------------------------------------------------
     x = df_results["gfa_S"].to_numpy() + df_results["gfa_L"].to_numpy() + df_results["gfa_P"].to_numpy()
+    x_million = x / 1e6   # convert to millions
     y = df_results["wall_mean"].to_numpy()
     yerr = df_results["wall_std"].to_numpy()
 
     # Force regression through (0,0)
-    m = (x * y).sum() / (x**2).sum()
+    m = (x_million * y).sum() / (x_million**2).sum()
     b = 0
-    trend_y = m * x  # no intercept
+    trend_y = m * x_million  # no intercept
 
     plt.figure(figsize=(8, 5))
-    plt.errorbar(x, y, yerr=yerr, fmt='o', color='blue',
+    plt.errorbar(x_million, y, yerr=yerr, fmt='o', color='blue',
                 ecolor='lightblue', elinewidth=2, capsize=4,
                 label='Running time Mean ± Std')
 
     # Plot trend line
-    plt.plot(x, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.plot(x_million, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
 
-    # Format x-axis with thousands separators
-    plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v):,}"))
+    # Format x-axis with 1 decimal and "M"
+    plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.1f}"))
 
-    plt.xlabel("Number of GFA tags")
+    plt.xlabel("Number of GFA tags (millions)")
     plt.ylabel("Running time (s)")
     plt.title("Running time vs number of GFA tags for SPAdes contig graph")
     plt.grid(True)
