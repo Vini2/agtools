@@ -284,7 +284,7 @@ def stitch_oriented_path(v_ids):
     return out
 
 # 4) Find simple "bubbles" and phase them locally
-# Heuristic: for any vertex with out-degree ≥2, pick two distinct successors,
+# Heuristic: for any vertex with out-degree >=2, pick two distinct successors,
 # find the first reconvergence vertex t reachable from both, then take
 # the shortest disjoint paths s->t (one through each successor).
 MAX_DEPTH = 80     # limit search for reconvergence
