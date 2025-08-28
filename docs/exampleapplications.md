@@ -251,7 +251,7 @@ from bidict import bidict
 from agtools.core.unitig_graph import UnitigGraph
 
 # ---- Input: unitig GFA from your assembler (SPAdes/Flye/etc.) ----
-gfa_path = "assembly_graph.gfa"
+gfa_path = "chr22_toy_bubbles.gfa"
 
 # 1) Load unitig graph (agtools)
 ug = UnitigGraph.from_gfa(gfa_path)
@@ -371,3 +371,11 @@ for idx, (s, t, pA, pB) in enumerate(bubbles, 1):
 
 !!! note
     This is a very simple example that demonstrates the utility of *agtools*. For chromosome-scale phasing you have to incorporate read/link evidence (e.g., long reads, Hi-C) to chain many bubbles consistently.
+
+<div class="button-container">
+  <a href="../resources/chr22_toy_bubbles.gfa" download class="download-button">
+    <i class="bi bi-download"></i> Download the example input data: chr22_toy_bubbles.gfa
+  </a>
+</div>
+
+<hr>
