@@ -10,9 +10,9 @@ Contigs of a genome ideally form connected components in the assembly graph. Her
 from agtools.assemblers import spades
 
 # --- files produced by your assembler ---
-graph_file        = "assembly_graph_with_scaffolds.gfa"  # metaSPAdes GFA
-contigs_fasta     = "contigs.fasta"                      # metaSPAdes contigs
-contig_paths_file = "contigs.paths"                      # metaSPAdes contig paths
+graph_file        = "ERR321017_assembly_graph.gfa"  # metaSPAdes GFA
+contigs_fasta     = "ERR321017_contigs.fasta"       # metaSPAdes contigs
+contig_paths_file = "ERR321017_contigs.paths"       # metaSPAdes contig paths
 
 # 2) load the contig graph (ContigGraph)
 cg = spades.get_contig_graph(graph_file, contigs_fasta, contig_paths_file)
@@ -45,26 +45,31 @@ with open("contig_bins.tsv", "w") as out:
 !!! note
     This example bins purely by graph connectivity (topology). If you want coverage and nucleotide composition-aware binning, you have to combine these bins with additional heuristics or downstream methods. Please take a look at [MetaCoAG](https://doi.org/10.1007/978-3-031-04749-7_5).
 
+<div class="button-container">
+  <a href="../resources/ERR321017_assembly.zip" download class="download-button">
+    <i class="bi bi-download"></i> Download the example input data: ERR321017_assembly.zip
+  </a>
+</div>
+
+<hr>
+
+
 ## Identify plasmid candidates
 
 Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a good first pass before deeper validation.
 
 ```python
-# 1) pick the assembler loader that matches your assembly
-#    (metaSPAdes shown here)
-from agtools.assemblers import spades
+from agtools.core.unitig_graph import UnitigGraph
 from pathlib import Path
 
-# --- files produced by your assembler ---
-graph_file        = "assembly_graph_with_scaffolds.gfa"
-contigs_fasta     = "contigs.fasta"
-contig_paths_file = "contigs.paths"
+# --- input: unitig GFA from your assembler (SPAdes/Flye/etc.) ---
+gfa_path = "ERR10750395_assembly_graph.gfa"
 
-# 1) Load contig graph
-cg = spades.get_contig_graph(graph_file, contigs_fasta, contig_paths_file)
+# 1) Load the unitig graph
+ug = UnitigGraph.from_gfa(gfa_path)
 
-# 2) Grab circular contigs (self-loops) — these are strong plasmid candidates
-circular_contigs = cg.self_loops  # list of contig names forming self-loops
+# 2) Grab circular unitigs (self-loops) — these are strong plasmid candidates
+circular_unitigs = ug.self_loops  # list of unitig names forming self-loops
 
 # 3) Pull sequences, compute simple stats, and apply loose length filters
 #    (plasmids are often a few kb to a few hundred kb; tweak as needed)
@@ -72,8 +77,8 @@ min_len = 1000
 max_len = 500_000
 
 candidates = []
-for name in circular_contigs:
-    seq = cg.get_contig_sequence(name)
+for name in circular_unitigs:
+    seq = ug.get_segment_sequence(ug.segment_names[name])
     length = len(seq)
     if min_len <= length <= max_len:
         candidates.append({
@@ -82,22 +87,30 @@ for name in circular_contigs:
         })
 
 # 4) Print a quick report
-print(f"Found {len(candidates)} circular contig(s) in plausible plasmid size range [{min_len:,}-{max_len:,}] bp")
+print(f"Found {len(candidates)} circular unitig(s) in plausible plasmid size range [{min_len:,}-{max_len:,}] bp")
 for i, rec in enumerate(sorted(candidates, key=lambda r: -r["length_bp"]), start=1):
-    print(f"{i:2d}. {rec['name']}\tlen={rec['length_bp']:,} bp\tGC={rec['gc']:.3f}")
+    print(f"{i:2d}. {rec['name']}\tlen={rec['length_bp']:,} bp")
 
 # 5) Optional: write results to a TSV
 out = Path("plasmid_candidates.tsv")
 with out.open("w") as fh:
-    fh.write("contig_name\tlength_bp\tgc_fraction\n")
+    fh.write("unitig_name\tlength_bp\n")
     for rec in candidates:
-        fh.write(f"{rec['name']}\t{rec['length_bp']}\t{rec['gc']}\n")
+        fh.write(f"{rec['name']}\t{rec['length_bp']}\n")
 print(f"\nSaved: {out.resolve()}")
 
 ```
 
 !!! note
-    Circular contigs do not mean plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
+    Circular segments do not mean plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
+
+<div class="button-container">
+  <a href="../resources/ERR10750395_assembly.zip" download class="download-button">
+    <i class="bi bi-download"></i> Download the example input data: ERR10750395_assembly.zip
+  </a>
+</div>
+
+<hr>
 
 
 ## Identify bacteriophage candidates
@@ -111,7 +124,7 @@ from bidict import bidict
 from agtools.core.unitig_graph import UnitigGraph
 
 # --- input: unitig GFA from your assembler (SPAdes/Flye/etc.) ---
-gfa_path = "assembly_graph_with_scaffolds.gfa"
+gfa_path = "ERR10359653_component_graph.gfa"
 
 # size window for candidate phage genomes (kbp). Adjust as needed.
 MIN_LEN = 10_000
@@ -199,16 +212,24 @@ for i, rec in enumerate(candidates, 1):
     print(f"{i:2d}. ~{rec['length_bp']:,} bp  | segments: {rec['n_segments']}\n    {rec['path_oriented']}\n")
 
 # Optional: write results to a TSV
-# out = Path("phage_like_candidates.tsv")
-# with out.open("w") as fh:
-#     fh.write("path_number\tlength_bp\tn_segments\tpath_oriented\n")
-#     for i, rec in enumerate(candidates, 1):
-#         fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
-# print(f"\nSaved: {out.resolve()}")
+out = Path("phage_like_candidates.tsv")
+with out.open("w") as fh:
+    fh.write("path_number\tlength_bp\tn_segments\tpath_oriented\n")
+    for i, rec in enumerate(candidates, 1):
+        fh.write(f"{i}\t{rec['length_bp']}\t{rec['n_segments']}\t{rec['path_oriented']}\n")
+print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
     This is a graph-only heuristic. Circular sequences do not mean they are always phages (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using tools like [Pharokka](https://github.com/gbouras13/pharokka), [Phold](https://github.com/gbouras13/phold) and [Phynteny](https://github.com/susiegriggo/Phynteny_transformer) after shortlisting candidates. If you want to get both circular and linear phage genomes accurately, please check out [Phables](https://github.com/Vini2/phables).
+
+<div class="button-container">
+  <a href="../resources/ERR10359653_assembly.zip" download class="download-button">
+    <i class="bi bi-download"></i> Download the example input data: ERR10359653_assembly.zip
+  </a>
+</div>
+
+<hr>
 
 
 ## Haplotype phasing from assembly graph bubbles
