@@ -1,13 +1,13 @@
 # agtools Command-Line Interface Reference
 
-*agtools* provides tools for manipulating assembly graphs.
+*agtools* provides A Software Framework to Manipulate Assembly Graphs.
 
 Run `agtools --help` or `agtools -h` to list the help message for *agtools*.
 
 ```bash
 Usage: agtools [OPTIONS] COMMAND [ARGS]...
 
-  agtools: Tools for manipulating assembly graphs
+  agtools: A Software Framework to Manipulate Assembly Graphs
 
 Options:
   -v, --version  Show the version and exit.
