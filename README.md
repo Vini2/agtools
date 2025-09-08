@@ -1,4 +1,4 @@
-# agtools: Tools for manipulating assembly graphs
+# agtools: A Software Framework to Manipulate Assembly Graphs
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16777546.svg)](https://doi.org/10.5281/zenodo.16777546)
 ![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
@@ -64,7 +64,7 @@ Run `agtools --help` or `agtools -h` to list the help message for `agtools`.
 ```bash
 Usage: agtools [OPTIONS] COMMAND [ARGS]...
 
-  agtools: Tools for manipulating assembly graphs
+  agtools: A Software Framework to Manipulate Assembly Graphs
 
 Options:
   -v, --version  Show the version and exit.
