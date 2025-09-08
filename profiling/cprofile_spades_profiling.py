@@ -150,9 +150,9 @@ def main():
     # Format x-axis with 1 decimal and "M"
     plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.1f}"))
 
-    plt.xlabel("Number of GFA tags (millions)")
+    plt.xlabel("Number of GFA lines (millions)")
     plt.ylabel("Running time (s)")
-    plt.title("Running time vs number of GFA tags for SPAdes contig graph")
+    plt.title("Running time vs number of GFA lines for SPAdes contig graph")
     plt.grid(True)
 
     # Save to file
