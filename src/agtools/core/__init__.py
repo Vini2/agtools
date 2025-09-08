@@ -1,4 +1,4 @@
-"""agtools: Tools for manipulating assembly graphs"""
+"""agtools: A Software Framework to Manipulate Assembly Graphs"""
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
