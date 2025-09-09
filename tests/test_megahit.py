@@ -94,7 +94,7 @@ def test_connected_components(contig_graph):
 
 
 def test_average_node_degree(contig_graph):
-    assert contig_graph.calculate_average_node_degree() == 0
+    assert contig_graph.calculate_average_node_degree() == 0.190459994898393
 
 
 def test_total_length(contig_graph):
@@ -102,7 +102,7 @@ def test_total_length(contig_graph):
 
 
 def test_average_contig_length(contig_graph):
-    assert contig_graph.calculate_average_contig_length() == 2582
+    assert contig_graph.calculate_average_contig_length() == 2582.1226086217157
 
 
 def test_n50_l50(contig_graph):
