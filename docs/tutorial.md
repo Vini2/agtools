@@ -54,9 +54,9 @@ You can call different functions to calculate graph and sequence based statistic
 
 ```python
 >>> ug.calculate_average_node_degree()
-2
+2.576374745417515
 >>> ug.calculate_average_segment_length()
-8490
+8490.319755600814
 >>> ug.calculate_n50_l50()
 (60706, 36)
 ```
@@ -208,11 +208,11 @@ You can call different functions to calculate graph and sequence based statistic
 
 ```python
 >>> cg.calculate_average_node_degree()
-4
+4.169312169312169
 >>> cg.calculate_total_length()
 8341464
 >>> cg.calculate_average_contig_length()
-44134
+44134.730158730155
 >>> cg.calculate_n50_l50()
 (220639, 14)
 >>> cg.get_gc_content()
