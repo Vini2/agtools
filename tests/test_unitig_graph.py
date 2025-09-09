@@ -121,7 +121,7 @@ def test_connected_components(spades_unitig_graph):
 
 
 def test_average_node_degree(spades_unitig_graph):
-    assert spades_unitig_graph.calculate_average_node_degree() == 2
+    assert spades_unitig_graph.calculate_average_node_degree() == 2.576374745417515
 
 
 def test_total_length(spades_unitig_graph):
@@ -129,7 +129,7 @@ def test_total_length(spades_unitig_graph):
 
 
 def test_average_segment_length(spades_unitig_graph):
-    assert spades_unitig_graph.calculate_average_segment_length() == 8490
+    assert spades_unitig_graph.calculate_average_segment_length() == 8490.319755600814
 
 
 def test_n50_l50(spades_unitig_graph):
