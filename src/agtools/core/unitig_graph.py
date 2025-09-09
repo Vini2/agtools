@@ -444,7 +444,7 @@ class UnitigGraph:
         """
         return self.graph.components()
 
-    def calculate_average_node_degree(self) -> int:
+    def calculate_average_node_degree(self) -> float:
         """
         Calculate the average node degree of the graph.
 
@@ -461,7 +461,7 @@ class UnitigGraph:
         Examples
         --------
         >>> ug.calculate_average_node_degree()
-        2
+        2.345233197556
         """
 
         if self.graph.vcount() == 0:
@@ -469,7 +469,7 @@ class UnitigGraph:
                 "Graph does not have any segments, cannot calculate average node degree"
             )
 
-        return int(sum(self.graph.degree()) / self.graph.vcount())
+        return sum(self.graph.degree()) / self.graph.vcount()
 
     def calculate_total_length(self) -> int:
         """
@@ -487,7 +487,7 @@ class UnitigGraph:
         """
         return sum(self.segment_lengths.values())
 
-    def calculate_average_segment_length(self) -> int:
+    def calculate_average_segment_length(self) -> float:
         """
         Calculate the average segment length.
 
@@ -504,7 +504,7 @@ class UnitigGraph:
         Examples
         --------
         >>> ug.calculate_average_segment_length()
-        3494
+        8490.319755600814
         """
 
         segment_lengths = self.segment_lengths
@@ -513,7 +513,7 @@ class UnitigGraph:
                 "Graph does not have any segments, cannot calculate average segment length"
             )
 
-        return int(sum(segment_lengths.values()) / len(segment_lengths))
+        return sum(segment_lengths.values()) / len(segment_lengths)
 
     def calculate_n50_l50(self) -> tuple[int, int]:
         """
