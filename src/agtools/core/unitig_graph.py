@@ -461,7 +461,7 @@ class UnitigGraph:
         Examples
         --------
         >>> ug.calculate_average_node_degree()
-        2.345233197556
+        2.576374745417515
         """
 
         if self.graph.vcount() == 0:

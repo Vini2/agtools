@@ -270,7 +270,7 @@ class ContigGraph:
         """
         return self.graph.components()
 
-    def calculate_average_node_degree(self) -> int:
+    def calculate_average_node_degree(self) -> float:
         """
         Calculate the average node degree of the graph.
 
@@ -295,7 +295,7 @@ class ContigGraph:
                 "Graph does not have any contigs, cannot calculate average node degree"
             )
 
-        return int(sum(self.graph.degree()) / self.graph.vcount())
+        return sum(self.graph.degree()) / self.graph.vcount()
 
     def calculate_total_length(self) -> int:
         """
@@ -316,7 +316,7 @@ class ContigGraph:
         ]
         return sum(contig_lengths)
 
-    def calculate_average_contig_length(self) -> int:
+    def calculate_average_contig_length(self) -> float:
         """
         Calculate the average contig length.
 
@@ -344,7 +344,7 @@ class ContigGraph:
                 "Graph does not have any contigs, cannot calculate average contig length"
             )
 
-        return int(sum(contig_lengths) / len(contig_lengths))
+        return sum(contig_lengths) / len(contig_lengths)
 
     def calculate_n50_l50(self) -> tuple[int, int]:
         """
