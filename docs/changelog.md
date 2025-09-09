@@ -1,11 +1,16 @@
 # Changelog
 
 ```
+== 1.0.1 ==
+
+- minor updates to formatting in graph stats (in both UnitigGraph and ContigGraph)
+
 == 1.0.0 ==
 
 - the first major release
 - major refactoring of UnitigGraph, ContigGraph and assembler specific functions to improve performance
 - removed gfa2fastg subcommand
+- used in profiling for the manuscript
 
 == 0.1.2 ==
 
