@@ -39,12 +39,8 @@ def test_is_connected(contig_graph):
 
 def test_contig_sequences(contig_graph):
 
-    assert contig_graph.get_contig_sequence("contig_2").startswith(
-        "GAATTATAATTTGAAA"
-    )
-    assert contig_graph.get_contig_sequence("contig_57").endswith(
-        "ATATCATCTGATG"
-    )
+    assert contig_graph.get_contig_sequence("contig_2").startswith("GAATTATAATTTGAAA")
+    assert contig_graph.get_contig_sequence("contig_57").endswith("ATATCATCTGATG")
 
 
 def test_contig_index(contig_graph):

@@ -2,11 +2,12 @@ import cProfile
 import os
 import pstats
 import time
-import pandas as pd
-import matplotlib.pyplot as plt
-
-from matplotlib.ticker import FuncFormatter
 from statistics import mean, stdev
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.ticker import FuncFormatter
+
 from agtools.assemblers import flye
 
 __author__ = "Vijini Mallawaarachchi"
@@ -18,15 +19,16 @@ __credits__ = ["Vijini Mallawaarachchi"]
 def grep_count(line_prefix, file_path):
     if not os.path.exists(file_path):
         return 0
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         return sum(1 for line in f if line.startswith(line_prefix))
-    
+
+
 # Get file size in MB
 def get_file_size(path):
     if os.path.exists(path):
         return os.path.getsize(path) / (1024 * 1024)  # Convert to MB
     return 0.0
-    
+
 
 def profile_call(func, *args, **kwargs):
     """Run func(*args, **kwargs) once under cProfile and return timings."""
@@ -42,11 +44,8 @@ def profile_call(func, *args, **kwargs):
     ps = pstats.Stats(pr)
     cumtime = sum(stat[3] for stat in ps.stats.values())  # inclusive CPU time
 
-    return {
-        "wall_time": end_wall - start_wall,
-        "cumtime": cumtime,
-        "profile": pr
-    }
+    return {"wall_time": end_wall - start_wall, "cumtime": cumtime, "profile": pr}
+
 
 def profile_files(folder_paths, runs=10):
     """Profile flye.get_contig_graph on each folder multiple times."""
@@ -59,12 +58,14 @@ def profile_files(folder_paths, runs=10):
         graph_file = os.path.join(folder_path, "assembly_graph.gfa")
         contigs_file = os.path.join(folder_path, "assembly.fasta")
         contig_paths_file = os.path.join(folder_path, "assembly_info.txt")
-        
+
         wall_times = []
         cum_times = []
 
         for _ in range(runs):
-            res = profile_call(flye.get_contig_graph, graph_file, contigs_file, contig_paths_file)
+            res = profile_call(
+                flye.get_contig_graph, graph_file, contigs_file, contig_paths_file
+            )
             wall_times.append(res["wall_time"])
             cum_times.append(res["cumtime"])
 
@@ -76,26 +77,29 @@ def profile_files(folder_paths, runs=10):
         # File sizes in MB
         size_graph = get_file_size(graph_file)
 
-        results.append({
-            "graph_file": folder_path,
-            "wall_min": min(wall_times),
-            "wall_max": max(wall_times),
-            "wall_mean": mean(wall_times),
-            "wall_std": stdev(wall_times) if runs > 1 else 0.0,
-            "cum_min": min(cum_times),
-            "cum_max": max(cum_times),
-            "cum_mean": mean(cum_times),
-            "cum_std": stdev(cum_times) if runs > 1 else 0.0,
-            "gfa_S": count_S,
-            "gfa_L": count_L,
-            "gfa_P": count_P,
-            "size_graph_MB": size_graph,
-        })
+        results.append(
+            {
+                "graph_file": folder_path,
+                "wall_min": min(wall_times),
+                "wall_max": max(wall_times),
+                "wall_mean": mean(wall_times),
+                "wall_std": stdev(wall_times) if runs > 1 else 0.0,
+                "cum_min": min(cum_times),
+                "cum_max": max(cum_times),
+                "cum_mean": mean(cum_times),
+                "cum_std": stdev(cum_times) if runs > 1 else 0.0,
+                "gfa_S": count_S,
+                "gfa_L": count_L,
+                "gfa_P": count_P,
+                "size_graph_MB": size_graph,
+            }
+        )
 
     return pd.DataFrame(results)
 
+
 def main():
-    
+
     folders = [
         "data/Flye/SRR18490951",
         "data/Flye/SRR18490961",
@@ -123,8 +127,12 @@ def main():
 
     # Plot running time with error bars
     # -----------------------------------------------------------
-    x = df_results["gfa_S"].to_numpy() + df_results["gfa_L"].to_numpy() + df_results["gfa_P"].to_numpy()
-    x_million = x / 1e6   # convert to millions
+    x = (
+        df_results["gfa_S"].to_numpy()
+        + df_results["gfa_L"].to_numpy()
+        + df_results["gfa_P"].to_numpy()
+    )
+    x_million = x / 1e6  # convert to millions
     y = df_results["wall_mean"].to_numpy()
     yerr = df_results["wall_std"].to_numpy()
 
@@ -134,12 +142,22 @@ def main():
     trend_y = m * x_million  # no intercept
 
     plt.figure(figsize=(8, 5))
-    plt.errorbar(x_million, y, yerr=yerr, fmt='o', color='blue',
-                ecolor='lightblue', elinewidth=2, capsize=4,
-                label='Running time Mean ± Std')
+    plt.errorbar(
+        x_million,
+        y,
+        yerr=yerr,
+        fmt="o",
+        color="blue",
+        ecolor="lightblue",
+        elinewidth=2,
+        capsize=4,
+        label="Running time Mean ± Std",
+    )
 
     # Plot trend line
-    plt.plot(x_million, trend_y, '--', color='black', label=f'Trend line: y={m:.3f}x+{b:.3f}')
+    plt.plot(
+        x_million, trend_y, "--", color="black", label=f"Trend line: y={m:.3f}x+{b:.3f}"
+    )
 
     # Format x-axis with 1 decimal and "M"
     plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.1f}"))
@@ -150,9 +168,8 @@ def main():
     plt.grid(True)
 
     # Save to file
-    plt.savefig("plots/flye_time.png", dpi=300, bbox_inches='tight')
+    plt.savefig("plots/flye_time.png", dpi=300, bbox_inches="tight")
     plt.show()
-
 
 
 if __name__ == "__main__":

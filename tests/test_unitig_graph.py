@@ -70,12 +70,26 @@ def test_oriented_links_and_overlap():
     os.unlink(f_path)
 
     # Oriented links should be symmetric
-    assert ug.oriented_links[ug.segment_name_to_id["segA"]][ug.segment_name_to_id["segB"]] == {("+", "-")}
-    assert ug.oriented_links[ug.segment_name_to_id["segB"]][ug.segment_name_to_id["segA"]] == {("+", "-")}
+    assert ug.oriented_links[ug.segment_name_to_id["segA"]][
+        ug.segment_name_to_id["segB"]
+    ] == {("+", "-")}
+    assert ug.oriented_links[ug.segment_name_to_id["segB"]][
+        ug.segment_name_to_id["segA"]
+    ] == {("+", "-")}
 
     # Overlap stored in both orientations
-    assert ug.link_overlap[(ug.segment_name_to_id["segA"], "+", ug.segment_name_to_id["segB"], "-")] == 5
-    assert ug.link_overlap[(ug.segment_name_to_id["segB"], "+", ug.segment_name_to_id["segA"], "-")] == 5
+    assert (
+        ug.link_overlap[
+            (ug.segment_name_to_id["segA"], "+", ug.segment_name_to_id["segB"], "-")
+        ]
+        == 5
+    )
+    assert (
+        ug.link_overlap[
+            (ug.segment_name_to_id["segB"], "+", ug.segment_name_to_id["segA"], "-")
+        ]
+        == 5
+    )
 
 
 def test_self_loops_are_recorded():
@@ -105,7 +119,9 @@ def test_get_sequence_segment(unitig_graph):
 
 
 def test_get_path(spades_unitig_graph):
-    segments, overlaps = spades_unitig_graph.get_path("NODE_71_length_545_cov_640.912245_1")
+    segments, overlaps = spades_unitig_graph.get_path(
+        "NODE_71_length_545_cov_640.912245_1"
+    )
     assert segments == "8896870+,8896654-,8922750+"
     assert overlaps == "*"
 
