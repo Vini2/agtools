@@ -24,6 +24,9 @@ Further details are available in the [Installation Guide](install.md).
 
 * [CLI examples](examples/stats.md)
 * [API tutorial](tutorial.md)
+* [Assembler-specific examples](assemblerexamples.md)
+* [More detailed examples](moreexamples.md)
+* [Example applications](exampleapplications.md)
 
 **References**
 
