@@ -1,4 +1,4 @@
-# agtools: A Software Framework to Manipulate Assembly Graphs
+# **agtools**: A Software Framework to Manipulate Assembly Graphs
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16777546.svg)](https://doi.org/10.5281/zenodo.16777546)
 ![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
