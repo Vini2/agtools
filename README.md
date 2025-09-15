@@ -95,3 +95,9 @@ If you want to test (or break) agtools give it a try and report any issues and s
 If you come across any questions, please have a look at the [agtools FAQ page](https://agtools.readthedocs.io/en/latest/faq/). If your question is not here, feel free to post it under [agtools Issues](https://github.com/Vini2/agtools/issues).
 
 If you want to request a feature, please post it under [agtools Issues](https://github.com/Vini2/agtools/issues) as a feature request.
+
+## Citation
+
+agtools is under review at the moment. In the meantime, if you use agtools in your work, please cite as follows.
+
+> V. Mallawaarachchi et al. (2025). agtools: A Software Framework to Manipulate Assembly Graphs. Zenodo. https://doi.org/10.5281/zenodo.16777546
