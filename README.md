@@ -100,4 +100,4 @@ If you want to request a feature, please post it under [agtools Issues](https://
 
 agtools is currently under review. In the meantime, if you use agtools in your work, please cite as follows.
 
-> V. Mallawaarachchi et al. (2025). agtools: A Software Framework to Manipulate Assembly Graphs. Zenodo. https://doi.org/10.5281/zenodo.16777546
+> V. Mallawaarachchi et al. (2025). agtools: A Software Framework to Manipulate Assembly Graphs. Zenodo. https://doi.org/10.5281/zenodo.17083866
