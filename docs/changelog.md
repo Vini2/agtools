@@ -1,6 +1,11 @@
 # Changelog
 
 ```
+== 1.0.2 ==
+
+- log version, repo, command name, and parameters of a subcommand run
+- minor fixes
+
 == 1.0.1 ==
 
 - minor updates to formatting in graph stats (in both UnitigGraph and ContigGraph)
