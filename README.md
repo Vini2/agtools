@@ -21,7 +21,7 @@ For detailed instructions on installation and usage, please refer to the [**docu
 
 ### Using pip
 
-You can install agtools from [PyPI](https://pypi.org/project/agtools/) using `pip`.
+You can install `agtools` from [PyPI](https://pypi.org/project/agtools/) using `pip`.
 
 ```bash
 pip install agtools
@@ -29,7 +29,7 @@ pip install agtools
 
 ### Using conda
 
-You can install agtools from [Bioconda](https://anaconda.org/bioconda/agtools) using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
+You can install `agtools` from [Bioconda](https://anaconda.org/bioconda/agtools) using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
 
 ```bash
 mamba install -c bioconda agtools
@@ -90,7 +90,7 @@ Please refer to the complete documentation available at [Read the docs](https://
 
 ## Issues and Questions
 
-If you want to test (or break) agtools give it a try and report any issues and suggestions under [agtools Issues](https://github.com/Vini2/agtools/issues).
+If you want to test (or break) `agtools` give it a try and report any issues and suggestions under [agtools Issues](https://github.com/Vini2/agtools/issues).
 
 If you come across any questions, please have a look at the [agtools FAQ page](https://agtools.readthedocs.io/en/latest/faq/). If your question is not here, feel free to post it under [agtools Issues](https://github.com/Vini2/agtools/issues).
 
@@ -98,6 +98,6 @@ If you want to request a feature, please post it under [agtools Issues](https://
 
 ## Citation
 
-agtools is currently under review. In the meantime, if you use agtools in your work, please cite as follows.
+`agtools` is currently under review. In the meantime, if you use `agtools` in your work, please cite as follows.
 
 > V. Mallawaarachchi et al. (2025). agtools: A Software Framework to Manipulate Assembly Graphs. Zenodo. https://doi.org/10.5281/zenodo.17083866
