@@ -14,6 +14,7 @@ __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
 __version__ = "1.0.1"
 __maintainer__ = "Vijini Mallawaarachchi"
+__url__ = "https://github.com/Vini2/agtools"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
 
@@ -72,8 +73,11 @@ _click_command_opts = dict(
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def stats(graph, output):
+@click.pass_context
+def stats(ctx, graph, output):
     """Compute statistics about the graph"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Computing statistics of the graph file {graph[0]}")
 
@@ -93,8 +97,11 @@ def stats(graph, output):
     required=False,
 )
 @_output
-def rename(graph, prefix, output):
+@click.pass_context
+def rename(ctx, graph, prefix, output):
     """Rename segments, paths and walks in a GFA file"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Renaming elements in graph file {graph[0]}")
     logger.info(f"Prefix used is {prefix}")
@@ -107,8 +114,11 @@ def rename(graph, prefix, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def concat(graph, output):
+@click.pass_context
+def concat(ctx, graph, output):
     """Concatenate two or more GFA files"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Concatenating graph files [{', '.join(graph)}]")
 
@@ -129,8 +139,11 @@ def concat(graph, output):
     required=True,
 )
 @_output
-def filter(graph, min_length, output):
+@click.pass_context
+def filter(ctx, graph, min_length, output):
     """Filter segments from GFA file"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Filtering segments in graph file {graph[0]}")
     logger.info(f"Minimum length of segments to keep is {min_length} bp")
@@ -158,8 +171,11 @@ def filter(graph, min_length, output):
     required=False,
 )
 @_output
-def clean(graph, fasta, assembler, output):
+@click.pass_context
+def clean(ctx, graph, fasta, assembler, output):
     """Clean a GFA file based on segments in a FASTA file"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Cleaning the graph file {graph[0]}")
     logger.info(f"Using the FASTA file {fasta}")
@@ -180,8 +196,11 @@ def clean(graph, fasta, assembler, output):
     required=True,
 )
 @_output
-def component(graph, segment, output):
+@click.pass_context
+def component(ctx, graph, segment, output):
     """Extract a component containing a given segment"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(
         f"Extracting from file {graph[0]} the component containing segment {segment}"
@@ -204,8 +223,11 @@ def component(graph, segment, output):
     required=True,
 )
 @_output
-def fastg2gfa(graph, ksize, output):
+@click.pass_context
+def fastg2gfa(ctx, graph, ksize, output):
     """Convert FASTG file to GFA format"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Converting FASTG file {graph[0]} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
@@ -218,8 +240,11 @@ def fastg2gfa(graph, ksize, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def asqg2gfa(graph, output):
+@click.pass_context
+def asqg2gfa(ctx, graph, output):
     """Convert ASQG file to GFA format"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Converting ASQG file {graph[0]} to GFA format")
 
@@ -240,8 +265,11 @@ def asqg2gfa(graph, output):
     required=False,
 )
 @_output
-def gfa2dot(graph, abyss, output):
+@click.pass_context
+def gfa2dot(ctx, graph, abyss, output):
     """Convert GFA file to DOT format (GraphViz)"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Converting GFA file {graph[0]} to DOT format")
 
@@ -253,8 +281,11 @@ def gfa2dot(graph, abyss, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
-def gfa2fasta(graph, output):
+@click.pass_context
+def gfa2fasta(ctx, graph, output):
     """Get segments in FASTA format"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Extracting segment sequences from {graph[0]} file in to FASTA format")
 
@@ -274,11 +305,27 @@ def gfa2fasta(graph, output):
     required=False,
 )
 @_output
-def gfa2adj(graph, delimiter, output):
+@click.pass_context
+def gfa2adj(ctx, graph, delimiter, output):
     """Get adjacency matrix of the assembly graph"""
+
+    begin_agtools(ctx, __version__, __url__)
 
     logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
 
     adj_path = commands.gfa2adj(graph[0], delimiter, output)
 
     logger.info(f"Adjacency matrix is written to {adj_path}")
+
+
+def begin_agtools(ctx: click.Context, version: str, repo_url: str):
+    """Log version, repo, command name, and parameters of a subcommand run."""
+    logger.info("agtools: A Software Framework to Manipulate Assembly Graphs")
+    logger.info(f"You are using agtools version {version}")
+    if repo_url:
+        logger.info(f"Repository homepage is {repo_url}")
+    logger.info(f"You are running agtools {ctx.command.name}")
+    logger.info("Listing parameters")
+
+    for param, value in ctx.params.items():
+        logger.info(f"Parameter: --{param.replace('_', '-')} {value}")
