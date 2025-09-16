@@ -78,6 +78,8 @@ def _write_segment_sequences(sequences: list, output_path: str) -> str:
     with open(f"{output_file}", "w") as output_handle:
         SeqIO.write(sequences, output_handle, "fasta")
 
+    return output_file
+
 
 def gfa2fasta(gfa_file: str, output_path: str) -> str:
     """
