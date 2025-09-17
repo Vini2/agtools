@@ -98,6 +98,6 @@ If you want to request a feature, please post it under [agtools Issues](https://
 
 ## Citation
 
-`agtools` is currently under review. In the meantime, if you use `agtools` in your work, please cite as follows.
+`agtools` is currently under review. In the meantime, if you use `agtools` in your work, please cite the preprint  as follows.
 
-> V. Mallawaarachchi et al. (2025). agtools: A Software Framework to Manipulate Assembly Graphs. Zenodo. https://doi.org/10.5281/zenodo.17083866
+> Vijini Mallawaarachchi, George Bouras, Ryan R. Wick, Susanna R. Grigson, Bhavya Papudeshi, Robert A. Edwards; agtools: a software framework to manipulate assembly graphs; bioRxiv 2025.09.14.676178; doi: https://doi.org/10.1101/2025.09.14.676178
