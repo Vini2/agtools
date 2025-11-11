@@ -149,12 +149,16 @@ You can load a Flye contig graph as follows.
 >>> cg = flye.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
+!!! warning
+    Please note that the sequences in the final Flye contig assembly may not be same as those derived from the GFA file due to post-polishing steps and the way Flye builds contigs (see [Flye/issues/610](https://github.com/mikolmogorov/Flye/issues/610)).
+
 !!! note
     If you want to load the Flye unitig graph, you can load it as
 
     ```python
     unitig_graph = UnitigGraph.from_gfa("tests/data/1Y3B/assembly_graph.gfa")
     ```
+
 
 ### Loading a myloasm graph
 
