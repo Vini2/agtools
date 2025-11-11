@@ -4,10 +4,13 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16777546.svg)](https://doi.org/10.5281/zenodo.16777546)
 ![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
+
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](https://anaconda.org/bioconda/agtools)
 [![Conda](https://img.shields.io/conda/dn/bioconda/agtools)](https://anaconda.org/bioconda/agtools)
 [![PyPI version](https://badge.fury.io/py/agtools.svg)](https://badge.fury.io/py/agtools)
 [![Downloads](https://static.pepy.tech/badge/agtools)](https://pepy.tech/project/agtools)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1cO6gDsGqCIJUvnDcwpy-EuB3FoXG4M-R?usp=sharing)
+
 [![CI](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml)
 [![codecov](https://codecov.io/gh/Vini2/agtools/graph/badge.svg?token=nYzx0Pd0h6)](https://codecov.io/gh/Vini2/agtools)
 [![CodeQL Advanced](https://github.com/Vini2/agtools/actions/workflows/codeql.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/codeql.yml)
