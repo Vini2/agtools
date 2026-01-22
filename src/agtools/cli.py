@@ -6,6 +6,7 @@ from typing import Mapping, Optional
 import click
 
 from agtools import commands
+from agtools import conversion
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -232,7 +233,7 @@ def fastg2gfa(ctx, graph, ksize, output):
     logger.info(f"Converting FASTG file {graph[0]} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
 
-    gfa_path = commands.fastg2gfa(graph[0], ksize, output)
+    gfa_path = conversion.fastg2gfa(graph[0], ksize, output)
 
     logger.info(f"GFA file is written to {gfa_path} with fixed overlap: {ksize}M")
 
@@ -248,7 +249,7 @@ def asqg2gfa(ctx, graph, output):
 
     logger.info(f"Converting ASQG file {graph[0]} to GFA format")
 
-    gfa_path = commands.asqg2gfa(graph[0], output)
+    gfa_path = conversion.asqg2gfa(graph[0], output)
 
     logger.info(f"GFA file is written to {gfa_path}")
 
@@ -273,7 +274,7 @@ def gfa2dot(ctx, graph, abyss, output):
 
     logger.info(f"Converting GFA file {graph[0]} to DOT format")
 
-    dot_path = commands.gfa2dot(graph[0], abyss, output)
+    dot_path = conversion.gfa2dot(graph[0], abyss, output)
 
     logger.info(f"DOT file written to {dot_path}")
 
@@ -289,7 +290,7 @@ def gfa2fasta(ctx, graph, output):
 
     logger.info(f"Extracting segment sequences from {graph[0]} file in to FASTA format")
 
-    fasta_path = commands.gfa2fasta(graph[0], output)
+    fasta_path = conversion.gfa2fasta(graph[0], output)
 
     logger.info(f"FASTA file written to {fasta_path}")
 
@@ -313,7 +314,7 @@ def gfa2adj(ctx, graph, delimiter, output):
 
     logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
 
-    adj_path = commands.gfa2adj(graph[0], delimiter, output)
+    adj_path = conversion.gfa2adj(graph[0], delimiter, output)
 
     logger.info(f"Adjacency matrix is written to {adj_path}")
 
