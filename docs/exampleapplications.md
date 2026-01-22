@@ -2,7 +2,7 @@
 
 ## Bin contigs by connected components
 
-Contigs of a genome ideally form connected components in the assembly graph. Here is a minimal, straightforward example using *agtools* that “bins” contigs by connected components (each bin = one connected component in the contig graph). It uses *agtools* to load a contig graph and then `get_connected_components()` to group contigs.
+Contigs from a genome ideally form connected components in the assembly graph. Below is a minimal, straightforward example using *agtools* that “bins” contigs by connected components (each bin = one connected component in the contig graph). It uses *agtools* to load a contig graph and then obtain connected components through the `get_connected_components()` function to group contigs.
 
 ```python
 # 1) pick the assembler loader that matches your assembly
@@ -43,7 +43,7 @@ with open("contig_bins.tsv", "w") as out:
 ```
 
 !!! note
-    This example bins purely by graph connectivity (topology). If you want coverage and nucleotide composition-aware binning, you have to combine these bins with additional heuristics or downstream methods. Please take a look at [MetaCoAG](https://doi.org/10.1007/978-3-031-04749-7_5).
+    This example bins purely by graph connectivity (topology). If you want coverage- and nucleotide composition-aware binning, you will need to combine these bins with additional heuristics or downstream methods. Please refer to [MetaCoAG](https://doi.org/10.1007/978-3-031-04749-7_5).
 
 <div class="button-container">
   <a href="../resources/ERR321017_assembly.zip" download class="download-button">
@@ -56,7 +56,7 @@ with open("contig_bins.tsv", "w") as out:
 
 ## Identify plasmid candidates
 
-Here is a simple, example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a good first pass before deeper validation.
+Below is a simple example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a useful first pass before deeper validation.
 
 ```python
 from agtools.core.unitig_graph import UnitigGraph
@@ -102,7 +102,7 @@ print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
-    Circular segments do not mean plasmids all the time. This example script is a first pass. For confirmation, you have to run gene/marker checks (replication proteins, MOB/relaxase, AMR markers) with downstream tools (e.g., PlasmidFinder or PLASMe) after you shortlist candidates from the graph.
+    Circular segments do not always indicate plasmids. This script is a first pass. For confirmation, run gene or marker checks (e.g. replication proteins, MOB/relaxase, AMR markers) with downstream tools (such as PlasmidFinder or PLASMe) after shortlisting candidates from the graph.
 
 <div class="button-container">
   <a href="../resources/ERR10750395_assembly.zip" download class="download-button">
@@ -115,7 +115,7 @@ print(f"\nSaved: {out.resolve()}")
 
 ## Identify bacteriophage candidates
 
-Bacteriophages (or phages) with circular genomes tend to form circular components in the assembly graph. Here is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e., circular paths) and keeps the ones whose estimated genome length falls in a typical bacteriophage range (default 10–300 kb; most sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN`/`MAX_LEN` as needed.
+Bacteriophages (or phages) with circular genomes often form circular components in the assembly graph. Below is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e. circular paths) and keeps the ones whose estimated genome length falls within a typical bacteriophage range (default 10–300 kb; many sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN` and `MAX_LEN` as needed.
 
 ```python
 import igraph as ig
@@ -221,7 +221,7 @@ print(f"\nSaved: {out.resolve()}")
 ```
 
 !!! note
-    This is a graph-only heuristic. Circular sequences do not mean they are always phages (could be plasmids, etc.). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using tools like [Pharokka](https://github.com/gbouras13/pharokka), [Phold](https://github.com/gbouras13/phold) and [Phynteny](https://github.com/susiegriggo/Phynteny_transformer) after shortlisting candidates. If you want to get both circular and linear phage genomes accurately, please check out [Phables](https://github.com/Vini2/phables).
+    This is a graph-only heuristic. Circular sequences do not always indicate phages (they could be plasmids, for example). For biological confirmation, follow up with hallmark phage gene searches (terminase large subunit, capsid, portal, tail) using tools such as [Pharokka](https://github.com/gbouras13/pharokka), [Phold](https://github.com/gbouras13/phold) and [Phynteny](https://github.com/susiegriggo/Phynteny_transformer) after shortlisting candidates. If you want to recover both circular and linear phage genomes more accurately, please refer to [Phables](https://github.com/Vini2/phables).
 
 <div class="button-container">
   <a href="../resources/ERR10359653_assembly.zip" download class="download-button">
@@ -234,9 +234,9 @@ print(f"\nSaved: {out.resolve()}")
 
 ## Haplotype phasing from assembly graph bubbles
 
-Haplotype phasing aims to distinguish and reconstruct the individual haplotypes present in a diploid or polyploid genome. In assembly graphs, this can often be approached by identifying and resolving **bubbles** which are alternative paths in the graph that correspond to sequence differences between haplotypes. 
+Haplotype phasing aims to distinguish and reconstruct the individual haplotypes present in a diploid or polyploid genome. In assembly graphs, this can often be approached by identifying and resolving **bubbles**, which are alternative paths in the graph corresponding to sequence differences between haplotypes.
 
-Here’s a minimal local haplotype phasing example with graph-bubbles using the *agtools* API. It:
+Below is a minimal local haplotype phasing example using graph bubbles with the agtools API. It:
 
 1. loads a `UnitigGraph` from a GFA,
 2. builds the **oriented unitig graph** (the +/− version),
@@ -370,7 +370,7 @@ for idx, (s, t, pA, pB) in enumerate(bubbles, 1):
 ```
 
 !!! note
-    This is a very simple example that demonstrates the utility of *agtools*. For chromosome-scale phasing you have to incorporate read/link evidence (e.g., long reads, Hi-C) to chain many bubbles consistently.
+    This is a minimal example intended to demonstrate the utility of *agtools*. For chromosome-scale phasing, you will need to incorporate read or linkage evidence (e.g. long reads, Hi-C) to chain many bubbles consistently.
 
 <div class="button-container">
   <a href="../resources/chr22_toy_bubbles.gfa" download class="download-button">

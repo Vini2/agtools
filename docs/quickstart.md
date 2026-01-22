@@ -2,13 +2,13 @@
 
 # Quick Start Guide
 
-For those of you who are eager too get started, this quick start guide will cover the following basic operations with assembly graphs.
+For those of you who are eager to get started, this quick start guide will cover the following basic operations with assembly graphs.
 
 * Load an assembly graph
 * Get basic graph-based statistics
 * Get basic sequence-based statistics
 * Get paths
-* Query neighbours of a segment
+* Query neighbors of a segment
 * Get the adjacency matrix
 * Query segment sequences
 * Plot the graph
@@ -90,7 +90,7 @@ ig.plot(
 )
 ```
 
-The plotted graph will be as below.
+The plotted graph will be shown below.
 
 ![](images/graph_plot.png)
 

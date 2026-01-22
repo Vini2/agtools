@@ -1,8 +1,8 @@
 # agtools Command-Line Interface Reference
 
-*agtools* provides A Software Framework to Manipulate Assembly Graphs.
+*agtools* provides a software framework for manipulating assembly graphs.
 
-Run `agtools --help` or `agtools -h` to list the help message for *agtools*.
+Run `agtools --help` or `agtools -h` to display the main help message.
 
 ```bash
 Usage: agtools [OPTIONS] COMMAND [ARGS]...
@@ -31,7 +31,7 @@ Commands:
 
 Compute statistics about the graph.
 
-Run `agtools stats --help` or `agtools stats -h` to list the help message for agtools stats.
+Run `agtools stats --help` or `agtools stats -h` to list the help message.
 
 ```bash
 Usage: agtools stats [OPTIONS]
@@ -50,13 +50,13 @@ Options:
 
 **Outputs**
 
-* Text file with the statistics
+* Text file containing graph statistics
 
 ## `rename`
 
 Rename segments, paths and walks in a GFA file.
 
-Run `agtools rename --help` or `agtools rename -h` to list the help message for agtools rename.
+Run `agtools rename --help` or `agtools rename -h` to list the help message.
 
 ```bash
 Usage: agtools rename [OPTIONS]
@@ -73,7 +73,7 @@ Options:
 **Inputs**
 
 * Assembly graph file in GFA format
-* Prefix to prepend segments, paths and walks in a GFA file
+* Prefix to prepend to segments, paths, and walks
 
 **Outputs**
 
@@ -83,7 +83,7 @@ Options:
 
 Concatenate two or more GFA files.
 
-Run `agtools concat --help` or `agtools concat -h` to list the help message for agtools concat.
+Run `agtools concat --help` or `agtools concat -h` to list the help message.
 
 ```bash
 Usage: agtools concat [OPTIONS]
@@ -98,17 +98,17 @@ Options:
 
 **Inputs**
 
-* Assembly graph files in GFA format. You can provide each file followed by `-g`
+* Multiple assembly graph files in GFA format. You can provide each file followed by `-g`.
 
 **Outputs**
 
-* Concatenated assembly graph file in GFA format
+* A concatenated assembly graph file in GFA format
 
 ## `filter`
 
 Filter segments from a GFA file based on length.
 
-Run `agtools filter --help` or `agtools filter -h` to list the help message for agtools filter.
+Run `agtools filter --help` or `agtools filter -h` to list the help message.
 
 ```bash
 Usage: agtools filter [OPTIONS]
@@ -136,7 +136,7 @@ Options:
 
 Clean a GFA file based on segments in a FASTA file.
 
-Run `agtools clean --help` or `agtools clean -h` to list the help message for agtools clean.
+Run `agtools clean --help` or `agtools clean -h` to list the help message.
 
 ```bash
 Usage: agtools clean [OPTIONS]
@@ -155,7 +155,7 @@ Options:
 
 * Assembly graph file in GFA format
 * FASTA file with segment sequences
-* Name of the assembler
+* Name of the assembler (if applicable)
 
 **Outputs**
 
@@ -165,7 +165,7 @@ Options:
 
 Extract a component containing a given segment.
 
-Run `agtools component --help` or `agtools component -h` to list the help message for agtools component.
+Run `agtools component --help` or `agtools component -h` to list the help message.
 
 ```bash
 Usage: agtools component [OPTIONS]
@@ -192,7 +192,7 @@ Options:
 
 Convert a FASTG file to GFA format.
 
-Run `agtools fastg2gfa --help` or `agtools fastg2gfa -h` to list the help message for agtools fastg2gfa.
+Run `agtools fastg2gfa --help` or `agtools fastg2gfa -h` to list the help message.
 
 ```bash
 Usage: agtools fastg2gfa [OPTIONS]
@@ -220,7 +220,7 @@ Options:
 
 Convert a ASQG file to GFA format.
 
-Run `agtools asqg2gfa --help` or `agtools asqg2gfa -h` to list the help message for agtools asqg2gfa.
+Run `agtools asqg2gfa --help` or `agtools asqg2gfa -h` to list the help message.
 
 ```bash
 Usage: agtools asqg2gfa [OPTIONS]
@@ -245,7 +245,7 @@ Options:
 
 Convert GFA file to GraphViz DOT format or ABySS DOT format.
 
-Run `agtools gfa2dot --help` or `agtools gfa2dot -h` to list the help message for agtools gfa2dot.
+Run `agtools gfa2dot --help` or `agtools gfa2dot -h` to list the help message.
 
 ```bash
 Usage: agtools gfa2dot [OPTIONS]
@@ -271,7 +271,7 @@ Options:
 
 Get segments from a GFA file in FASTA format
 
-Run `agtools gfa2fasta --help` or `agtools gfa2fasta -h` to list the help message for agtools gfa2fasta.
+Run `agtools gfa2fasta --help` or `agtools gfa2fasta -h` to list the help message.
 
 ```bash
 Usage: agtools gfa2fasta [OPTIONS]
@@ -296,7 +296,7 @@ Options:
 
 Get adjacency matrix of the assembly graph
 
-Run `agtools gfa2adj --help` or `agtools gfa2adj -h` to list the help message for agtools gfa2adj.
+Run `agtools gfa2adj --help` or `agtools gfa2adj -h` to list the help message.
 
 ```bash
 Usage: agtools gfa2adj [OPTIONS]

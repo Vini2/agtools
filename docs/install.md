@@ -12,13 +12,13 @@ pip install agtools
 
 ## Conda
 
-You can install *agtools* through [Bioconda](https://anaconda.org/bioconda/agtools) using `conda` or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
+You can install *agtools* through [Bioconda](https://anaconda.org/bioconda/agtools) using [`conda`](https://docs.conda.io/projects/conda/en/latest/index.html) or [`mamba`](https://mamba.readthedocs.io/en/latest/index.html).
 
 ```bash
 mamba install -c bioconda agtools
 ```
 
-If you prefer to install *agtools* in your own environment, you can do so as follows.
+If you prefer to install *agtools* in a dedicated environment, you can do so as follows.
 
 ```bash
 mamba create -n agtools
@@ -26,7 +26,7 @@ mamba activate agtools
 mamba install -c bioconda agtools
 ```
 
-OR
+Alternatively:
 
 ```bash
 mamba create -n agtools -c bioconda agtools
@@ -35,7 +35,7 @@ mamba activate agtools
 
 ## Installing *agtools* from source
 
-If you want to use the development version of *agtools*, you can install it using `flit` as follows. Please make sure you have [`flit`](https://flit.pypa.io/en/stable/) installed beforehand.
+If you want to use the development version of *agtools*, you can install it using `flit` as follows. Please ensure that [`flit`](https://flit.pypa.io/en/stable/) is installed beforehand.
 
 ```bash
 # clone repository
@@ -55,7 +55,7 @@ flit install -s --python `which python`
 agtools --help
 ```
 
-If you don't want to create your own environment but just install *agtools*, please make sure you have the following packages installed.
+If you prefer not to create a dedicated environment and only want to install *agtools*, ensure the following dependencies are installed:
 
 * [`flit`](https://flit.pypa.io/en/stable/) - for installation
 * [`click`](https://click.palletsprojects.com/en/stable/) - for CLI argument parsing

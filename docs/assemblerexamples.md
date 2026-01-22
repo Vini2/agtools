@@ -1,10 +1,12 @@
 # Assembler-specific examples
 
-This page guides you through using the assembler-specific contig graph representations provided by the *agtools* API, along with detailed insights into how contig graphs are constructed.
+This page guides you through the assembler-specific contig graph representations provided by the *agtools* API, along with explanations of how contig graphs are constructed.
+
+---
 
 ## SPAdes contig graph
 
-Here is an example SPAdes graph. Note that this is not a real SPAdes graph.
+Below is an example SPAdes graph (note that this is not a real SPAdes output).
 
 ```text
 H	VN:Z:1.0
@@ -19,7 +21,10 @@ P	NODE_1_length_13_cov_20.0	8925540+,8925544+	5M,5M
 P	NODE_2_length_21_cov_18.5	8925544+,8925548+,8925552+	5M,5M,5M
 ```
 
-SPAdes generates a unitig graph and resolves longer paths as contigs. *agtools* builds the contig graph based on prefix and suffix matching of contigs, *i.e.*, if the last segment of the first contig is the same as the first segment of the second contig, then a link between the two contigs is created. For example path `NODE_1_length_13_cov_20.0` ends with segment `8925544` and path `NODE_2_length_21_cov_18.5` starts with `8925544`.
+SPAdes generates a unitig graph and resolves longer paths as contigs. *agtools* constructs the contig graph based on prefix–suffix matching of contigs. In other words, if the last segment of one contig matches the first segment of another, a link is created.
+
+For example, the path `NODE_1_length_13_cov_20.0` ends with segment `8925544`, and `NODE_2_length_21_cov_18.5` starts with `8925544`.
+
 
 You can load a SPAdes contig graph as follows. We will use the [test data](https://github.com/Vini2/agtools/tree/main/tests/data/ESC) provided.
 
@@ -31,7 +36,8 @@ You can load a SPAdes contig graph as follows. We will use the [test data](https
 >>> cg = spades.get_contig_graph(graph_file, contigs_file, contig_paths_file)
 ```
 
-You can check the number of vertices (contigs) and edges (connections).
+You can check the number of vertices (contigs) and edges (connections):
+
 ```python
 >>> cg.vcount
 189
@@ -40,17 +46,17 @@ You can check the number of vertices (contigs) and edges (connections).
 ```
 
 !!! note
-    You will note that there are less number of contigs than segments (`S` tags) in the graph (189 contigs and 982 segments in this example). This is because SPAdes resolves longer segment paths as contigs. Each contig is made up of one or more segments.
+    There are fewer contigs than segments (`S` tags) in the graph (189 contigs and 982 segments in this example) because SPAdes resolves paths with multiple segments into longer contigs. Each contig is made up of one or more segments.
 
 !!! note
-    You will note that there are less number of edges than links (`L` tags) in the graph (394 edges and 1318 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove multiple edges and self loops.
+    There are also fewer edges than links (`L` tags) in the graph (394 edges and 1318 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove multiple edges and self loops.
 
 
 ## MEGAHIT contig graph
 
 MEGAHIT assembly graphs represent contig sequences as segments and overlaps between contigs as links. So it is pretty straightforward to understand. However, when building the graph file from `megahit_core`, the contigs are renamed.
 
-For example, this is how the first few lines of `final.contigs.fa` looks like.
+For example, the first few entries of `final.contigs.fa` looks like:
 
 ```text
 >k141_4704 flag=0 multi=1.0000 len=301
@@ -60,7 +66,7 @@ GCAGTTAAGGCAGATCAAAATTTCAAGCGTACAGATGATAAGACTAAAGATGTTGAACTAAGTGATAATGATAAAAAATT
 ...
 ```
 
-And this is how the first few lines of `final.graph.fastg` looks like.
+The `final.graph.fastg` file contains entries such as:
 
 ```text
 >NODE_1_length_205_cov_1.0000_ID_1;
@@ -74,7 +80,12 @@ GTTCGGATAACTTAGCTTCTTTTTCAGTGATATCTTTAATTAACTTTTGTTTTTCTAACTTAACTTCTGGTGTAACTTCT
 ...
 ```
 
-`k141_4704` corresponds to `NODE_1_length_205_cov_1.0000_ID_1` and `k141_10879` corresponds to `NODE_2_length_301_cov_1.0000_ID_3`. Hence, the `megahit` module of *agtools* is designed to handle these differences in contig names as well.
+Here
+
+* `k141_4704` corresponds to `NODE_1_length_205_cov_1.0000_ID_1`
+* `k141_10879` corresponds to `NODE_2_length_301_cov_1.0000_ID_3`
+
+The `megahit` module of *agtools* automatically resolves this mapping.
 
 Once you convert the FASTG file to GFA format, you can load a MEGAHIT contig graph as follows. We will use the [test data](https://github.com/Vini2/agtools/tree/main/tests/data/ESC) provided.
 
@@ -125,7 +136,7 @@ Note that the contigs have some descriptions after the name in the FASTA file. Y
 
 ## Flye contig graph
 
-Flye assembly graphs follows a similar structure to that of SPAdes. The main difference is that links are direct continuations instead of overlaps. Similar to SPAdes, *agtools* builds the contig graph based on prefix and suffix matching of contigs, *i.e.*, if the last segment of the first contig is the same as the first segment of the second contig, then a link between the two contigs is created.
+Flye contig graphs follow a similar structure to SPAdes, but links represent direct continuations rather than overlaps. Similar to SPAdes, *agtools* builds the contig graph based on prefix and suffix matching of contigs, *i.e.*, if the last segment of the first contig matches the first segment of the second contig, then a link between the two contigs is created.
 
 You can load a Flye contig graph as follows. We will use the [test data](https://github.com/Vini2/agtools/tree/main/tests/data/1Y3B) provided.
 
@@ -138,6 +149,7 @@ You can load a Flye contig graph as follows. We will use the [test data](https:/
 ```
 
 You can check the number of vertices (contigs), edges (connections) and number of link lines in the GFA file.
+
 ```python
 >>> cg.vcount
 67
@@ -148,15 +160,15 @@ You can check the number of vertices (contigs), edges (connections) and number o
 ```
 
 !!! note
-    You will note that there are less number of contigs than segments (`S` tags) in the graph (67 contigs and 69 segments in this example). This is because SPAdes resolves longer segment paths as contigs. Each contig is made up of one or more segments.
+    There are less number of contigs than segments (`S` tags) in the graph (67 contigs and 69 segments in this example). This is because SPAdes resolves longer segment paths as contigs. Each contig is made up of one or more segments.
 
 !!! note
-    You will note that there are less number of edges than links (`L` tags) in the graph (2 edges and 10 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove duplicate edges.
+    There are less number of edges than links (`L` tags) in the graph (2 edges and 10 links in this example). This is because *agtools* only represent prefix-suffix overlaps of contigs. Also, the graph is undirected and simplified to remove duplicate edges.
 
 
 ## myloasm contig graph
 
-myloasm assembly graphs represent contig sequences as segments and overlaps between contigs as links. So it is pretty straightforward to represent contig graphs.
+myloasm outputs contig graphs directly, where segments represent contigs and links represent overlaps. So it is pretty straightforward to represent contig graphs.
 
 ```python
 >>> from agtools.assemblers import myloasm
@@ -166,10 +178,10 @@ myloasm assembly graphs represent contig sequences as segments and overlaps betw
 ```
 
 !!! warning
-    Not all contigs in the `final_contig_graph.gfa` file appear in the `assembly_primary.fa` as contigs that are similar to larger contigs are removed (see [GitHub issue](https://github.com/bluenote-1577/myloasm/issues/5)). Also, the contig sequences are not present in the GFA file. This can raise warnings when retrieving contig sequences. Hence, it is recommended to run `agtools clean` to remove missing contigs and add back the contig sequences to the GFA file.
+    Not all contigs in the `final_contig_graph.gfa` file appear in the `assembly_primary.fa` as contigs that are similar to larger contigs are removed (see [GitHub issue](https://github.com/bluenote-1577/myloasm/issues/5)). Also, some contig sequences are not present in the GFA file. This can raise warnings when retrieving contig sequences. Hence, it is recommended to run `agtools clean` to remove missing contigs and add back the contig sequences to the GFA file.
 
 
-You can check the number of vertices (contigs), edges (connections), the number of link lines and contig names.
+You can check the number of vertices (contigs), edges (connections), the number of link lines and contig names:
 
 ```python
 >>> cg.vcount

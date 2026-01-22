@@ -1,6 +1,6 @@
 # Assembly Graph File Formats
 
-Assembly graphs describe the structure of DNA assemblies using nodes (segments/contigs) and edges (connections/overlaps). Several file formats are used to represent these graphs, each with its own syntax and conventions.
+Assembly graphs describe the structure of DNA assemblies using nodes (segments or contigs) and edges (connections or overlaps). Several file formats are used to represent these graphs, each with its own syntax and conventions.
 
 This page summarises the four most common formats supported by *agtools*.
 
@@ -8,16 +8,16 @@ This page summarises the four most common formats supported by *agtools*.
 
 **Extension**: `.gfa`
 
-**Versions supported**: GFA1 (commonly used)
+**Versions supported**: GFA1 (commonly used in assembly)
 
-GFA (Graphical Fragment Assembly) is a standard format to describe genome assemblies as graphs, where:
+GFA (Graphical Fragment Assembly) is a standard format for describing genome assemblies as graphs, where:
 
 * Headers (starts with the tag `H`) denote metadata.
-* Segments (starts with the tag `S`) are nodes (contigs/unitigs).
+* Segments (starts with the tag `S`) are nodes (contigs or unitigs).
 * Links (starts with the tag `L`) define edges between segments.
 * Paths (starts with the tag `P`) optionally define traversal orders.
 
-*agtools* also supports the tags `J`, `C` and `W`. Please refer to the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html) for more details.
+*agtools* also supports the tags `J`, `C` and `W`. Please refer to the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html) for further details.
 
 **Example**
 
@@ -34,14 +34,14 @@ P	contig1	unitig1+,unitig2-	10M
 
 **Extension**: `.fastg`
 
-FASTG represents possible assembly paths in a genome using a FASTA-like structure but designed to encode the assembly graph topology. 
+FASTG represents possible assembly paths using a FASTA-like structure that encodes graph topology.
 
-Each node `NODE_X` in the graph (contig or unitig) has the following entries:
+Each node (`NODE_X`) in the graph (contig or unitig) contains:
 
-* A path label (with :neighbor1,neighbor2...) - shows outgoing edges.
-* A sequence entry — the nucleotide sequence for that node.
+* A path label (e.g. :neighbor1,neighbor2...) describing outgoing edges.
+* A sequence entry representing the nucleotide sequence.
 
-followed by the reverse complement `NODE_X'`. See the below example.
+This is followed by the reverse complement entry (`NODE_X'`). See the example below.
 
 **Example**
 
@@ -66,7 +66,7 @@ TCGATCCGGTCAA
 
 **Extension**: `.asqg`
 
-The ASQG format describes an assembly graph with overlapping contigs.
+The ASQG format represents assembly graphs using overlapping contigs.
 
 * Header records (start with the tag `HT`) denote metadata.
 * Vertex records (start with the tag `VT`) denote the sequences.
@@ -132,7 +132,13 @@ dot -Tpng graph.dot -o graph.png
 
 **References**: [GraphViz DOT Format](https://graphviz.org/doc/info/lang.html)
 
-The same example graph can be represented in ABySS DOT format as follows. `l` denotes the sequence length and `d` denoted the overlap length.
+
+The same example graph can be represented in ABySS DOT format, where: 
+
+*`l` denotes sequence length
+* `d` denoted overlap length
+
+**Example**
 
 ```text
 digraph g {
@@ -160,3 +166,35 @@ digraph g {
 ```
 
 **References**: [ABySS DOT Format](https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot)
+
+---
+
+## Comparison of Assembly Graph File Formats
+
+| Feature | **GFA** | **FASTG** | **ASQG** | **DOT (GraphViz / ABySS)** |
+|-------|--------|-----------|----------|-----------------------------|
+| **Primary use** | General-purpose assembly graph representation | Compact representation of assembly paths | Read overlap graphs | Visualisation and graph layout |
+| **Typical extension** | `.gfa` | `.fastg` | `.asqg` | `.dot`, `.gv` |
+| **Graph type** | Directed graph | Directed graph | Directed graph | Directed or undirected |
+| **Nodes represent** | Segments / unitigs | Contigs or unitigs | Reads or contigs | Generic graph nodes |
+| **Edges represent** | Overlaps / links | Traversable paths | Sequence overlaps | Graph connections |
+| **Stores sequences** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
+| **Stores overlaps** | ✅ Yes | ✅ Implicitly | ✅ Yes | Optional |
+| **Supports paths** | ✅ Yes (`P` records) | ✅ Yes (via node labels) | ❌ No | ❌ No |
+| **Orientation-aware** | ✅ Yes | ✅ Yes | ✅ Yes | Optional |
+| **Standardised** | ✅ Yes (GFA1) | ⚠️ Semi-standard | ❌ Tool-specific | ✅ GraphViz |
+| **Used by assemblers** | SPAdes, Flye, hifiasm | MEGAHIT | SGA | ABySS |
+| **Supported by agtools** | ✅ Full support | ✅ Supported | ✅ Supported | ✅ Supported |
+| **Best for** | General graph analysis | Path-centric graphs | Overlap-based assemblies | Visualisation |
+| **Visualisation support** | Via Bandage | Via Bandage | Limited | Native (GraphViz) |
+
+---
+
+## Summary
+
+| Format | When to Use |
+|------|-------------|
+| **GFA** | Best all-purpose format for assembly graphs; recommended default |
+| **FASTG** | Useful when working with assembler-generated paths |
+| **ASQG** | Suitable for overlap-based assemblies |
+| **DOT** | Best for visualisation and debugging |

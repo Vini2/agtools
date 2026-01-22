@@ -83,7 +83,7 @@ ig.plot(
 )
 ```
 
-The plotted graph will be as below. You can see that each segment is represented by two nodes, the forward node (+) and the reverse node (-). The connections are directed as well.
+The plotted graph is shown below. You can see that each segment is represented by two nodes: the forward node (+) and the reverse node (-). The connections are directed as well.
 
 ![](images/directed_graph_plot.png)
 
@@ -110,7 +110,7 @@ You can find all simple cycles in the oriented unitig graph as follows. A simple
 [(0, 2, 4, 6), (0, 2, 4, 10), (0, 8, 4, 6), (0, 8, 4, 10), (1, 7, 5, 3), (1, 7, 5, 9), (1, 11, 5, 3), (1, 11, 5, 9)]
 ```
 
-You can get the paths with the corresponding segment names as follows.
+You can print the paths using the corresponding segment names as follows.
 
 ```python
 >>> for cycle in cycles:
