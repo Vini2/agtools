@@ -10,9 +10,14 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
 
 
+from .asqg2gfa import asqg2gfa
 from .clean import clean
 from .component import component
 from .concat import concat
+from .fastg2gfa import fastg2gfa
 from .filter import filter
+from .gfa2adj import gfa2adj
+from .gfa2dot import gfa2dot
+from .gfa2fasta import gfa2fasta
 from .rename import rename
 from .stats import stats
