@@ -1,5 +1,7 @@
 # Example applications of *agtools*
 
+The following examples illustrate how *agtools* can be used to extract and manipulate assembly graph structures that are commonly used in downstream analyses. These examples are intended to demonstrate typical usage patterns rather than to provide complete implementations of the respective analytical methods. They are not production-ready pipelines, have not been exhaustively validated, and may require modification for real datasets.
+
 ## Bin contigs by connected components
 
 Contigs from a genome ideally form connected components in the assembly graph. Below is a minimal, straightforward example using *agtools* that “bins” contigs by connected components (each bin = one connected component in the contig graph). It uses *agtools* to load a contig graph and then obtain connected components through the `get_connected_components()` function to group contigs.
