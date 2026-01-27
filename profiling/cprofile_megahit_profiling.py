@@ -134,7 +134,7 @@ def main():
     b = 0
     trend_y = m * x_million  # no intercept
 
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(6, 3))
     plt.errorbar(
         x_million,
         y,
@@ -157,7 +157,7 @@ def main():
 
     plt.xlabel("Number of GFA lines (millions)")
     plt.ylabel("Running time (s)")
-    plt.title("Running time vs number of GFA lines for MEGAHIT contig graph")
+    plt.title("MEGAHIT contig graph")
     plt.grid(True)
 
     # Save to file
