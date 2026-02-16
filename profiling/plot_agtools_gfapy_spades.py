@@ -1,5 +1,5 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 from matplotlib.ticker import FuncFormatter
 
 # -----------------------------------------------------------
@@ -21,13 +21,18 @@ yerr_ag = df_ag["wall_std"]
 
 m_ag = (x_ag_m * y_ag).sum() / (x_ag_m**2).sum()
 plt.errorbar(
-    x_ag_m, y_ag, yerr=yerr_ag,
-    fmt="o", color="blue", ecolor="lightblue",
-    capsize=4, label="agtools"
+    x_ag_m,
+    y_ag,
+    yerr=yerr_ag,
+    fmt="o",
+    color="blue",
+    ecolor="lightblue",
+    capsize=4,
+    label="agtools",
 )
 plt.plot(x_ag_m, m_ag * x_ag_m, "--", color="blue")
 
-#GfaPy
+# GfaPy
 x_gf = df_gf["gfa_S"] + df_gf["gfa_L"] + df_gf["gfa_P"]
 x_gf_m = x_gf / 1e6
 y_gf = df_gf["wall_mean"]
@@ -35,9 +40,14 @@ yerr_gf = df_gf["wall_std"]
 
 m_gf = (x_gf_m * y_gf).sum() / (x_gf_m**2).sum()
 plt.errorbar(
-    x_gf_m, y_gf, yerr=yerr_gf,
-    fmt="o", color="orange", ecolor="peachpuff",
-    capsize=4, label="GfaPy"
+    x_gf_m,
+    y_gf,
+    yerr=yerr_gf,
+    fmt="o",
+    color="orange",
+    ecolor="peachpuff",
+    capsize=4,
+    label="GfaPy",
 )
 plt.plot(x_gf_m, m_gf * x_gf_m, "--", color="orange")
 
@@ -62,9 +72,14 @@ yerr_ag_mem = df_ag["mem_std_MB"]
 
 m_ag_mem = (x_ag_m * y_ag_mem).sum() / (x_ag_m**2).sum()
 plt.errorbar(
-    x_ag_m, y_ag_mem, yerr=yerr_ag_mem,
-    fmt="o", color="blue", ecolor="lightblue",
-    capsize=4, label="agtools"
+    x_ag_m,
+    y_ag_mem,
+    yerr=yerr_ag_mem,
+    fmt="o",
+    color="blue",
+    ecolor="lightblue",
+    capsize=4,
+    label="agtools",
 )
 plt.plot(x_ag_m, m_ag_mem * x_ag_m, "--", color="blue")
 
@@ -74,9 +89,14 @@ yerr_gf_mem = df_gf["mem_std_MB"]
 
 m_gf_mem = (x_gf_m * y_gf_mem).sum() / (x_gf_m**2).sum()
 plt.errorbar(
-    x_gf_m, y_gf_mem, yerr=yerr_gf_mem,
-    fmt="o", color="orange", ecolor="peachpuff",
-    capsize=4, label="GfaPy"
+    x_gf_m,
+    y_gf_mem,
+    yerr=yerr_gf_mem,
+    fmt="o",
+    color="orange",
+    ecolor="peachpuff",
+    capsize=4,
+    label="GfaPy",
 )
 plt.plot(x_gf_m, m_gf_mem * x_gf_m, "--", color="orange")
 
