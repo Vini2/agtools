@@ -27,7 +27,7 @@ plt.errorbar(
 )
 plt.plot(x_ag_m, m_ag * x_ag_m, "--", color="blue")
 
-# Gfapy
+# GfaPy
 x_gf = df_gf["gfa_S"] + df_gf["gfa_L"] + df_gf["gfa_P"]
 x_gf_m = x_gf / 1e6
 y_gf = df_gf["wall_mean"]
@@ -37,7 +37,7 @@ m_gf = (x_gf_m * y_gf).sum() / (x_gf_m**2).sum()
 plt.errorbar(
     x_gf_m, y_gf, yerr=yerr_gf,
     fmt="o", color="orange", ecolor="peachpuff",
-    capsize=4, label="Gfapy"
+    capsize=4, label="GfaPy"
 )
 plt.plot(x_gf_m, m_gf * x_gf_m, "--", color="orange")
 
@@ -68,7 +68,7 @@ plt.errorbar(
 )
 plt.plot(x_ag_m, m_ag_mem * x_ag_m, "--", color="blue")
 
-# Gfapy
+# GfaPy
 y_gf_mem = df_gf["mem_mean_MB"]
 yerr_gf_mem = df_gf["mem_std_MB"]
 
@@ -76,7 +76,7 @@ m_gf_mem = (x_gf_m * y_gf_mem).sum() / (x_gf_m**2).sum()
 plt.errorbar(
     x_gf_m, y_gf_mem, yerr=yerr_gf_mem,
     fmt="o", color="orange", ecolor="peachpuff",
-    capsize=4, label="Gfapy"
+    capsize=4, label="GfaPy"
 )
 plt.plot(x_gf_m, m_gf_mem * x_gf_m, "--", color="orange")
 
