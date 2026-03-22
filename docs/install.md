@@ -41,7 +41,7 @@ If you want to use the development version of *agtools*, you can install it usin
 # clone repository
 git clone https://github.com/Vini2/agtools.git
 
-# move to gbintk directory
+# move to agtools directory
 cd agtools
 
 # create and activate conda env

@@ -68,10 +68,10 @@ for path in ug.path_index:
     print(path, ":", ug.get_path(path))
 
 # Get neighbours of a segment
-print(f"Neighbours of segment 5: {ug.get_neighbors("5")}")
+print(f"Neighbours of segment 5: {ug.get_neighbors('5')}")
 
 # Print adjacency matrix
-print("Adjancency matrix:")
+print("Adjacency matrix:")
 print(ug.get_adjacency_matrix())
 
 # Print segments

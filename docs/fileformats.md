@@ -133,10 +133,10 @@ dot -Tpng graph.dot -o graph.png
 **References**: [GraphViz DOT Format](https://graphviz.org/doc/info/lang.html)
 
 
-The same example graph can be represented in ABySS DOT format, where: 
+The same example graph can be represented in ABySS DOT format, where:
 
-*`l` denotes sequence length
-* `d` denoted overlap length
+* `l` denotes sequence length
+* `d` denotes overlap length
 
 **Example**
 

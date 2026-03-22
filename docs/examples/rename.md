@@ -5,7 +5,7 @@
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
 ```text
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 segments (20 bp) and 1 short segment (10 bp: seqX)
 H	VN:Z:1.0
 # Segments
 S	seq1	ATGCGTATGCGTATGCGTAA
@@ -43,7 +43,7 @@ agtools rename -g test_graph.gfa -p TEST -o ./
 The renamed graph will look as follows.
 
 ```text
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 segments (20 bp) and 1 short segment (10 bp: seqX)
 H	VN:Z:1.0
 # Segments
 S	TEST_seq1	ATGCGTATGCGTATGCGTAA

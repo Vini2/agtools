@@ -1,6 +1,6 @@
 # API Tutorial
 
-This page is a detailed tutorial of *agtools*' API. If you want to get a quick overview of how the *agtools* API works, please refer to the [Quick Start Guide](quickstart.md). If you have not installed *agtools* yet, see [Installing *agtools*](install.md).
+This page is a detailed tutorial for the *agtools* API. If you want to get a quick overview of how the *agtools* API works, please refer to the [Quick Start Guide](quickstart.md). If you have not installed *agtools* yet, see [Installing *agtools*](install.md).
 
 ## Importing *agtools*
 

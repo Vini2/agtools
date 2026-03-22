@@ -5,7 +5,7 @@
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/clean_ex_graph.gfa). The lines starting with the `S` tags are missing the segment sequences.
 
 ```text
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 segments (20 bp) and 1 short segment (10 bp: seqX)
 H	VN:Z:1.0
 # Segments
 S	seq1		DP:f:1.0
@@ -34,7 +34,7 @@ W	seqread1	0	*	<seq6<seqX>seq9
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
-We have the following [segments file in FASTA format](https://github.com/Vini2/agtools/tree/main/docs/data/clean_ex_segments.fasta). It is missing `segX`.
+We have the following [segments file in FASTA format](https://github.com/Vini2/agtools/tree/main/docs/data/clean_ex_segments.fasta). It is missing `seqX`.
 
 ```text
 >seq1
@@ -65,10 +65,10 @@ You can run the following command to clean up the GFA file.
 agtools clean -g test_graph.gfa -f test_fasta.fasta -o ./
 ```
 
-The cleaned graph would look like below. Note that the segment sequences are added back and `segX` is removed.
+The cleaned graph would look as shown below. Note that the segment sequences are added back and `seqX` is removed.
 
 ```text
-# GFA file: 10 seqments (20 bp) and 1 short seqment (10 bp: seqX)
+# GFA file: 10 segments (20 bp) and 1 short segment (10 bp: seqX)
 H	VN:Z:1.0
 # Segments
 S	seq1	ATGCGTATGCGTATGCGTAA	DP:f:1.0

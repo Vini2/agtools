@@ -186,7 +186,7 @@ Options:
 
 **Outputs**
 
-* Assembly graph file of the constituent component in GFA format
+* Assembly graph file of the corresponding component in GFA format
 
 ## `fastg2gfa`
 
@@ -218,7 +218,7 @@ Options:
 
 ## `asqg2gfa`
 
-Convert a ASQG file to GFA format.
+Convert an ASQG file to GFA format.
 
 Run `agtools asqg2gfa --help` or `agtools asqg2gfa -h` to list the help message.
 
@@ -317,4 +317,4 @@ Options:
 
 **Outputs**
 
-* A delimited file of the adjancency matrix
+* A delimited file of the adjacency matrix

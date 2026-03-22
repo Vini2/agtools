@@ -91,7 +91,7 @@ Let’s load the GFA file and query the edges and links.
 
 `ug.lcount` reports the number of lines in the GFA file that begin with the `L` tag (21 in this case).
 
-If you look at the Bandage visualisation, there are 11 links: segment 9 has two links with different orientations, and segment 6 has a self-loop. However,** *agtools* does not represent the directional assembly graph**. Instead, it represents only the connectivity between segments.
+If you look at the Bandage visualisation, there are 11 links: segment 9 has two links with different orientations, and segment 6 has a self-loop. However,** *agtools* does not represent a directional assembly graph**. Instead, it represents only the connectivity between segments.
 
 Multiple edges and self-loops are removed to simplify the graph. This is why `ug.ecount` differs from the number of `L` records in the GFA file.
 

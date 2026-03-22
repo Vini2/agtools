@@ -1,6 +1,6 @@
 ## Filtering segments from an assembly graph
 
-*agtools* can filter sequences given a minimum segment length. Sequences that are shorted than minimum length will be removed along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
+*agtools* can filter sequences given a minimum segment length. Sequences that are shorter than the minimum length will be removed, along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
 
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
@@ -34,7 +34,7 @@ W	seqread1	0	*	<seq6<seqX>seq9
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
-We want to remove segments shorted than 15bp. You can run the following command to remove segments shorted than 15bp.
+We want to remove segments shorter than 15 bp. You can run the following command to remove segments shorter than 15 bp.
 
 ```bash
 agtools filter -g test_graph.gfa -l 15 -o ./
