@@ -73,7 +73,7 @@ class FastaParser:
         This allows seeking to the start of a sequence later.
         """
         with self._open("rt") as f:
-            pos = f.tell() if not self.gzipped else f.fileobj.tell()
+            pos = f.tell()
             line = f.readline()
             while line:
                 if line.startswith(">"):
@@ -82,7 +82,7 @@ class FastaParser:
                     else:
                         seq_name = line[1:].strip().split()[0]
                     self.index[seq_name] = pos
-                pos = f.tell() if not self.gzipped else f.fileobj.tell()
+                pos = f.tell()
                 line = f.readline()
 
     def get_sequence(self, seq_name: str) -> Seq:
@@ -123,11 +123,7 @@ class FastaParser:
         seq_lines = []
 
         with self._open("rt") as f:
-            if not self.gzipped:
-                f.seek(self.index[seq_name])
-            else:
-                # For gzip, use fileobj.seek
-                f.fileobj.seek(self.index[seq_name])
+            f.seek(self.index[seq_name])
 
             f.readline()  # skip header line
             for line in f:
