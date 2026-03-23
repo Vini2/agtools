@@ -57,6 +57,7 @@ agtools --help
 
 If you prefer not to create a dedicated environment and only want to install *agtools*, ensure the following dependencies are installed:
 
+* [Python](https://www.python.org/) - 3.10 or higher
 * [`flit`](https://flit.pypa.io/en/stable/) - for installation
 * [`click`](https://click.palletsprojects.com/en/stable/) - for CLI argument parsing
 * [`loguru`](https://loguru.readthedocs.io/en/stable/) - for logging
