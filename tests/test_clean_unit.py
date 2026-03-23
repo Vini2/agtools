@@ -22,6 +22,8 @@ def test_write_filtered_graph_fills_missing_sequences_and_prunes_edges(tmp_path)
         "S\ts1\t\tLN:i:4\n"
         "S\ts2\tTT\n"
         "L\ts1\t+\ts2\t-\t1M\n"
+        "C\ts1\t+\ts2\t+\t1M\n"
+        "C\ts1\t+\ts1\t+\t1M\n"
         "P\tp1\ts1+,s2-\t*\n"
         "P\tp2\ts1+\t*\n"
         "W\tw1\t*\t*\t*\t>s1<s2\n"
@@ -37,6 +39,8 @@ def test_write_filtered_graph_fills_missing_sequences_and_prunes_edges(tmp_path)
     assert "S\ts1\tACGT\tLN:i:4" in content
     assert "S\ts2\tTT" not in content
     assert "L\ts1\t+\ts2\t-\t1M" not in content
+    assert "C\ts1\t+\ts2\t+\t1M" not in content
+    assert "C\ts1\t+\ts1\t+\t1M" in content
     assert "P\tp1\ts1+,s2-\t*" not in content
     assert "W\tw1\t*\t*\t*\t>s1<s2" not in content
     assert "P\tp2\ts1+\t*" in content

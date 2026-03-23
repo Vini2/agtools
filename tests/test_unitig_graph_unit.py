@@ -44,6 +44,10 @@ def test_unitig_graph_query_and_matrix_apis(tmp_path):
     assert not ug.is_connected("a", "c")
     assert ug.get_path("p1") == ("a+,b-", "*")
 
+    adj_matrix = ug.get_adjacency_matrix()
+    assert adj_matrix[0, 1] == 1
+    assert adj_matrix[0, 2] == 0
+
     adj_df = ug.get_adjacency_matrix(type="pandas")
     assert list(adj_df.index) == ["a", "b", "c"]
     assert list(adj_df.columns) == ["a", "b", "c"]

@@ -15,6 +15,8 @@ def test_write_component_graph_keeps_only_requested_component(tmp_path):
         "S\ts1\tAAAA\n"
         "S\ts2\tTT\n"
         "L\ts1\t+\ts2\t-\t1M\n"
+        "C\ts1\t+\ts2\t+\t1M\n"
+        "C\ts1\t+\ts1\t+\t1M\n"
         "P\tp1\ts1+,s2-\t*\n"
         "P\tp2\ts1+\t*\n"
         "W\tw1\t*\t*\t*\t>s1<s2\n"
@@ -28,6 +30,8 @@ def test_write_component_graph_keeps_only_requested_component(tmp_path):
     assert "S\ts1\tAAAA" in content
     assert "S\ts2\tTT" not in content
     assert "L\ts1\t+\ts2\t-\t1M" not in content
+    assert "C\ts1\t+\ts2\t+\t1M" not in content
+    assert "C\ts1\t+\ts1\t+\t1M" in content
     assert "P\tp1\ts1+,s2-\t*" not in content
     assert "W\tw1\t*\t*\t*\t>s1<s2" not in content
     assert "P\tp2\ts1+\t*" in content

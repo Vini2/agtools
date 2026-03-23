@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pytest
+
 from agtools.commands.asqg2gfa import _get_segments_and_links, _write_gfa, asqg2gfa
 
 
@@ -52,3 +54,10 @@ def test_asqg2gfa_end_to_end(tmp_path):
     assert "S\tcontig2\tCCCC" in content
     assert "L\tcontig1\t+\tcontig2\t-\t3M" in content
 
+
+def test_get_segments_and_links_raises_on_malformed_ed_line(tmp_path):
+    asqg_file = tmp_path / "graph.asqg"
+    asqg_file.write_text("VT\tcontig1\tAAAA\nED\tcontig1 contig2 0 3\n")
+
+    with pytest.raises(ValueError, match="Malformed ED line"):
+        _get_segments_and_links(str(asqg_file))
