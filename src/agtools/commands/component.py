@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import re
-
+from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -49,40 +48,10 @@ def _write_component_graph(
 
     output_file = f"{output_path}/component_graph.gfa"
 
-    with open(gfa_file, "r") as gfa, open(output_file, "w") as filtered_gfa:
-        for line in gfa:
-            if line.startswith("S"):
-                parts = line.strip().split("\t")
-                seg_id = parts[1]
-                if seg_id in component_segments:
-                    filtered_gfa.write(line)
-            elif line.startswith("L") or line.startswith("J"):
-                parts = line.strip().split("\t")
-                from_seg, to_seg = parts[1], parts[3]
-                if from_seg in component_segments and to_seg in component_segments:
-                    filtered_gfa.write(line)
-            elif line.startswith("C"):
-                parts = line.strip().split("\t")
-                container_seg, contained_seg = parts[1], parts[3]
-                if (
-                    container_seg in component_segments
-                    and contained_seg in component_segments
-                ):
-                    filtered_gfa.write(line)
-            elif line.startswith("P"):
-                parts = line.strip().split("\t")
-                seg_ids = [
-                    part[:-1] for part in re.split(r"[,;]", parts[2]) if part != ""
-                ]
-                if all(seg_id in component_segments for seg_id in seg_ids):
-                    filtered_gfa.write(line)
-            elif line.startswith("W"):
-                parts = line.strip().split("\t")
-                seg_ids = [seg for seg in re.split(r"[><]", parts[-1]) if seg != ""]
-                if all(seg_id in component_segments for seg_id in seg_ids):
-                    filtered_gfa.write(line)
-            else:
-                filtered_gfa.write(line)
+    def keep_segment(seg_id: str) -> bool:
+        return seg_id in component_segments
+
+    write_filtered_gfa(gfa_file, output_file, keep_segment)
 
     return output_file
 
@@ -120,9 +89,7 @@ def component(gfa_file: str, segment: str, output_path: str) -> str:
 
     for component in connected_components:
         if segment_id in component:
-            component_segments = set(
-                [ug.segment_names[node_id] for node_id in component]
-            )
+            component_segments = {ug.segment_names[node_id] for node_id in component}
             break
 
     output_file = _write_component_graph(component_segments, gfa_file, output_path)

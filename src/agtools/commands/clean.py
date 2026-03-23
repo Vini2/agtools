@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-import re
-
+from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.fasta_parser import FastaParser
 from agtools.core.unitig_graph import UnitigGraph
 
@@ -38,50 +37,17 @@ def _write_filtered_graph(
 
     output_file = f"{output_path}/cleaned_graph.gfa"
 
-    with open(gfa_file, "r") as gfa, open(output_file, "w") as cleaned_gfa:
-        for line in gfa:
-            if line.startswith("S"):
-                parts = line.strip().split("\t")
-                seg_id = parts[1]
+    def keep_segment(seg_id: str) -> bool:
+        return seg_id not in segments_to_remove
 
-                if seg_id not in segments_to_remove:
-                    if parts[2] == "":
-                        parts[2] = str(parser.get_sequence(seg_id))
-                        line = "\t".join(parts) + "\n"
-                    cleaned_gfa.write(line)
+    def transform_segment(parts: list[str]) -> list[str]:
+        if len(parts) > 2 and parts[2] == "":
+            updated_parts = parts.copy()
+            updated_parts[2] = str(parser.get_sequence(parts[1]))
+            return updated_parts
+        return parts
 
-            elif line.startswith("L") or line.startswith("J"):
-                parts = line.strip().split("\t")
-                from_seg, to_seg = parts[1], parts[3]
-                if (
-                    from_seg not in segments_to_remove
-                    and to_seg not in segments_to_remove
-                ):
-                    cleaned_gfa.write(line)
-            elif line.startswith("C"):
-                parts = line.strip().split("\t")
-                container_seg, contained_seg = parts[1], parts[3]
-                if (
-                    container_seg not in segments_to_remove
-                    and contained_seg not in segments_to_remove
-                ):
-                    cleaned_gfa.write(line)
-            elif line.startswith("P"):
-                parts = line.strip().split("\t")
-                seg_ids = [
-                    seg.rstrip("+-")
-                    for seg in re.split(r"[,;]", parts[2])
-                    if seg != ""
-                ]
-                if all(seg_id not in segments_to_remove for seg_id in seg_ids):
-                    cleaned_gfa.write(line)
-            elif line.startswith("W"):
-                parts = line.strip().split("\t")
-                seg_ids = [seg for seg in re.split(r"[><]", parts[-1]) if seg != ""]
-                if all(seg_id not in segments_to_remove for seg_id in seg_ids):
-                    cleaned_gfa.write(line)
-            else:
-                cleaned_gfa.write(line)
+    write_filtered_gfa(gfa_file, output_file, keep_segment, transform_segment)
 
     return output_file
 
@@ -117,11 +83,9 @@ def clean(gfa_file: str, fasta: str, assembler: str, output_path: str) -> str:
     # Get parser for fasta file
     parser = FastaParser(fasta, assembler=assembler)
 
-    segments_to_remove = set()
-
-    for segment in ug.segment_names:
-        if segment not in parser.index:
-            segments_to_remove.add(segment)
+    segments_to_remove = {
+        segment for segment in ug.segment_names if segment not in parser.index
+    }
 
     output_file = _write_filtered_graph(
         segments_to_remove, parser, gfa_file, output_path
