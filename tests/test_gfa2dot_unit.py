@@ -11,8 +11,9 @@ gfa2dot_module = importlib.import_module("agtools.commands.gfa2dot")
 def test_write_abyss_dot_emits_nodes_and_links(tmp_path):
     dummy_graph = types.SimpleNamespace(
         graph=types.SimpleNamespace(vs={"name": ["seg1", "seg2"]}),
+        segment_names=["seg1", "seg2"],
         segment_lengths={"seg1": 4, "seg2": 6},
-        link_overlap={("seg1+", "seg2-"): 5},
+        link_overlap={(0, "+", 1, "-"): 5, (1, "+", 0, "-"): 5},
     )
 
     output_file = _write_abyss_dot(dummy_graph, str(tmp_path))
@@ -22,6 +23,7 @@ def test_write_abyss_dot_emits_nodes_and_links(tmp_path):
     assert '"seg1+" [l=4]' in content
     assert '"seg2-" [l=6]' in content
     assert '"seg1+" -> "seg2-" [d=-5]' in content
+    assert '"seg2+" -> "seg1-" [d=-5]' in content
 
 
 def test_write_dot_delegates_to_igraph_writer(tmp_path):
