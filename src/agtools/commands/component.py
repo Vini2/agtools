@@ -71,12 +71,14 @@ def _write_component_graph(
                     filtered_gfa.write(line)
             elif line.startswith("P"):
                 parts = line.strip().split("\t")
-                seg_ids = [part[:-1] for part in re.split(r"[,;]", parts[2])]
+                seg_ids = [
+                    part[:-1] for part in re.split(r"[,;]", parts[2]) if part != ""
+                ]
                 if all(seg_id in component_segments for seg_id in seg_ids):
                     filtered_gfa.write(line)
             elif line.startswith("W"):
                 parts = line.strip().split("\t")
-                seg_ids = re.split(r"[><]", parts[-1])
+                seg_ids = [seg for seg in re.split(r"[><]", parts[-1]) if seg != ""]
                 if all(seg_id in component_segments for seg_id in seg_ids):
                     filtered_gfa.write(line)
             else:

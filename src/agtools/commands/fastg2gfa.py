@@ -102,6 +102,10 @@ def _parse_fastg(fastg_file: str) -> tuple:
             else:
                 seq_lines.append(line)
 
+    # Flush the final segment after EOF.
+    if segment_key and "'" not in current_segment:
+        segments[segment_key] = "".join(seq_lines)
+
     return segments, edges
 
 

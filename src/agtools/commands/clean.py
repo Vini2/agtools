@@ -68,12 +68,16 @@ def _write_filtered_graph(
                     cleaned_gfa.write(line)
             elif line.startswith("P"):
                 parts = line.strip().split("\t")
-                seg_ids = parts[2].split(",")
+                seg_ids = [
+                    seg.rstrip("+-")
+                    for seg in re.split(r"[,;]", parts[2])
+                    if seg != ""
+                ]
                 if all(seg_id not in segments_to_remove for seg_id in seg_ids):
                     cleaned_gfa.write(line)
             elif line.startswith("W"):
                 parts = line.strip().split("\t")
-                seg_ids = re.split(r"[><]", parts[-1])
+                seg_ids = [seg for seg in re.split(r"[><]", parts[-1]) if seg != ""]
                 if all(seg_id not in segments_to_remove for seg_id in seg_ids):
                     cleaned_gfa.write(line)
             else:
