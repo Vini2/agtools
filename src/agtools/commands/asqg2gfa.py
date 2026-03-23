@@ -49,12 +49,23 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
 
             # Identify lines with link information
             elif line.startswith("ED"):
-                parts = line.strip().split("\t")[1].split(" ")
+                fields = line.strip().split("\t")
+                if len(fields) < 2:
+                    raise ValueError(f"Malformed ED line: {line.strip()}")
+
+                parts = fields[1].split(" ")
+                if len(parts) < 9:
+                    raise ValueError(f"Malformed ED line: {line.strip()}")
+
                 seq1_name = parts[0]
                 seq2_name = parts[1]
-                seq1_overlap = int(parts[3]) - int(parts[2])
-                seq2_overlap = int(parts[6]) - int(parts[5])
-                seq2_orient = int(parts[8])
+
+                try:
+                    seq1_overlap = int(parts[3]) - int(parts[2])
+                    seq2_overlap = int(parts[6]) - int(parts[5])
+                    seq2_orient = int(parts[8])
+                except ValueError as e:
+                    raise ValueError(f"Malformed ED line: {line.strip()}") from e
 
                 if seq1_overlap == seq2_overlap:
 
@@ -63,6 +74,8 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                         links.append([seq1_name, "+", seq2_name, "-", seq1_overlap])
                     elif seq2_orient == 0:
                         links.append([seq1_name, "+", seq2_name, "+", seq1_overlap])
+                    else:
+                        raise ValueError(f"Malformed ED line: {line.strip()}")
 
     return segments, links
 
