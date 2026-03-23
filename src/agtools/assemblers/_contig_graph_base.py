@@ -51,7 +51,8 @@ def get_graph_edges(
 
         while line != "":
             # Identify lines with link information
-            if "L" in line:
+            tag = line[0]
+            if tag == "L":
                 lcount += 1
                 strings = line.split("\t")
                 source = segment_name_to_id[strings[1]]

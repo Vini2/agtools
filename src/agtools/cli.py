@@ -160,7 +160,7 @@ def filter(ctx, graph, min_length, output):
     "-f",
     help="path to the FASTA file",
     type=click.Path(exists=True),
-    required=False,
+    required=True,
 )
 @click.option(
     "--assembler",
