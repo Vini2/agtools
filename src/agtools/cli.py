@@ -65,7 +65,8 @@ _output = click.option(
 )
 _log_file = click.option(
     "--log-file",
-    help="optional path to write debug logs; by default no log file is created",
+    "-lf",
+    help="optional path to write output logs; by default no log file is created",
     type=click.Path(dir_okay=False, writable=True),
     required=False,
 )
