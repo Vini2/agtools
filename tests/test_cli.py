@@ -157,3 +157,22 @@ def test_agtools_gfa2adj(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
+
+def test_agtools_no_log_file_by_default(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2adj, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+    assert not (tmp_dir / "agtools.log").exists()
+
+
+def test_agtools_log_file_is_optional(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "test_graph.gfa"
+    log_file = tmp_dir / "custom-agtools.log"
+    args = f"-g {graph} -o {outpath} --log-file {log_file}".split()
+    r = runner.invoke(gfa2adj, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+    assert log_file.exists()
