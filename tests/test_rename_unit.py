@@ -43,15 +43,16 @@ def test_write_renamed_file_updates_all_supported_gfa_tags(tmp_path):
         "X\tcustom\tline\n"
     )
 
+    target = tmp_path / "renamed_graph.gfa"
     output_file = _write_renamed_file(
         str(gfa_file),
         {"seg1": "pref_seg1", "seg2": "pref_seg2"},
         {"path1": "pref_path1"},
         {"walk1": "pref_walk1"},
-        str(tmp_path),
+        str(target),
     )
 
-    content = (tmp_path / "renamed_graph.gfa").read_text()
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "renamed_graph.gfa")
     assert "S\tpref_seg1\tATGC" in content
@@ -67,10 +68,10 @@ def test_rename_end_to_end(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\tseg1\tATGC\nP\tpath1\tseg1+\t*\n")
 
-    output_file = rename(str(gfa_file), "pref", str(tmp_path))
+    target = tmp_path / "renamed_graph.gfa"
+    output_file = rename(str(gfa_file), "pref", str(target))
 
-    content = (tmp_path / "renamed_graph.gfa").read_text()
+    content = target.read_text()
     assert output_file == str(tmp_path / "renamed_graph.gfa")
     assert "S\tpref_seg1\tATGC" in content
     assert "P\tpref_path1\tpref_seg1+\t*" in content
-

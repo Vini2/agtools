@@ -23,8 +23,9 @@ def test_write_filtered_graph_removes_segments_and_dependent_records(tmp_path):
         "W\tw2\t*\t*\t*\t>s1\n"
     )
 
-    output_file = _write_filtered_graph({"s2"}, str(gfa_file), str(tmp_path))
-    content = (tmp_path / "filtered_graph.gfa").read_text()
+    target = tmp_path / "filtered_graph.gfa"
+    output_file = _write_filtered_graph({"s2"}, str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "filtered_graph.gfa")
     assert "S\ts1\tAAAA" in content
@@ -50,8 +51,9 @@ def test_filter_removes_segments_shorter_than_threshold(tmp_path, monkeypatch):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\ts1\tAAAAAAAAAA\nS\ts2\tTT\nP\tp1\ts1+,s2-\t*\n")
 
-    output_file = filter(str(gfa_file), min_length=5, output_path=str(tmp_path))
-    content = (tmp_path / "filtered_graph.gfa").read_text()
+    target = tmp_path / "filtered_graph.gfa"
+    output_file = filter(str(gfa_file), min_length=5, output_path=str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "filtered_graph.gfa")
     assert "S\ts1\tAAAAAAAAAA" in content

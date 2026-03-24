@@ -32,8 +32,9 @@ def test_write_filtered_graph_fills_missing_sequences_and_prunes_edges(tmp_path)
 
     parser = DummyParser(index={"s1": 0}, sequences={"s1": "ACGT"})
 
-    output_file = _write_filtered_graph({"s2"}, parser, str(gfa_file), str(tmp_path))
-    content = (tmp_path / "cleaned_graph.gfa").read_text()
+    target = tmp_path / "cleaned_graph.gfa"
+    output_file = _write_filtered_graph({"s2"}, parser, str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "cleaned_graph.gfa")
     assert "S\ts1\tACGT\tLN:i:4" in content
@@ -61,8 +62,14 @@ def test_clean_removes_segments_missing_from_fasta_index(tmp_path, monkeypatch):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\ts1\t\tLN:i:4\nS\ts2\tTT\nP\tp1\ts1+,s2-\t*\n")
 
-    output_file = clean(str(gfa_file), fasta="contigs.fasta", assembler="general", output_path=str(tmp_path))
-    content = (tmp_path / "cleaned_graph.gfa").read_text()
+    target = tmp_path / "cleaned_graph.gfa"
+    output_file = clean(
+        str(gfa_file),
+        fasta="contigs.fasta",
+        assembler="general",
+        output_path=str(target),
+    )
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "cleaned_graph.gfa")
     assert "S\ts1\tACGT\tLN:i:4" in content

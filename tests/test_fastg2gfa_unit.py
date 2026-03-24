@@ -27,12 +27,13 @@ def test_write_gfa_outputs_header_segments_and_links(tmp_path):
     segments = {"seg1": "ATGC", "seg2": "GGTT"}
     edges = [("seg1", "+", "seg2", "-",)]
 
+    target = tmp_path / "converted_graph.gfa"
     output_file = _write_gfa(
-        segments=segments, edges=edges, output_path=str(tmp_path), fixed_overlap=41
+        segments=segments, edges=edges, output_path=str(target), fixed_overlap=41
     )
 
-    content = (tmp_path / "converted_graph.gfa").read_text().splitlines()
-    assert output_file == str(tmp_path / "converted_graph.gfa")
+    content = target.read_text().splitlines()
+    assert output_file == str(target)
     assert content[0] == "H\tVN:Z:1.0"
     assert "S\tseg1\tATGC" in content
     assert "S\tseg2\tGGTT" in content
@@ -43,10 +44,11 @@ def test_fastg2gfa_end_to_end_generates_expected_gfa(tmp_path):
     fastg_file = tmp_path / "graph.fastg"
     fastg_file.write_text(">A:B';\nACGT\n>B';\nTTTT\n")
 
-    output_file = fastg2gfa(str(fastg_file), k_overlap=55, gfa_path=str(tmp_path))
+    target = tmp_path / "converted_graph.gfa"
+    output_file = fastg2gfa(str(fastg_file), k_overlap=55, gfa_path=str(target))
 
-    content = (tmp_path / "converted_graph.gfa").read_text().splitlines()
+    content = target.read_text().splitlines()
 
-    assert output_file == str(tmp_path / "converted_graph.gfa")
+    assert output_file == str(target)
     assert "S\tA\tACGT" in content
     assert "L\tA\t+\tB\t-\t55M" in content

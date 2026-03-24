@@ -25,8 +25,9 @@ def test_write_segment_sequences_outputs_fasta(tmp_path):
     gfa_file.write_text("S\tseg1\tATGC\n")
     sequences = _get_segment_sequences(str(gfa_file))
 
-    output_file = _write_segment_sequences(sequences, str(tmp_path))
-    content = (tmp_path / "segments.fasta").read_text()
+    target = tmp_path / "segments.fasta"
+    output_file = _write_segment_sequences(sequences, str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "segments.fasta")
     assert ">seg1" in content
@@ -37,10 +38,10 @@ def test_gfa2fasta_end_to_end(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\tseg1\tATGC\nS\tseg2\tGGTT\n")
 
-    output_file = gfa2fasta(str(gfa_file), str(tmp_path))
-    content = (tmp_path / "segments.fasta").read_text()
+    target = tmp_path / "segments.fasta"
+    output_file = gfa2fasta(str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "segments.fasta")
     assert ">seg1" in content
     assert ">seg2" in content
-

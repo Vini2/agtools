@@ -22,8 +22,9 @@ def test_write_stats_file_contains_expected_metrics(tmp_path):
         "gc_content": 0.4321,
     }
 
-    output_file = _write_stats_file("graph.gfa", stats_dict, str(tmp_path))
-    content = (tmp_path / "graph_stats.txt").read_text()
+    target = tmp_path / "graph_stats.txt"
+    output_file = _write_stats_file("graph.gfa", stats_dict, str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "graph_stats.txt")
     assert "Basic graph statistics for graph.gfa:" in content
@@ -63,8 +64,9 @@ def test_stats_builds_metrics_from_unitig_graph(tmp_path, monkeypatch):
         stats_module.UnitigGraph, "from_gfa", staticmethod(lambda _: DummyUG())
     )
 
-    output_file = stats("input.gfa", str(tmp_path))
-    content = (tmp_path / "graph_stats.txt").read_text()
+    target = tmp_path / "graph_stats.txt"
+    output_file = stats("input.gfa", str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "graph_stats.txt")
     assert "Number of segments: 4" in content

@@ -19,8 +19,9 @@ def test_concat_orders_known_tags_and_appends_unknown_tags(tmp_path):
         "P\tpath1\tseg1+\t*\n" "S\tseg2\tGC\n" "L\tseg1\t+\tseg2\t+\t1M\n" "#\tcomment\n"
     )
 
-    output_file = concat([str(graph_1), str(graph_2)], str(tmp_path))
-    lines = (tmp_path / "concatenated_graph.gfa").read_text().splitlines()
+    target = tmp_path / "concatenated_graph.gfa"
+    output_file = concat([str(graph_1), str(graph_2)], str(target))
+    lines = target.read_text().splitlines()
 
     assert output_file == str(tmp_path / "concatenated_graph.gfa")
     assert lines.index("#\tcomment") < lines.index("H\tVN:Z:1.0")
@@ -46,8 +47,8 @@ def test_concat_raises_on_duplicate_ids(tmp_path, line_1, line_2):
     graph_1.write_text(line_1)
     graph_2.write_text(line_2)
 
+    target = tmp_path / "concatenated_graph.gfa"
     with pytest.raises(SystemExit) as exc:
-        concat([str(graph_1), str(graph_2)], str(tmp_path))
+        concat([str(graph_1), str(graph_2)], str(target))
 
     assert exc.value.code == 1
-

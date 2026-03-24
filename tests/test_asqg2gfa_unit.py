@@ -26,15 +26,16 @@ def test_get_segments_and_links_parses_orientations_and_filters_invalid_overlaps
 
 
 def test_write_gfa_outputs_segments_and_links(tmp_path):
+    target = tmp_path / "converted_graph.gfa"
     output_file = _write_gfa(
         segments={"c1": "ATGC", "c2": "GGTT"},
         links=[["c1", "+", "c2", "-", 4]],
-        output_path=str(tmp_path),
+        output_path=str(target),
     )
 
-    content = (tmp_path / "converted_graph.gfa").read_text().splitlines()
+    content = target.read_text().splitlines()
 
-    assert output_file == str(tmp_path / "converted_graph.gfa")
+    assert output_file == str(target)
     assert "S\tc1\tATGC" in content
     assert "S\tc2\tGGTT" in content
     assert "L\tc1\t+\tc2\t-\t4M" in content
@@ -46,10 +47,11 @@ def test_asqg2gfa_end_to_end(tmp_path):
         "VT\tcontig1\tAAAA\n" "VT\tcontig2\tCCCC\n" "ED\tcontig1 contig2 0 3 0 0 3 0 1\n"
     )
 
-    output_file = asqg2gfa(str(asqg_file), str(tmp_path))
-    content = (tmp_path / "converted_graph.gfa").read_text()
+    target = tmp_path / "converted_graph.gfa"
+    output_file = asqg2gfa(str(asqg_file), str(target))
+    content = target.read_text()
 
-    assert output_file == str(tmp_path / "converted_graph.gfa")
+    assert output_file == str(target)
     assert "S\tcontig1\tAAAA" in content
     assert "S\tcontig2\tCCCC" in content
     assert "L\tcontig1\t+\tcontig2\t-\t3M" in content

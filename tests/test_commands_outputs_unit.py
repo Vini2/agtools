@@ -29,8 +29,9 @@ def test_stats_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
 
-    output_file = stats(str(gfa_file), str(tmp_path))
-    content = (tmp_path / "graph_stats.txt").read_text()
+    target = tmp_path / "graph_stats.txt"
+    output_file = stats(str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "graph_stats.txt")
     assert "Number of segments: 3" in content
@@ -47,8 +48,9 @@ def test_rename_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
 
-    output_file = rename(str(gfa_file), "pref", str(tmp_path))
-    content = (tmp_path / "renamed_graph.gfa").read_text()
+    target = tmp_path / "renamed_graph.gfa"
+    output_file = rename(str(gfa_file), "pref", str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "renamed_graph.gfa")
     assert "S\tpref_s1\tAAAA" in content
@@ -63,8 +65,9 @@ def test_concat_output_file_content(tmp_path):
     gfa_1.write_text("H\tVN:Z:1.0\nS\ts1\tAAAA\n")
     gfa_2.write_text("S\ts2\tCC\nL\ts1\t+\ts2\t+\t1M\n")
 
-    output_file = concat([str(gfa_1), str(gfa_2)], str(tmp_path))
-    content = (tmp_path / "concatenated_graph.gfa").read_text()
+    target = tmp_path / "concatenated_graph.gfa"
+    output_file = concat([str(gfa_1), str(gfa_2)], str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "concatenated_graph.gfa")
     assert "H\tVN:Z:1.0" in content
@@ -77,8 +80,9 @@ def test_filter_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
 
-    output_file = filter(str(gfa_file), min_length=3, output_path=str(tmp_path))
-    content = (tmp_path / "filtered_graph.gfa").read_text()
+    target = tmp_path / "filtered_graph.gfa"
+    output_file = filter(str(gfa_file), min_length=3, output_path=str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "filtered_graph.gfa")
     assert "S\ts1\tAAAA" in content
@@ -100,10 +104,11 @@ def test_clean_output_file_content(tmp_path):
     fasta_file = tmp_path / "contigs.fasta"
     fasta_file.write_text(">s1\nAAAA\n")
 
+    target = tmp_path / "cleaned_graph.gfa"
     output_file = clean(
-        str(gfa_file), str(fasta_file), assembler="general", output_path=str(tmp_path)
+        str(gfa_file), str(fasta_file), assembler="general", output_path=str(target)
     )
-    content = (tmp_path / "cleaned_graph.gfa").read_text()
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "cleaned_graph.gfa")
     assert "S\ts1\tAAAA\tLN:i:4" in content
@@ -123,8 +128,9 @@ def test_component_output_file_content(tmp_path):
         "P\tp2\ts3+\t*\n"
     )
 
-    output_file = component(str(gfa_file), segment="s1", output_path=str(tmp_path))
-    content = (tmp_path / "component_graph.gfa").read_text()
+    target = tmp_path / "component_graph.gfa"
+    output_file = component(str(gfa_file), segment="s1", output_path=str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "component_graph.gfa")
     assert "S\ts1\tAAAA" in content
@@ -138,8 +144,9 @@ def test_fastg2gfa_output_file_content(tmp_path):
     fastg_file = tmp_path / "graph.fastg"
     fastg_file.write_text(">A:B';\nATGC\n>B';\nGG\n")
 
-    output_file = fastg2gfa(str(fastg_file), k_overlap=55, gfa_path=str(tmp_path))
-    content = (tmp_path / "converted_graph.gfa").read_text()
+    target = tmp_path / "converted_graph.gfa"
+    output_file = fastg2gfa(str(fastg_file), k_overlap=55, gfa_path=str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "converted_graph.gfa")
     assert "S\tA\tATGC" in content
@@ -154,8 +161,9 @@ def test_asqg2gfa_output_file_content(tmp_path):
         "ED\tcontig1 contig2 0 3 0 0 3 0 1\n"
     )
 
-    output_file = asqg2gfa(str(asqg_file), str(tmp_path))
-    content = (tmp_path / "converted_graph.gfa").read_text()
+    target = tmp_path / "converted_graph.gfa"
+    output_file = asqg2gfa(str(asqg_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "converted_graph.gfa")
     assert "S\tcontig1\tAAAA" in content
@@ -167,21 +175,24 @@ def test_gfa2dot_outputs_file_for_both_formats(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
 
-    dot_file = gfa2dot(str(gfa_file), abyss=False, output_path=str(tmp_path))
-    abyss_file = gfa2dot(str(gfa_file), abyss=True, output_path=str(tmp_path))
+    dot_target = tmp_path / "graph.dot"
+    abyss_target = tmp_path / "graph.gv"
+    dot_file = gfa2dot(str(gfa_file), abyss=False, output_path=str(dot_target))
+    abyss_file = gfa2dot(str(gfa_file), abyss=True, output_path=str(abyss_target))
 
-    assert dot_file == str(tmp_path / "graph.dot")
-    assert abyss_file == str(tmp_path / "graph.gv")
-    assert (tmp_path / "graph.dot").exists()
-    assert "digraph g {" in (tmp_path / "graph.gv").read_text()
+    assert dot_file == str(dot_target)
+    assert abyss_file == str(abyss_target)
+    assert dot_target.exists()
+    assert "digraph g {" in abyss_target.read_text()
 
 
 def test_gfa2fasta_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\ts1\tatgcn-\nS\ts2\tGGTT\n")
 
-    output_file = gfa2fasta(str(gfa_file), str(tmp_path))
-    content = (tmp_path / "segments.fasta").read_text()
+    target = tmp_path / "segments.fasta"
+    output_file = gfa2fasta(str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "segments.fasta")
     assert ">s1" in content
@@ -194,12 +205,12 @@ def test_gfa2adj_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
 
-    output_file = gfa2adj(str(gfa_file), delimiter="comma", output_path=str(tmp_path))
-    rows = (tmp_path / "adjacency_matrix.csv").read_text().splitlines()
+    target = tmp_path / "adjacency_matrix.csv"
+    output_file = gfa2adj(str(gfa_file), delimiter="comma", output_path=str(target))
+    rows = target.read_text().splitlines()
 
     assert output_file == str(tmp_path / "adjacency_matrix.csv")
     assert rows[0] == ",s1,s2,s3"
     assert any(row.startswith("s1,0,1,0") for row in rows[1:])
     assert any(row.startswith("s2,1,0,0") for row in rows[1:])
     assert any(row.startswith("s3,0,0,0") for row in rows[1:])
-

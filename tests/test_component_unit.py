@@ -23,8 +23,9 @@ def test_write_component_graph_keeps_only_requested_component(tmp_path):
         "W\tw2\t*\t*\t*\t>s1\n"
     )
 
-    output_file = _write_component_graph({"s1"}, str(gfa_file), str(tmp_path))
-    content = (tmp_path / "component_graph.gfa").read_text()
+    target = tmp_path / "component_graph.gfa"
+    output_file = _write_component_graph({"s1"}, str(gfa_file), str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "component_graph.gfa")
     assert "S\ts1\tAAAA" in content
@@ -58,8 +59,9 @@ def test_component_selects_component_containing_requested_segment(tmp_path, monk
         "L\ts2\t+\ts1\t+\t1M\n"
     )
 
-    output_file = component(str(gfa_file), segment="s3", output_path=str(tmp_path))
-    content = (tmp_path / "component_graph.gfa").read_text()
+    target = tmp_path / "component_graph.gfa"
+    output_file = component(str(gfa_file), segment="s3", output_path=str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "component_graph.gfa")
     assert "S\ts1\tAAAA" in content

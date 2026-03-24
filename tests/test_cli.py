@@ -31,7 +31,7 @@ def runner():
 
 
 def test_agtools_stats(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "stats" / "graph_stats.txt"
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(stats, args, catch_exceptions=False)
@@ -39,7 +39,7 @@ def test_agtools_stats(runner, tmp_dir):
 
 
 def test_agtools_rename_seg(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "rename_seg" / "renamed_graph.gfa"
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     prefix = "test"
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
@@ -48,7 +48,7 @@ def test_agtools_rename_seg(runner, tmp_dir):
 
 
 def test_agtools_rename_path(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "rename_path" / "renamed_graph.gfa"
     graph = DATADIR / "test_path.gfa"
     prefix = "test"
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
@@ -57,7 +57,7 @@ def test_agtools_rename_path(runner, tmp_dir):
 
 
 def test_agtools_rename_walk(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "rename_walk" / "renamed_graph.gfa"
     graph = DATADIR / "test_walk.gfa"
     prefix = "test"
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
@@ -66,7 +66,7 @@ def test_agtools_rename_walk(runner, tmp_dir):
 
 
 def test_agtools_concat(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "concat" / "concatenated_graph.gfa"
     graph_1 = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     graph_2 = DATADIR / "test_graph.gfa"
     args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
@@ -75,7 +75,7 @@ def test_agtools_concat(runner, tmp_dir):
 
 
 def test_agtools_filter(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "filter" / "filtered_graph.gfa"
     graph = DATADIR / "test_graph.gfa"
     min_length = 1000
     args = f"-g {graph} -l {min_length} -o {outpath}".split()
@@ -84,7 +84,7 @@ def test_agtools_filter(runner, tmp_dir):
 
 
 def test_agtools_clean(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "clean" / "cleaned_graph.gfa"
     graph = DATADIR / "test_graph_1.gfa"
     fasta = DATADIR / "test_fasta.fasta"
     args = f"-g {graph} -f {fasta} -a general -o {outpath}".split()
@@ -93,7 +93,7 @@ def test_agtools_clean(runner, tmp_dir):
 
 
 def test_agtools_clean_myloasm(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "clean_myloasm" / "cleaned_graph.gfa"
     graph = DATADIR / "myloasm" / "final_contig_graph.gfa"
     fasta = DATADIR / "myloasm" / "assembly_primary.fa"
     args = f"-g {graph} -f {fasta} -a myloasm -o {outpath}".split()
@@ -102,7 +102,7 @@ def test_agtools_clean_myloasm(runner, tmp_dir):
 
 
 def test_agtools_component(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "component" / "component_graph.gfa"
     graph = DATADIR / "test_graph.gfa"
     segment = "seg4"
     args = f"-g {graph} -s {segment} -o {outpath}".split()
@@ -111,7 +111,7 @@ def test_agtools_component(runner, tmp_dir):
 
 
 def test_agtools_fastg2gfa(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "fastg2gfa" / "converted_graph.gfa"
     graph = DATADIR / "final.graph.fastg"
     k = 141
     args = f"-g {graph} -k {k} -o {outpath}".split()
@@ -120,7 +120,7 @@ def test_agtools_fastg2gfa(runner, tmp_dir):
 
 
 def test_agtools_asqg2gfa(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "asqg2gfa" / "converted_graph.gfa"
     graph = DATADIR / "ESC" / "default-graph.asqg"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(asqg2gfa, args, catch_exceptions=False)
@@ -128,7 +128,7 @@ def test_agtools_asqg2gfa(runner, tmp_dir):
 
 
 def test_agtools_gfa2dot(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "gfa2dot" / "graph.dot"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2dot, args, catch_exceptions=False)
@@ -136,7 +136,7 @@ def test_agtools_gfa2dot(runner, tmp_dir):
 
 
 def test_agtools_gfa2dot_abyss(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "gfa2dot_abyss" / "graph.gv"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -ab -o {outpath}".split()
     r = runner.invoke(gfa2dot, args, catch_exceptions=False)
@@ -144,7 +144,7 @@ def test_agtools_gfa2dot_abyss(runner, tmp_dir):
 
 
 def test_agtools_gfa2fasta(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "gfa2fasta" / "segments.fasta"
     graph = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
@@ -152,7 +152,7 @@ def test_agtools_gfa2fasta(runner, tmp_dir):
 
 
 def test_agtools_gfa2adj(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "gfa2adj" / "adjacency_matrix.csv"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
@@ -160,7 +160,7 @@ def test_agtools_gfa2adj(runner, tmp_dir):
 
 
 def test_agtools_no_log_file_by_default(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "no_log" / "adjacency_matrix.csv"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
@@ -169,7 +169,7 @@ def test_agtools_no_log_file_by_default(runner, tmp_dir):
 
 
 def test_agtools_log_file_is_optional(runner, tmp_dir):
-    outpath = tmp_dir
+    outpath = tmp_dir / "with_log" / "adjacency_matrix.csv"
     graph = DATADIR / "test_graph.gfa"
     log_file = tmp_dir / "custom-agtools.log"
     args = f"-g {graph} -o {outpath} --log-file {log_file}".split()

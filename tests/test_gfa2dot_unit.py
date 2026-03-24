@@ -16,8 +16,9 @@ def test_write_abyss_dot_emits_nodes_and_links(tmp_path):
         link_overlap={(0, "+", 1, "-"): 5, (1, "+", 0, "-"): 5},
     )
 
-    output_file = _write_abyss_dot(dummy_graph, str(tmp_path))
-    content = (tmp_path / "graph.gv").read_text()
+    target = tmp_path / "graph.gv"
+    output_file = _write_abyss_dot(dummy_graph, str(target))
+    content = target.read_text()
 
     assert output_file == str(tmp_path / "graph.gv")
     assert '"seg1+" [l=4]' in content
@@ -39,11 +40,12 @@ def test_write_dot_delegates_to_igraph_writer(tmp_path):
     inner_graph = DummyInnerGraph()
     wrapper = types.SimpleNamespace(graph=inner_graph)
 
-    output_file = _write_dot(wrapper, str(tmp_path))
+    target = tmp_path / "graph.dot"
+    output_file = _write_dot(wrapper, str(target))
 
-    assert output_file == str(tmp_path / "graph.dot")
-    assert inner_graph.called_path == str(tmp_path / "graph.dot")
-    assert (tmp_path / "graph.dot").read_text() == "graph {}"
+    assert output_file == str(target)
+    assert inner_graph.called_path == str(target)
+    assert target.read_text() == "graph {}"
 
 
 def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):
@@ -65,9 +67,17 @@ def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):
     monkeypatch.setattr(gfa2dot_module, "_write_abyss_dot", fake_abyss)
     monkeypatch.setattr(gfa2dot_module, "_write_dot", fake_dot)
 
-    assert gfa2dot("graph.gfa", abyss=True, output_path=str(tmp_path)) == "abyss-output"
-    assert gfa2dot("graph.gfa", abyss=False, output_path=str(tmp_path)) == "dot-output"
+    abyss_target = tmp_path / "graph.gv"
+    dot_target = tmp_path / "graph.dot"
+    assert (
+        gfa2dot("graph.gfa", abyss=True, output_path=str(abyss_target))
+        == "abyss-output"
+    )
+    assert (
+        gfa2dot("graph.gfa", abyss=False, output_path=str(dot_target))
+        == "dot-output"
+    )
     assert calls == [
-        ("abyss", dummy_ug, str(tmp_path)),
-        ("dot", dummy_ug, str(tmp_path)),
+        ("abyss", dummy_ug, str(abyss_target)),
+        ("dot", dummy_ug, str(dot_target)),
     ]
