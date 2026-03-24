@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from agtools.commands._output import prepare_output_file
-from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.fasta_parser import FastaParser
+from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.unitig_graph import UnitigGraph
 
 

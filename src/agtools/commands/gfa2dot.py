@@ -36,7 +36,12 @@ def _write_abyss_dot(graph, output_path):
             f.write(f'"{segment}+" [l={graph.segment_lengths[segment]}]\n')
             f.write(f'"{segment}-" [l={graph.segment_lengths[segment]}]\n')
 
-        for (from_id, from_orient, to_id, to_orient), overlap in graph.link_overlap.items():
+        for (
+            from_id,
+            from_orient,
+            to_id,
+            to_orient,
+        ), overlap in graph.link_overlap.items():
             from_name = graph.segment_names[from_id]
             to_name = graph.segment_names[to_id]
             f.write(

@@ -5,14 +5,14 @@ from typing import Mapping, Optional
 
 import click
 
-from agtools import commands
+from agtools import __version__, commands
 from agtools.log_config import configure_logger, logger
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
-__version__ = "1.1.0"
+
 __maintainer__ = "Vijini Mallawaarachchi"
 __url__ = "https://github.com/Vini2/agtools"
 __email__ = "viji.mallawaarachchi@gmail.com"

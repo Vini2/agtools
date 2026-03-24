@@ -6,13 +6,14 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
+from agtools import __version__
 from agtools.commands._output import prepare_output_file
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
-__version__ = "1.1.0"
+
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"

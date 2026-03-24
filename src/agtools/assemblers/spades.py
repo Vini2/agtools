@@ -6,10 +6,11 @@ from collections import defaultdict
 
 from agtools.assemblers._contig_graph_base import (
     build_contig_graph as _build_contig_graph,
-    get_unitig_graph as _get_unitig_graph,
 )
+from agtools.assemblers._contig_graph_base import get_unitig_graph as _get_unitig_graph
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.unitig_graph import UnitigGraph
+
 
 def _get_segment_paths_and_contig_mapping(
     contig_paths: str, segment_name_to_id: dict
