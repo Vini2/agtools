@@ -6,7 +6,7 @@ from typing import Mapping, Optional
 import click
 
 from agtools import commands
-from agtools.log_config import logger
+from agtools.log_config import configure_logger, logger
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -63,6 +63,12 @@ _output = click.option(
     type=click.Path(exists=True, dir_okay=True, writable=True, readable=True),
     required=True,
 )
+_log_file = click.option(
+    "--log-file",
+    help="optional path to write debug logs; by default no log file is created",
+    type=click.Path(dir_okay=False, writable=True),
+    required=False,
+)
 
 
 _click_command_opts = dict(
@@ -73,11 +79,12 @@ _click_command_opts = dict(
 @main.command(**_click_command_opts)
 @_graph
 @_output
+@_log_file
 @click.pass_context
-def stats(ctx, graph, output):
+def stats(ctx, graph, output, log_file=None):
     """Compute statistics about the graph"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Computing statistics of the graph file {graph[0]}")
 
@@ -97,11 +104,12 @@ def stats(ctx, graph, output):
     required=False,
 )
 @_output
+@_log_file
 @click.pass_context
-def rename(ctx, graph, prefix, output):
+def rename(ctx, graph, prefix, output, log_file=None):
     """Rename segments, paths and walks in a GFA file"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Renaming elements in graph file {graph[0]}")
     logger.info(f"Prefix used is {prefix}")
@@ -114,11 +122,12 @@ def rename(ctx, graph, prefix, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
+@_log_file
 @click.pass_context
-def concat(ctx, graph, output):
+def concat(ctx, graph, output, log_file=None):
     """Concatenate two or more GFA files"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Concatenating graph files [{', '.join(graph)}]")
 
@@ -139,11 +148,12 @@ def concat(ctx, graph, output):
     required=True,
 )
 @_output
+@_log_file
 @click.pass_context
-def filter(ctx, graph, min_length, output):
+def filter(ctx, graph, min_length, output, log_file=None):
     """Filter segments from GFA file"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Filtering segments in graph file {graph[0]}")
     logger.info(f"Minimum length of segments to keep is {min_length} bp")
@@ -171,11 +181,12 @@ def filter(ctx, graph, min_length, output):
     required=False,
 )
 @_output
+@_log_file
 @click.pass_context
-def clean(ctx, graph, fasta, assembler, output):
+def clean(ctx, graph, fasta, assembler, output, log_file=None):
     """Clean a GFA file based on segments in a FASTA file"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Cleaning the graph file {graph[0]}")
     logger.info(f"Using the FASTA file {fasta}")
@@ -196,11 +207,12 @@ def clean(ctx, graph, fasta, assembler, output):
     required=True,
 )
 @_output
+@_log_file
 @click.pass_context
-def component(ctx, graph, segment, output):
+def component(ctx, graph, segment, output, log_file=None):
     """Extract a component containing a given segment"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(
         f"Extracting from file {graph[0]} the component containing segment {segment}"
@@ -223,11 +235,12 @@ def component(ctx, graph, segment, output):
     required=True,
 )
 @_output
+@_log_file
 @click.pass_context
-def fastg2gfa(ctx, graph, ksize, output):
+def fastg2gfa(ctx, graph, ksize, output, log_file=None):
     """Convert FASTG file to GFA format"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Converting FASTG file {graph[0]} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
@@ -240,11 +253,12 @@ def fastg2gfa(ctx, graph, ksize, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
+@_log_file
 @click.pass_context
-def asqg2gfa(ctx, graph, output):
+def asqg2gfa(ctx, graph, output, log_file=None):
     """Convert ASQG file to GFA format"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Converting ASQG file {graph[0]} to GFA format")
 
@@ -265,11 +279,12 @@ def asqg2gfa(ctx, graph, output):
     required=False,
 )
 @_output
+@_log_file
 @click.pass_context
-def gfa2dot(ctx, graph, abyss, output):
+def gfa2dot(ctx, graph, abyss, output, log_file=None):
     """Convert GFA file to DOT format (GraphViz)"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Converting GFA file {graph[0]} to DOT format")
 
@@ -281,11 +296,12 @@ def gfa2dot(ctx, graph, abyss, output):
 @main.command(**_click_command_opts)
 @_graph
 @_output
+@_log_file
 @click.pass_context
-def gfa2fasta(ctx, graph, output):
+def gfa2fasta(ctx, graph, output, log_file=None):
     """Get segments in FASTA format"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Extracting segment sequences from {graph[0]} file in to FASTA format")
 
@@ -305,11 +321,12 @@ def gfa2fasta(ctx, graph, output):
     required=False,
 )
 @_output
+@_log_file
 @click.pass_context
-def gfa2adj(ctx, graph, delimiter, output):
+def gfa2adj(ctx, graph, delimiter, output, log_file=None):
     """Get adjacency matrix of the assembly graph"""
 
-    begin_agtools(ctx, __version__, __url__)
+    begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
 
@@ -318,8 +335,11 @@ def gfa2adj(ctx, graph, delimiter, output):
     logger.info(f"Adjacency matrix is written to {adj_path}")
 
 
-def begin_agtools(ctx: click.Context, version: str, repo_url: str):
+def begin_agtools(
+    ctx: click.Context, version: str, repo_url: str, log_file: str | None = None
+):
     """Log version, repo, command name, and parameters of a subcommand run."""
+    configure_logger(log_file)
     logger.info("agtools: A Software Framework to Manipulate Assembly Graphs")
     logger.info(f"You are using agtools version {version}")
     if repo_url:

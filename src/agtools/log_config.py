@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import Optional
 
 from loguru import logger
 
@@ -14,11 +15,18 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
 
 
-# Remove the default logger configuration
-logger.remove()
+def configure_logger(log_file: Optional[str] = None):
+    """Configure agtools logging sinks.
 
-# Console logging (INFO level and above)
-logger.add(sink=sys.stdout, level="INFO")
+    By default, logs are emitted to stdout only. If ``log_file`` is
+    provided, DEBUG-level logs are also written to that file.
+    """
+    logger.remove()
+    logger.add(sink=sys.stdout, level="INFO")
 
-# File logging (DEBUG level and above)
-logger.add(sink="agtools.log", level="DEBUG")
+    if log_file:
+        logger.add(sink=log_file, level="DEBUG")
+
+
+# Default configuration for library/programmatic usage: console logs only.
+configure_logger()
