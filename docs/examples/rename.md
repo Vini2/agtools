@@ -37,7 +37,7 @@ W	seqread2	0	*	<seq1>seq2<seq3
 You can run the following command to rename using the prefix `TEST`.
 
 ```bash
-agtools rename -g test_graph.gfa -p TEST -o ./
+agtools rename -g test_graph.gfa -p TEST -o results/renamed_graph.gfa
 ```
 
 The renamed graph will look as follows.

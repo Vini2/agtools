@@ -29,7 +29,7 @@ The graph will look as follows. It has two connected components.
 We want to get the component containing segment `A3`. You can run the following command to get the GFA file of the component.
 
 ```bash
-agtools component -g test_graph.gfa -s A3 -o ./
+agtools component -g test_graph.gfa -s A3 -o results/component_graph.gfa
 ```
 
 The GFA file of the extracted component will look as shown below.

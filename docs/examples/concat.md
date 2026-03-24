@@ -8,7 +8,7 @@
 You can run the following command to concatenate multiple GFA files. Make sure to provide each GFA file using `-g`.
 
 ```bash
-agtools concat -g test_graph_1.gfa -g test_graph_2.gfa -g test_graph_3.gfa -o ./
+agtools concat -g test_graph_1.gfa -g test_graph_2.gfa -g test_graph_3.gfa -o results/concatenated_graph.gfa
 ```
 
 The lines with different tags `H`, `S`, `L`, `J`, `C`, `P` and `W` will be grouped together from the GFA files and written together.

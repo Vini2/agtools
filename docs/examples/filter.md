@@ -37,7 +37,7 @@ W	seqread2	0	*	<seq1>seq2<seq3
 We want to remove segments shorter than 15 bp. You can run the following command to remove segments shorter than 15 bp.
 
 ```bash
-agtools filter -g test_graph.gfa -l 15 -o ./
+agtools filter -g test_graph.gfa -l 15 -o results/filtered_graph.gfa
 ```
 
 The filtered graph file will look as follows.

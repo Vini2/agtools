@@ -62,7 +62,7 @@ TTGCTTGCTTGCTTGCTTGC
 You can run the following command to clean up the GFA file.
 
 ```bash
-agtools clean -g test_graph.gfa -f test_fasta.fasta -o ./
+agtools clean -g test_graph.gfa -f test_fasta.fasta -o results/cleaned_graph.gfa
 ```
 
 The cleaned graph would look as shown below. Note that the segment sequences are added back and `seqX` is removed.

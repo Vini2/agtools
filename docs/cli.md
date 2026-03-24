@@ -39,9 +39,11 @@ Usage: agtools stats [OPTIONS]
   Compute statistics about the graph
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -64,10 +66,12 @@ Usage: agtools rename [OPTIONS]
   Rename segments, paths and walks in a GFA file
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -p, --prefix TEXT  prefix for the graph elements  [default: ""]
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -p, --prefix TEXT     prefix for the graph elements  [default: ""]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -91,9 +95,11 @@ Usage: agtools concat [OPTIONS]
   Concatenate two or more GFA files
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -119,7 +125,9 @@ Options:
   -g, --graph PATH          path(s) to the assembly graph file(s)  [required]
   -l, --min-length INTEGER  minimum length of segments to keep  [default: 100;
                             required]
-  -o, --output PATH         path to the output folder  [required]
+  -o, --output FILE         path to the output file  [required]
+  -lf, --log-file FILE      optional path to write output logs; by default no
+                            log file is created
   -h, --help                Show this message and exit.
 ```
 
@@ -145,9 +153,11 @@ Usage: agtools clean [OPTIONS]
 
 Options:
   -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
-  -f, --fasta PATH      path to the FASTA file
+  -f, --fasta PATH      path to the FASTA file  [required]
   -a, --assembler TEXT  assembler name (if assembler used is myloasm)
-  -o, --output PATH     path to the output folder  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
   -h, --help            Show this message and exit.
 ```
 
@@ -173,10 +183,12 @@ Usage: agtools component [OPTIONS]
   Extract a component containing a given segment
 
 Options:
-  -g, --graph PATH    path(s) to the assembly graph file(s)  [required]
-  -s, --segment TEXT  segment ID  [required]
-  -o, --output PATH   path to the output folder  [required]
-  -h, --help          Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -s, --segment TEXT    segment ID  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -200,11 +212,13 @@ Usage: agtools fastg2gfa [OPTIONS]
   Convert FASTG file to GFA format
 
 Options:
-  -g, --graph PATH     path(s) to the assembly graph file(s)  [required]
-  -k, --ksize INTEGER  k-mer size used for the assembly  [default: 141;
-                       required]
-  -o, --output PATH    path to the output folder  [required]
-  -h, --help           Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -k, --ksize INTEGER   k-mer size used for the assembly  [default: 141;
+                        required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -228,9 +242,11 @@ Usage: agtools asqg2gfa [OPTIONS]
   Convert ASQG file to GFA format
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -253,10 +269,12 @@ Usage: agtools gfa2dot [OPTIONS]
   Convert GFA file to DOT format (GraphViz)
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -ab, --abyss       use the ABySS DOT format for the output
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -ab, --abyss          use the ABySS DOT format for the output
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -279,9 +297,11 @@ Usage: agtools gfa2fasta [OPTIONS]
   Get segments in FASTA format
 
 Options:
-  -g, --graph PATH   path(s) to the assembly graph file(s)  [required]
-  -o, --output PATH  path to the output folder  [required]
-  -h, --help         Show this message and exit.
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
 ```
 
 **Inputs**
@@ -307,7 +327,9 @@ Options:
   -g, --graph PATH         path(s) to the assembly graph file(s)  [required]
   --delimiter [comma|tab]  delimiter for adjacency file. Supports a comma and
                            a tab.  [default: comma]
-  -o, --output PATH        path to the output folder  [required]
+  -o, --output FILE        path to the output file  [required]
+  -lf, --log-file FILE     optional path to write output logs; by default no
+                           log file is created
   -h, --help               Show this message and exit.
 ```
 
