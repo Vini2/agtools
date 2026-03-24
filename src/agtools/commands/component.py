@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
@@ -33,7 +34,7 @@ def _write_component_graph(
     gfa_file : str
         Path to the input GFA file.
     output_path : str
-        Directory to write the filtered component GFA file.
+        Path to write the filtered component GFA file.
 
     Returns
     -------
@@ -46,7 +47,7 @@ def _write_component_graph(
     [https://gfa-spec.github.io/GFA-spec/GFA1.html](https://gfa-spec.github.io/GFA-spec/GFA1.html)
     """
 
-    output_file = f"{output_path}/component_graph.gfa"
+    output_file = prepare_output_file(output_path)
 
     def keep_segment(seg_id: str) -> bool:
         return seg_id in component_segments
@@ -71,7 +72,7 @@ def component(gfa_file: str, segment: str, output_path: str) -> str:
     segment : str
         Segment ID for which to extract the connected component.
     output : str
-        Directory where the filtered GFA file will be saved.
+        Path where the filtered GFA file will be saved.
 
     Returns
     -------

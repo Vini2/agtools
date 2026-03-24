@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
@@ -34,7 +35,7 @@ def _write_filtered_graph(
     gfa_file : str
         Path to the input GFA file.
     output_path : str
-        Directory where the filtered GFA file will be written.
+        Path where the filtered GFA file will be written.
 
     Returns
     -------
@@ -42,7 +43,7 @@ def _write_filtered_graph(
         Full path to the written filtered GFA file.
     """
 
-    output_file = f"{output_path}/filtered_graph.gfa"
+    output_file = prepare_output_file(output_path)
 
     def keep_segment(seg_id: str) -> bool:
         return seg_id not in segments_to_remove
@@ -68,7 +69,7 @@ def filter(gfa_file: str, min_length: int, output_path: str) -> str:
     min_length : int
         Minimum length threshold for retaining segments.
     output_path : str
-        Directory where the filtered GFA file will be saved.
+        Path where the filtered GFA file will be saved.
 
     Returns
     -------

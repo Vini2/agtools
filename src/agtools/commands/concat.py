@@ -4,6 +4,7 @@ import os
 import sys
 import tempfile
 
+from agtools.commands._output import prepare_output_file
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -28,7 +29,7 @@ def concat(graph_files: list, output_path: str) -> str:
     graph_files : list of str
         Paths to the GFA files to concatenate.
     output_path : str
-        Directory where the concatenated GFA file will be saved.
+        Path where the concatenated GFA file will be saved.
 
     Returns
     -------
@@ -42,7 +43,7 @@ def concat(graph_files: list, output_path: str) -> str:
     }
     other_lines = tempfile.NamedTemporaryFile(mode="w+", delete=False)
 
-    output_file = f"{output_path}/concatenated_graph.gfa"
+    output_file = prepare_output_file(output_path)
 
     segments = set()
     paths = set()

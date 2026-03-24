@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -15,7 +16,7 @@ __status__ = "Production"
 
 def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     """
-    Convert a GFA file into an adjacency matrix and save it as a TSV file.
+    Convert a GFA file into an adjacency matrix and save it to a file.
 
     This function parses a GFA file to build an undirected graph representation of the
     assembly, computes its adjacency matrix, and writes the matrix to a tab-separated
@@ -26,12 +27,12 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     gfa_file : str
         Path to the input GFA file.
     output_path : str
-        Directory path where the output adjacency matrix file will be written.
+        Path where the output adjacency matrix file will be written.
 
     Returns
     -------
     str
-        Path to the generated TSV file containing the adjacency matrix.
+        Path to the generated file containing the adjacency matrix.
     """
 
     ug = UnitigGraph.from_gfa(gfa_file)
@@ -39,11 +40,7 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     adj_df = ug.get_adjacency_matrix(type="pandas")
 
     separator = "," if delimiter == "comma" else "\t"
-    output_file = (
-        f"{output_path}/adjacency_matrix.csv"
-        if delimiter == "comma"
-        else f"{output_path}/adjacency_matrix.tsv"
-    )
+    output_file = prepare_output_file(output_path)
     adj_df.to_csv(output_file, sep=separator)
 
     return output_file

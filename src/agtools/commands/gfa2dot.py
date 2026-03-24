@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.unitig_graph import UnitigGraph
 
 
@@ -12,7 +13,7 @@ def _write_abyss_dot(graph, output_path):
     graph : igraph.Graph
         The unitig graph to export. Vertices should have a 'sequence' attribute.
     output_path : str
-        Path to the output directory where the DOT file will be written.
+        Path to the output file where the DOT content will be written.
 
     Returns
     -------
@@ -25,7 +26,7 @@ def _write_abyss_dot(graph, output_path):
     [https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot](https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot)
     """
 
-    output_file = f"{output_path}/graph.gv"
+    output_file = prepare_output_file(output_path)
 
     with open(output_file, "w") as f:
 
@@ -56,7 +57,7 @@ def _write_dot(graph, output_path):
     graph : igraph.Graph
         The graph to export.
     output_path : str
-        Path to the output directory where the DOT file will be written.
+        Path to the output file where the DOT content will be written.
 
     Returns
     -------
@@ -64,7 +65,7 @@ def _write_dot(graph, output_path):
         Full path to the generated DOT file.
     """
 
-    output_file = f"{output_path}/graph.dot"
+    output_file = prepare_output_file(output_path)
     graph.graph.write_dot(output_file)
     return output_file
 
@@ -83,7 +84,7 @@ def gfa2dot(gfa_file, abyss, output_path):
     abyss : bool
         If True, output in ABySS-compatible DOT format. Otherwise, use standard DOT.
     output_path : str
-        Path to the directory where the DOT file will be saved.
+        Path to the output file where the DOT file will be saved.
 
     Returns
     -------

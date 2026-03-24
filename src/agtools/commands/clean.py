@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.fasta_parser import FastaParser
 from agtools.core.unitig_graph import UnitigGraph
@@ -27,7 +28,7 @@ def _write_filtered_graph(
     gfa_file : str
         Path to the input GFA file.
     output_path : str
-        Directory where the cleaned GFA file will be written.
+        Path where the cleaned GFA file will be written.
 
     Returns
     -------
@@ -35,7 +36,7 @@ def _write_filtered_graph(
         Full path to the written cleaned GFA file.
     """
 
-    output_file = f"{output_path}/cleaned_graph.gfa"
+    output_file = prepare_output_file(output_path)
 
     def keep_segment(seg_id: str) -> bool:
         return seg_id not in segments_to_remove
@@ -70,7 +71,7 @@ def clean(gfa_file: str, fasta: str, assembler: str, output_path: str) -> str:
     assembler : str
         Assembler used to get the assembly
     output_path : str
-        Directory where the filtered GFA file will be saved.
+        Path where the filtered GFA file will be saved.
 
     Returns
     -------

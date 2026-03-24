@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -24,14 +25,14 @@ def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     stats : dict
         Dictionary containing various computed graph statistics.
     output_path : str
-        Directory path where the output statistics file will be saved.
+        Path where the output statistics file will be saved.
 
     Returns
     -------
     str
         Path to the written statistics file.
     """
-    output_file = f"{output_path}/graph_stats.txt"
+    output_file = prepare_output_file(output_path)
 
     with open(output_file, "w") as f:
         # Write basic graph statistics
@@ -59,14 +60,14 @@ def stats(gfa_file: str, output_path: str) -> str:
 
     This function parses the given GFA file using a UnitigGraph object,
     calculates a variety of assembly and graph-level statistics, and writes
-    the results to a file in the specified output directory.
+    the results to the specified output file.
 
     Parameters:
     ----------
     gfa_file : str
         Path to the input GFA file representing the assembly graph.
     output_path : str
-        Directory path where the output statistics file will be written.
+        Path where the output statistics file will be written.
 
     Returns:
     -------

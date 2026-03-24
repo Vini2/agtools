@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from agtools.commands._output import prepare_output_file
+
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
@@ -92,7 +94,7 @@ def _write_gfa(segments, links, output_path):
         List of link definitions in the form
         [from_segment, from_orientation, to_segment, to_orientation, overlap_length].
     output_path : str
-        Directory path where the output GFA file will be saved.
+        Path where the output GFA file will be saved.
 
     Returns
     -------
@@ -100,7 +102,7 @@ def _write_gfa(segments, links, output_path):
         Path to the generated GFA file.
     """
 
-    output_file = f"{output_path}/converted_graph.gfa"
+    output_file = prepare_output_file(output_path)
 
     with open(output_file, "w") as gfa_file:
 
@@ -131,7 +133,7 @@ def asqg2gfa(asqg_file, output_path):
     asqg_file : str
         Path to the input ASQG file.
     output_path : str
-        Directory path where the output GFA file will be saved.
+        Path where the output GFA file will be saved.
 
     Returns
     -------

@@ -2,6 +2,8 @@
 
 import re
 
+from agtools.commands._output import prepare_output_file
+
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
@@ -123,7 +125,7 @@ def _write_gfa(
         List of tuples representing GFA links. Each tuple is in the format:
         (from_segment, from_orientation, to_segment, to_orientation, overlap).
     output_path : str
-        Directory path where the output GFA file should be saved.
+        Path where the output GFA file should be saved.
 
     Returns
     -------
@@ -131,7 +133,7 @@ def _write_gfa(
         Full path to the written GFA file.
     """
 
-    output_file = f"{output_path}/converted_graph.gfa"
+    output_file = prepare_output_file(output_path)
     with open(output_file, "w") as f:
         f.write("H\tVN:Z:1.0\n")
         for segment_id, sequence in segments.items():
@@ -155,7 +157,7 @@ def fastg2gfa(fastg_path: str, k_overlap: int, gfa_path: str) -> str:
     k_overlap : int
         Fixed k-mer overlap length to apply to all links (e.g., 41).
     gfa_path : str
-        Directory path where the output GFA file will be saved.
+        Path where the output GFA file will be saved.
 
     Returns
     -------
