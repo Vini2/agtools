@@ -6,7 +6,13 @@ This page guides you through the assembler-specific contig graph representations
 
 ## SPAdes contig graph
 
-Below is an example SPAdes graph (note that this is not a real SPAdes output).
+Files required:
+
+* GFA file - `assembly_graph_with_scaffolds.gfa`
+* Contigs file - `contigs.fasta`
+* Contig paths file - `contigs.paths`
+
+Below is an example SPAdes assembly graph (note that this is not a real SPAdes output).
 
 ```text
 H	VN:Z:1.0
@@ -87,6 +93,11 @@ Here
 
 The `megahit` module of *agtools* automatically resolves this mapping.
 
+Files required:
+
+* GFA file - You can convert the `final.graph.fastg` in to GFA format using the *agtools* [`fastg2gfa`](https://agtools.readthedocs.io/en/latest/cli/#fastg2gfa) subcommand.
+* Contigs file - `final.contigs.fa`
+
 Once you convert the FASTG file to GFA format, you can load a MEGAHIT contig graph as follows. We will use the provided [test data](https://github.com/Vini2/agtools/tree/main/tests/data/ESC).
 
 ```python
@@ -138,6 +149,12 @@ Note that the contigs have some descriptions after the name in the FASTA file. Y
 
 Flye contig graphs follow a similar structure to SPAdes, but links represent direct continuations rather than overlaps. Similar to SPAdes, *agtools* builds the contig graph based on prefix and suffix matching of contigs, *i.e.*, if the last segment of the first contig matches the first segment of the second contig, then a link between the two contigs is created.
 
+Files required:
+
+* GFA file - `assembly_graph.gfa`
+* Contigs file - `assembly.fasta`
+* Contig paths file - `assembly_info.txt`
+
 You can load a Flye contig graph as follows. We will use the provided [test data](https://github.com/Vini2/agtools/tree/main/tests/data/1Y3B).
 
 ```python
@@ -169,6 +186,12 @@ You can check the number of vertices (contigs), edges (connections) and number o
 ## myloasm contig graph
 
 myloasm outputs contig graphs directly, where segments represent contigs and links represent overlaps, so they are straightforward to represent.
+
+Files required:
+
+* GFA file - `final_contig_graph.gfa`
+* Contigs file - `assembly_primary.fa`
+
 
 ```python
 >>> from agtools.assemblers import myloasm
