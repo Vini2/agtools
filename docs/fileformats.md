@@ -62,6 +62,8 @@ TCGATCCGGTCAA
 
 **References**: [FASTG Format](https://web.archive.org/web/20211209213905/http://fastg.sourceforge.net/FASTG_Spec_v1.00.pdf)
 
+**Note**: The FASTG format described in the official FASTG specification differs substantially from the FASTG files produced by MEGAHIT and early versions of SPAdes (prior to version 3.10.0).
+
 ## ASQG
 
 **Extension**: `.asqg`
