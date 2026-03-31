@@ -3,6 +3,7 @@
 import pytest
 
 from agtools.core.unitig_graph import UnitigGraph
+import agtools.core.unitig_graph as unitig_graph_module
 
 
 def _write_small_graph(path):
@@ -78,3 +79,31 @@ def test_get_segment_sequence_detects_length_mismatch_after_file_change(tmp_path
 
     with pytest.raises(ValueError, match="Wrong sequence retrieved"):
         ug.get_segment_sequence("seg1")
+
+
+def test_get_segment_sequence_raises_for_unknown_segment_name():
+    ug = UnitigGraph()
+
+    with pytest.raises(KeyError, match="Segment name does not exist in the graph"):
+        ug.get_segment_sequence("missing")
+
+
+def test_from_gfa_flushes_edge_batches_when_threshold_is_reached(tmp_path, monkeypatch):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text(
+        "S\ta\tAAAA\n"
+        "S\tb\tCCCC\n"
+        "S\tc\tGGGG\n"
+        "L\ta\t+\tb\t+\t1M\n"
+        "L\tb\t+\tc\t+\t1M\n"
+        "P\tp1\ta+,b+,c+\t*\n"
+    )
+
+    monkeypatch.setattr(unitig_graph_module, "EDGE_BATCH", 1)
+
+    ug = UnitigGraph.from_gfa(str(gfa_file))
+
+    assert ug.ecount == 2
+    assert ug.lcount == 2
+    assert ug.pcount == 1
+    assert ug.get_neighbors("b") == ["a", "c"]
