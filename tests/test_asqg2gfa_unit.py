@@ -65,6 +65,22 @@ def test_get_segments_and_links_raises_on_malformed_ed_line(tmp_path):
         _get_segments_and_links(str(asqg_file))
 
 
+@pytest.mark.parametrize(
+    "ed_line",
+    [
+        "ED\n",
+        "ED\tcontig1 contig2 x 3 0 0 3 0 1\n",
+        "ED\tcontig1 contig2 0 3 0 0 3 0 2\n",
+    ],
+)
+def test_get_segments_and_links_rejects_other_malformed_ed_variants(tmp_path, ed_line):
+    asqg_file = tmp_path / "graph.asqg"
+    asqg_file.write_text("VT\tcontig1\tAAAA\nVT\tcontig2\tCCCC\n" + ed_line)
+
+    with pytest.raises(ValueError, match="Malformed ED line"):
+        _get_segments_and_links(str(asqg_file))
+
+
 def test_asqg2gfa_rejects_gfa_input(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text("S\tseg1\tATGC\n")
