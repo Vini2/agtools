@@ -48,9 +48,6 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str, contig_index: dict) -> 
 
             tag = line[0]
 
-            if not line:
-                continue
-
             if tag == "S":  # Segment line
                 parts = line.rstrip().split("\t")
                 contig_name = parts[1]

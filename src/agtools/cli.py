@@ -45,7 +45,6 @@ class OrderedGroup(click.Group):
 @click.version_option(__version__, "-v", "--version", is_flag=True)
 def main():
     """agtools: A Software Framework to Manipulate Assembly Graphs"""
-    pass
 
 
 _graph = click.option(

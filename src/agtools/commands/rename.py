@@ -123,9 +123,6 @@ def _write_renamed_file(
     with open(input_gfa, "r") as infile, open(output_file, "w") as outfile:
         for line in infile:
             parts = line.strip().split("\t")
-            if not parts:
-                continue
-
             tag = parts[0]
 
             if tag == "S":

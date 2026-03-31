@@ -8,6 +8,8 @@ import pandas as pd
 from Bio.Seq import Seq
 from igraph import Graph
 
+EDGE_BATCH = 1_000_000
+
 
 class UnitigGraph:
     """
@@ -142,8 +144,6 @@ class UnitigGraph:
         80
         """
 
-        EDGE_BATCH = 1_000_000
-
         ug = cls()
         edge_list_batch = []
 
@@ -157,9 +157,6 @@ class UnitigGraph:
                     break
 
                 tag = line[0]
-
-                if not line:
-                    continue
 
                 if tag == "S":  # Segment line
                     parts = line.rstrip().split("\t")
@@ -184,9 +181,6 @@ class UnitigGraph:
                     break
 
                 tag = line[0]
-
-                if not line:
-                    continue
 
                 if tag == "L":  # Link line
                     ug.lcount += 1
@@ -262,14 +256,16 @@ class UnitigGraph:
         >>> ug.get_segment_sequence("unitig_1")[:10]
         Seq('ATGCGTACGG')
         """
+        
+        if seg_name not in self.segment_offsets or seg_name not in self.segment_lengths:
+            raise KeyError("Segment name does not exist in the graph")
+
         pos = self.segment_offsets[seg_name]
         with open(self.file_path, "r") as f:
             f.seek(pos)
             line = f.readline()
             seq = line.rstrip().split("\t")[2]
 
-            if seg_name not in self.segment_lengths:
-                raise KeyError("Segment name does not exist in the graph")
             if len(seq) == self.segment_lengths[seg_name]:
                 return Seq(seq)
             else:
