@@ -3,6 +3,7 @@
 *agtools* can perform the following graph file format conversions.
 
 * FASTG to GFA
+* GFA to FASTG
 * ASQG to GFA
 * GFA to GraphViz DOT
 * GFA to ABySS DOT
