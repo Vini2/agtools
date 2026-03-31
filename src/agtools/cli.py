@@ -295,6 +295,23 @@ def asqg2gfa(ctx, graph, output, log_file=None):
 
 @main.command(**_click_command_opts)
 @_graph
+@_output
+@_log_file
+@click.pass_context
+def gfa2asqg(ctx, graph, output, log_file=None):
+    """Convert GFA file to ASQG format"""
+
+    begin_agtools(ctx, __version__, __url__, log_file)
+
+    logger.info(f"Converting GFA file {graph[0]} to ASQG format")
+
+    asqg_path = _run_value_error_as_click(commands.gfa2asqg, graph[0], output)
+
+    logger.info(f"ASQG file is written to {asqg_path}")
+
+
+@main.command(**_click_command_opts)
+@_graph
 @click.option(
     "--abyss",
     "-ab",
