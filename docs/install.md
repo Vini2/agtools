@@ -65,3 +65,4 @@ If you prefer not to create a dedicated environment and only want to install *ag
 * [`python-igraph`](https://python.igraph.org/en/stable/index.html) - for graph operations
 * [`biopython`](https://biopython.org/) - for sequence operations
 * [`pandas`](https://pandas.pydata.org/) - for dataframes
+* [`pycairo`](https://pycairo.readthedocs.io/en/latest/) - for plotting in igraph
