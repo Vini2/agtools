@@ -82,7 +82,9 @@ Commands:
   clean      Clean a GFA file based on segments in a FASTA file
   component  Extract a component containing a given segment
   fastg2gfa  Convert FASTG file to GFA format
+  gfa2fastg  Convert GFA file to FASTG format
   asqg2gfa   Convert ASQG file to GFA format
+  gfa2asqg   Convert GFA file to ASQG format
   gfa2dot    Convert GFA file to DOT format (GraphViz)
   gfa2fasta  Get segments in FASTA format
   gfa2adj    Get adjacency matrix of the assembly graph
