@@ -13,6 +13,13 @@ __credits__ = ["Vijini Mallawaarachchi"]
 DATADIR = pathlib.Path(__file__).parent / "data"
 
 
+def _assert_output_file_created(path):
+    output_path = pathlib.Path(str(path))
+    assert output_path.exists()
+    assert output_path.is_file()
+    assert output_path.stat().st_size > 0
+
+
 @pytest.fixture(scope="session")
 def tmp_dir(tmpdir_factory):
     return tmpdir_factory.mktemp("tmp")
@@ -36,6 +43,7 @@ def test_agtools_stats(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(stats, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_rename_seg(runner, tmp_dir):
@@ -45,6 +53,7 @@ def test_agtools_rename_seg(runner, tmp_dir):
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_rename_path(runner, tmp_dir):
@@ -54,6 +63,7 @@ def test_agtools_rename_path(runner, tmp_dir):
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_rename_walk(runner, tmp_dir):
@@ -63,6 +73,7 @@ def test_agtools_rename_walk(runner, tmp_dir):
     args = f"-g {graph} -p {prefix} -o {outpath}".split()
     r = runner.invoke(rename, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_concat(runner, tmp_dir):
@@ -72,6 +83,7 @@ def test_agtools_concat(runner, tmp_dir):
     args = f"-g {graph_1} -g {graph_2} -o {outpath}".split()
     r = runner.invoke(concat, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_filter(runner, tmp_dir):
@@ -81,6 +93,7 @@ def test_agtools_filter(runner, tmp_dir):
     args = f"-g {graph} -l {min_length} -o {outpath}".split()
     r = runner.invoke(filter, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_clean(runner, tmp_dir):
@@ -90,6 +103,7 @@ def test_agtools_clean(runner, tmp_dir):
     args = f"-g {graph} -f {fasta} -a general -o {outpath}".split()
     r = runner.invoke(clean, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_clean_myloasm(runner, tmp_dir):
@@ -99,6 +113,7 @@ def test_agtools_clean_myloasm(runner, tmp_dir):
     args = f"-g {graph} -f {fasta} -a myloasm -o {outpath}".split()
     r = runner.invoke(clean, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_component(runner, tmp_dir):
@@ -108,6 +123,7 @@ def test_agtools_component(runner, tmp_dir):
     args = f"-g {graph} -s {segment} -o {outpath}".split()
     r = runner.invoke(component, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_fastg2gfa(runner, tmp_dir):
@@ -117,6 +133,7 @@ def test_agtools_fastg2gfa(runner, tmp_dir):
     args = f"-g {graph} -k {k} -o {outpath}".split()
     r = runner.invoke(fastg2gfa, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_fastg2gfa_rejects_gfa_input(runner, tmp_dir):
@@ -134,6 +151,7 @@ def test_agtools_gfa2fastg(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fastg, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_gfa2fastg_rejects_fastg_input(runner, tmp_dir):
@@ -151,6 +169,7 @@ def test_agtools_asqg2gfa(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(asqg2gfa, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_asqg2gfa_rejects_gfa_input(runner, tmp_dir):
@@ -168,6 +187,7 @@ def test_agtools_gfa2dot(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2dot, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_gfa2dot_rejects_fastg_input(runner, tmp_dir):
@@ -185,6 +205,7 @@ def test_agtools_gfa2dot_abyss(runner, tmp_dir):
     args = f"-g {graph} -ab -o {outpath}".split()
     r = runner.invoke(gfa2dot, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_gfa2fasta(runner, tmp_dir):
@@ -193,6 +214,7 @@ def test_agtools_gfa2fasta(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_gfa2fasta_rejects_fastg_input(runner, tmp_dir):
@@ -210,6 +232,7 @@ def test_agtools_gfa2adj(runner, tmp_dir):
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
 
 
 def test_agtools_gfa2adj_rejects_fastg_input(runner, tmp_dir):
