@@ -12,15 +12,15 @@ S	seq2_8	ATCGATCGATCGATCGATCG
 S	seq2_9	GCGTGCGTGCGTGCGTGCGT
 S	seq2_10	TTGCTTGCTTGCTTGCTTGC
 S	seq2_X	ACGTACGTAC
-L	seq2_X	+	seq2_2	-	5M
+L	seq2_X	+	seq2_2	+	5M
 L	seq2_4	+	seq2_5	+	10M
 L	seq2_6	-	seq2_7	+	7M
 L	seq2_9	+	seq2_10	-	5M
 J	seq2_5	+	seq2_X	-	*
 J	seq2_3	-	seq2_8	+	*
 J	seq2_7	+	seq2_2	+	*
-C	seq2_1	+	seq2_X	-	10M	5	0
-C	seq2_2	+	seq2_X	+	10M	2	0
+C	seq2_1	+	seq2_X	-	5	10M
+C	seq2_2	+	seq2_X	+	2	10M
 P	path1	seq2_1+,seq2_X+,seq2_3-	20M,10M,20M
 P	path2	seq2_4+,seq2_5+,seq2_6+	20M,20M,20M
 W	seq2_read1	0	*	<seq2_6<seq2_X>seq2_9

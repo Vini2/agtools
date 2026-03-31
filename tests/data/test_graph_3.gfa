@@ -12,15 +12,15 @@ S	seq3_8	ATCGATCGATCGATCGATCG
 S	seq3_9	GCGTGCGTGCGTGCGTGCGT
 S	seq3_10	TTGCTTGCTTGCTTGCTTGC
 S	seq3_X	ACGTACGTAC
-L	seq3_X	+	seq3_2	-	5M
+L	seq3_X	+	seq3_2	+	5M
 L	seq3_4	+	seq3_5	+	10M
 L	seq3_6	-	seq3_7	+	7M
 L	seq3_9	+	seq3_10	-	5M
 J	seq3_5	+	seq3_X	-	*
 J	seq3_3	-	seq3_8	+	*
 J	seq3_7	+	seq3_2	+	*
-C	seq3_1	+	seq3_X	-	10M	5	0
-C	seq3_2	+	seq3_X	+	10M	2	0
+C	seq3_1	+	seq3_X	-	5	10M
+C	seq3_2	+	seq3_X	+	2	10M
 P	seq3_path1	seq3_1+,seq3_X+,seq3_3-	20M,10M,20M
 P	seq3_path2	seq3_4+,seq3_5+,seq3_6+	20M,20M,20M
 W	read1	0	*	seq3_6+,seq3_X-,seq3_9+	1500	3
