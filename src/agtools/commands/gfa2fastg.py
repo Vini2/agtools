@@ -54,7 +54,9 @@ def reverse_complement(sequence: str) -> str:
     return str(Seq(sequence).reverse_complement())
 
 
-def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict[str, set[str]], dict[str, str]]:
+def _get_graph_sequences(
+    gfa_file: str,
+) -> tuple[defaultdict[str, set[str]], dict[str, str]]:
     """
     Parse a GFA file and extract segment sequences and oriented links.
 

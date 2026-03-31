@@ -256,7 +256,7 @@ class UnitigGraph:
         >>> ug.get_segment_sequence("unitig_1")[:10]
         Seq('ATGCGTACGG')
         """
-        
+
         if seg_name not in self.segment_offsets or seg_name not in self.segment_lengths:
             raise KeyError("Segment name does not exist in the graph")
 
