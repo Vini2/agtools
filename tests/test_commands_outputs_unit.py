@@ -7,6 +7,7 @@ from agtools.commands.concat import concat
 from agtools.commands.fastg2gfa import fastg2gfa
 from agtools.commands.filter import filter
 from agtools.commands.gfa2adj import gfa2adj
+from agtools.commands.gfa2asqg import gfa2asqg
 from agtools.commands.gfa2dot import gfa2dot
 from agtools.commands.gfa2fasta import gfa2fasta
 from agtools.commands.rename import rename
@@ -169,6 +170,21 @@ def test_asqg2gfa_output_file_content(tmp_path):
     assert "S\tcontig1\tAAAA" in content
     assert "S\tcontig2\tCCCC" in content
     assert "L\tcontig1\t+\tcontig2\t-\t3M" in content
+
+
+def test_gfa2asqg_output_file_content(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tcontig1\tAAAA\nS\tcontig2\tCCCC\nL\tcontig1\t+\tcontig2\t-\t3M\n")
+
+    target = tmp_path / "converted_graph.asqg"
+    output_file = gfa2asqg(str(gfa_file), str(target))
+    content = target.read_text()
+
+    assert output_file == str(tmp_path / "converted_graph.asqg")
+    assert "HT\tVN:i:1\tER:f:0\tOL:i:3\tCN:i:0\tTE:i:0" in content
+    assert "VT\tcontig1\tAAAA" in content
+    assert "VT\tcontig2\tCCCC" in content
+    assert "ED\tcontig1 contig2 1 3 4 1 3 4 1 0" in content
 
 
 def test_gfa2dot_outputs_file_for_both_formats(tmp_path):

@@ -181,6 +181,24 @@ def test_agtools_asqg2gfa_rejects_gfa_input(runner, tmp_dir):
     assert "looks like a GFA file" in r.output
 
 
+def test_agtools_gfa2asqg(runner, tmp_dir):
+    outpath = tmp_dir / "gfa2asqg" / "converted_graph.asqg"
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2asqg, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
+
+
+def test_agtools_gfa2asqg_rejects_asqg_input(runner, tmp_dir):
+    outpath = tmp_dir / "gfa2asqg_error" / "converted_graph.asqg"
+    graph = DATADIR / "ESC" / "default-graph.asqg"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2asqg, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like an ASQG file" in r.output
+
+
 def test_agtools_gfa2dot(runner, tmp_dir):
     outpath = tmp_dir / "gfa2dot" / "graph.dot"
     graph = DATADIR / "test_graph.gfa"

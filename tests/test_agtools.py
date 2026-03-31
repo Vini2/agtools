@@ -102,6 +102,12 @@ def test_agtools_asqg2gfa():
     exec_command(cmd)
 
 
+def test_agtools_gfa2asqg():
+    """test agtools gfa2asqg"""
+    cmd = "agtools gfa2asqg --help"
+    exec_command(cmd)
+
+
 def test_agtools_gfa2dot():
     """test agtools gfa2dot"""
     cmd = "agtools gfa2dot --help"

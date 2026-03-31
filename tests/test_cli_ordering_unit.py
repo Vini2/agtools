@@ -27,6 +27,7 @@ def test_main_help_lists_commands_in_registered_order():
     assert output.find("\n  concat") < output.find("\n  filter")
     assert output.find("\n  fastg2gfa") < output.find("\n  gfa2fastg")
     assert output.find("\n  gfa2fastg") < output.find("\n  asqg2gfa")
+    assert output.find("\n  asqg2gfa") < output.find("\n  gfa2asqg")
 
 
 def test_main_short_help_flag_is_supported():
