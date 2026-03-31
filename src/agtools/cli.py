@@ -77,6 +77,15 @@ _click_command_opts = dict(
 )
 
 
+def _run_value_error_as_click(function, *args):
+    """Convert command-layer ValueError exceptions into Click errors."""
+
+    try:
+        return function(*args)
+    except ValueError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+
 @main.command(**_click_command_opts)
 @_graph
 @_output
@@ -246,7 +255,7 @@ def fastg2gfa(ctx, graph, ksize, output, log_file=None):
     logger.info(f"Converting FASTG file {graph[0]} to GFA format")
     logger.info(f"k-mer size {ksize} will be used as the overlap")
 
-    gfa_path = commands.fastg2gfa(graph[0], ksize, output)
+    gfa_path = _run_value_error_as_click(commands.fastg2gfa, graph[0], ksize, output)
 
     logger.info(f"GFA file is written to {gfa_path} with fixed overlap: {ksize}M")
 
@@ -263,10 +272,7 @@ def gfa2fastg(ctx, graph, output, log_file=None):
 
     logger.info(f"Converting GFA file {graph[0]} to FASTG format")
 
-    try:
-        fastg_path = commands.gfa2fastg(graph[0], output)
-    except ValueError as exc:
-        raise click.ClickException(str(exc)) from exc
+    fastg_path = _run_value_error_as_click(commands.gfa2fastg, graph[0], output)
 
     logger.info(f"FASTG file written to {fastg_path}")
 
@@ -283,7 +289,7 @@ def asqg2gfa(ctx, graph, output, log_file=None):
 
     logger.info(f"Converting ASQG file {graph[0]} to GFA format")
 
-    gfa_path = commands.asqg2gfa(graph[0], output)
+    gfa_path = _run_value_error_as_click(commands.asqg2gfa, graph[0], output)
 
     logger.info(f"GFA file is written to {gfa_path}")
 
@@ -309,7 +315,7 @@ def gfa2dot(ctx, graph, abyss, output, log_file=None):
 
     logger.info(f"Converting GFA file {graph[0]} to DOT format")
 
-    dot_path = commands.gfa2dot(graph[0], abyss, output)
+    dot_path = _run_value_error_as_click(commands.gfa2dot, graph[0], abyss, output)
 
     logger.info(f"DOT file written to {dot_path}")
 
@@ -326,7 +332,7 @@ def gfa2fasta(ctx, graph, output, log_file=None):
 
     logger.info(f"Extracting segment sequences from {graph[0]} file in to FASTA format")
 
-    fasta_path = commands.gfa2fasta(graph[0], output)
+    fasta_path = _run_value_error_as_click(commands.gfa2fasta, graph[0], output)
 
     logger.info(f"FASTA file written to {fasta_path}")
 
@@ -351,7 +357,7 @@ def gfa2adj(ctx, graph, delimiter, output, log_file=None):
 
     logger.info(f"Obtaining the adjacency matrix from {graph[0]}")
 
-    adj_path = commands.gfa2adj(graph[0], delimiter, output)
+    adj_path = _run_value_error_as_click(commands.gfa2adj, graph[0], delimiter, output)
 
     logger.info(f"Adjacency matrix is written to {adj_path}")
 

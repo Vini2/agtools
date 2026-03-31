@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import prepare_output_file
 from agtools.core.unitig_graph import UnitigGraph
 
@@ -97,6 +98,7 @@ def gfa2dot(gfa_file, abyss, output_path):
         Full path to the generated DOT file.
     """
 
+    validate_gfa_input(gfa_file, "gfa2dot")
     ug = UnitigGraph.from_gfa(gfa_file)
 
     output_file = None

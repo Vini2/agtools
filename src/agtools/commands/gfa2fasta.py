@@ -7,6 +7,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 from agtools import __version__
+from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import prepare_output_file
 
 __author__ = "Vijini Mallawaarachchi"
@@ -103,6 +104,7 @@ def gfa2fasta(gfa_file: str, output_path: str) -> str:
     str
         Path to the generated FASTA file.
     """
+    validate_gfa_input(gfa_file, "gfa2fasta")
     segment_sequences = _get_segment_sequences(gfa_file)
     output_file = _write_segment_sequences(segment_sequences, output_path)
 

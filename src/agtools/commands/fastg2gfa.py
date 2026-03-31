@@ -3,6 +3,7 @@
 import re
 
 from agtools import __version__
+from agtools.commands._format_checks import validate_fastg_input
 from agtools.commands._output import prepare_output_file
 
 __author__ = "Vijini Mallawaarachchi"
@@ -166,6 +167,7 @@ def fastg2gfa(fastg_path: str, k_overlap: int, gfa_path: str) -> str:
         Full path to the generated GFA file.
     """
 
+    validate_fastg_input(fastg_path, "fastg2gfa")
     segments, edges = _parse_fastg(fastg_path)
     output_file = _write_gfa(segments, edges, gfa_path, fixed_overlap=k_overlap)
 

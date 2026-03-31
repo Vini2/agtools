@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict
-from pathlib import Path
 
 from Bio.Seq import Seq
 
 from agtools import __version__
+from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import prepare_output_file
-from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -77,14 +76,8 @@ def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict[str, set[str]], dic
     sequences = {}
     graph_nodes = defaultdict(set)
 
-    first_record = None
-
     with open(gfa_file, "r") as file:
         for line in file:
-            stripped = line.strip()
-            if stripped and first_record is None:
-                first_record = stripped[0]
-
             if line.startswith("S\t"):
                 parts = line.rstrip().split("\t")
                 sequences[parts[1]] = parts[2]
@@ -101,23 +94,6 @@ def _get_graph_sequences(gfa_file: str) -> tuple[defaultdict[str, set[str]], dic
                 rev_from = f"{to_seg}{reverse_orientation(to_orient)}"
                 rev_to = f"{from_seg}{reverse_orientation(from_orient)}"
                 graph_nodes[rev_from].add(rev_to)
-
-    if not sequences:
-        file_name = Path(gfa_file).name
-        if first_record == ">":
-            message = (
-                f"{file_name} looks like a FASTG file. "
-                "The gfa2fastg subcommand expects GFA input."
-            )
-            logger.error(message)
-            raise ValueError(message)
-
-        message = (
-            f"No GFA segments were found in {file_name}. "
-            "The gfa2fastg subcommand expects a GFA file containing S records."
-        )
-        logger.error(message)
-        raise ValueError(message)
 
     return graph_nodes, sequences
 
@@ -194,6 +170,7 @@ def gfa2fastg(gfa_file: str, output_path: str) -> str:
         Full path to the generated FASTG file.
     """
 
+    validate_gfa_input(gfa_file, "gfa2fastg")
     graph_nodes, sequences = _get_graph_sequences(gfa_file)
     output_file = _write_fastg(graph_nodes, sequences, output_path)
 

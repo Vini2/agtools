@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 from agtools import __version__
+from agtools.commands._format_checks import validate_asqg_input
 from agtools.commands._output import prepare_output_file
+from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -54,11 +56,15 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
             elif line.startswith("ED"):
                 fields = line.strip().split("\t")
                 if len(fields) < 2:
-                    raise ValueError(f"Malformed ED line: {line.strip()}")
+                    message = f"Malformed ED line: {line.strip()}"
+                    logger.error(message)
+                    raise ValueError(message)
 
                 parts = fields[1].split(" ")
                 if len(parts) < 9:
-                    raise ValueError(f"Malformed ED line: {line.strip()}")
+                    message = f"Malformed ED line: {line.strip()}"
+                    logger.error(message)
+                    raise ValueError(message)
 
                 seq1_name = parts[0]
                 seq2_name = parts[1]
@@ -68,7 +74,9 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                     seq2_overlap = int(parts[6]) - int(parts[5])
                     seq2_orient = int(parts[8])
                 except ValueError as e:
-                    raise ValueError(f"Malformed ED line: {line.strip()}") from e
+                    message = f"Malformed ED line: {line.strip()}"
+                    logger.error(message)
+                    raise ValueError(message) from e
 
                 if seq1_overlap == seq2_overlap:
 
@@ -78,7 +86,9 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                     elif seq2_orient == 0:
                         links.append([seq1_name, "+", seq2_name, "+", seq1_overlap])
                     else:
-                        raise ValueError(f"Malformed ED line: {line.strip()}")
+                        message = f"Malformed ED line: {line.strip()}"
+                        logger.error(message)
+                        raise ValueError(message)
 
     return segments, links
 
@@ -142,6 +152,7 @@ def asqg2gfa(asqg_file, output_path):
         Path to the converted GFA file.
     """
 
+    validate_asqg_input(asqg_file, "asqg2gfa")
     segments, links = _get_segments_and_links(asqg_file)
 
     output_file = _write_gfa(segments, links, output_path)

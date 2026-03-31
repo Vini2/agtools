@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from agtools import __version__
+from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import prepare_output_file
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
@@ -36,6 +37,7 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
         Path to the generated file containing the adjacency matrix.
     """
 
+    validate_gfa_input(gfa_file, "gfa2adj")
     ug = UnitigGraph.from_gfa(gfa_file)
 
     adj_df = ug.get_adjacency_matrix(type="pandas")
