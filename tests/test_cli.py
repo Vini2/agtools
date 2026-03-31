@@ -165,7 +165,14 @@ def test_agtools_gfa2fastg_rejects_fastg_input(runner, tmp_dir):
 
 def test_agtools_asqg2gfa(runner, tmp_dir):
     outpath = tmp_dir / "asqg2gfa" / "converted_graph.gfa"
-    graph = DATADIR / "ESC" / "default-graph.asqg"
+    graph = tmp_dir / "asqg2gfa" / "graph.asqg"
+    graph.dirpath().ensure(dir=True)
+    graph.write_text(
+        "VT\tcontig1\tAAAA\n"
+        "VT\tcontig2\tCCCC\n"
+        "ED\tcontig1 contig2 1 3 4 1 3 4 1 0\n",
+        encoding="utf-8",
+    )
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(asqg2gfa, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output

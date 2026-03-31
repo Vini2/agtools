@@ -159,7 +159,7 @@ def test_asqg2gfa_output_file_content(tmp_path):
     asqg_file.write_text(
         "VT\tcontig1\tAAAA\n"
         "VT\tcontig2\tCCCC\n"
-        "ED\tcontig1 contig2 0 3 0 0 3 0 1\n"
+        "ED\tcontig1 contig2 1 3 4 1 3 4 1 0\n"
     )
 
     target = tmp_path / "converted_graph.gfa"

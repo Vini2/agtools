@@ -2,6 +2,7 @@
 
 import pytest
 
+from agtools.commands.asqg2gfa import asqg2gfa
 from agtools.commands.gfa2asqg import _get_segments_and_edges, _write_asqg, gfa2asqg
 
 
@@ -50,11 +51,15 @@ def test_gfa2asqg_end_to_end_writes_spec_compliant_ed_coordinates(tmp_path):
 
     asqg_target = tmp_path / "converted_graph.asqg"
     output_file = gfa2asqg(str(gfa_file), str(asqg_target))
+    roundtrip_target = tmp_path / "roundtrip_graph.gfa"
+    roundtrip_file = asqg2gfa(str(asqg_target), str(roundtrip_target))
 
     assert output_file == str(asqg_target)
+    assert roundtrip_file == str(roundtrip_target)
     assert "VT\tA\tAAAA" in asqg_target.read_text()
     assert "HT\tVN:i:1\tER:f:0\tOL:i:3\tCN:i:0\tTE:i:0" in asqg_target.read_text()
     assert "ED\tA B 1 3 4 1 3 4 1 0" in asqg_target.read_text()
+    assert "L\tA\t+\tB\t-\t3M" in roundtrip_target.read_text()
 
 
 def test_get_segments_and_edges_rejects_unsupported_overlap_fields(tmp_path):
