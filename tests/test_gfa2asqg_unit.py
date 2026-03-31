@@ -3,7 +3,12 @@
 import pytest
 
 from agtools.commands.asqg2gfa import asqg2gfa
-from agtools.commands.gfa2asqg import _get_segments_and_edges, _write_asqg, gfa2asqg
+from agtools.commands.gfa2asqg import (
+    _get_segment_length,
+    _get_segments_and_edges,
+    _write_asqg,
+    gfa2asqg,
+)
 
 
 def test_get_segments_and_edges_converts_link_orientations_to_asqg_coordinates(tmp_path):
@@ -76,3 +81,63 @@ def test_gfa2asqg_rejects_asqg_input(tmp_path):
 
     with pytest.raises(ValueError, match="looks like an ASQG file"):
         gfa2asqg(str(asqg_file), str(tmp_path / "converted_graph.asqg"))
+
+
+def test_get_segment_length_reads_ln_tag_when_sequence_is_missing():
+    parts = ["S", "seg1", "*", "LN:i:12"]
+
+    assert _get_segment_length(parts, "S\tseg1\t*\tLN:i:12\n") == 12
+
+
+def test_get_segment_length_rejects_invalid_ln_tag():
+    parts = ["S", "seg1", "*", "LN:i:not_an_int"]
+
+    with pytest.raises(ValueError, match="Malformed S line"):
+        _get_segment_length(parts, "S\tseg1\t*\tLN:i:not_an_int\n")
+
+
+def test_get_segment_length_rejects_missing_ln_tag_for_sequence_placeholder():
+    parts = ["S", "seg1", "*"]
+
+    with pytest.raises(ValueError, match="without sequence data or an LN tag"):
+        _get_segment_length(parts, "S\tseg1\t*\n")
+
+
+def test_get_segments_and_edges_rejects_malformed_s_line(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tseg1\n")
+
+    with pytest.raises(ValueError, match="Malformed S line"):
+        _get_segments_and_edges(str(gfa_file))
+
+
+def test_get_segments_and_edges_rejects_malformed_l_line_with_missing_fields(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tA\tAAAA\nL\tA\t+\tB\t+\n")
+
+    with pytest.raises(ValueError, match="Malformed L line"):
+        _get_segments_and_edges(str(gfa_file))
+
+
+def test_get_segments_and_edges_rejects_l_line_with_invalid_orientation(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tA\tAAAA\nS\tB\tCCCC\nL\tA\t?\tB\t+\t1M\n")
+
+    with pytest.raises(ValueError, match="Malformed L line"):
+        _get_segments_and_edges(str(gfa_file))
+
+
+def test_get_segments_and_edges_rejects_links_to_undefined_segments(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tA\tAAAA\nL\tA\t+\tB\t+\t1M\n")
+
+    with pytest.raises(ValueError, match="Link references undefined segment"):
+        _get_segments_and_edges(str(gfa_file))
+
+
+def test_get_segments_and_edges_rejects_overlaps_longer_than_segment_length(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tA\tAAAA\nS\tB\tCCCC\nL\tA\t+\tB\t+\t5M\n")
+
+    with pytest.raises(ValueError, match="Link overlap 5 exceeds segment length"):
+        _get_segments_and_edges(str(gfa_file))

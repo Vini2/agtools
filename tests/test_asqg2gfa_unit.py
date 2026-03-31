@@ -107,3 +107,42 @@ def test_asqg2gfa_rejects_gfa_input(tmp_path):
 
     with pytest.raises(ValueError, match="looks like a GFA file"):
         asqg2gfa(str(gfa_file), str(tmp_path / "converted_graph.gfa"))
+
+
+def test_get_segments_and_links_rejects_edges_with_undefined_segments(tmp_path):
+    asqg_file = tmp_path / "graph.asqg"
+    asqg_file.write_text(
+        "VT\tcontig1\tAAAA\n"
+        "ED\tcontig1 contig2 1 3 4 1 3 4 1 0\n"
+    )
+
+    with pytest.raises(ValueError, match="Malformed ED line"):
+        _get_segments_and_links(str(asqg_file))
+
+
+def test_get_segments_and_links_rejects_seq1_coordinates_that_are_not_prefix_or_suffix(
+    tmp_path,
+):
+    asqg_file = tmp_path / "graph.asqg"
+    asqg_file.write_text(
+        "VT\tcontig1\tAAAAAAAA\n"
+        "VT\tcontig2\tCCCCCC\n"
+        "ED\tcontig1 contig2 1 3 8 0 2 6 0 0\n"
+    )
+
+    with pytest.raises(ValueError, match="Malformed ED line"):
+        _get_segments_and_links(str(asqg_file))
+
+
+def test_get_segments_and_links_rejects_forward_seq2_coordinates_that_are_not_prefix(
+    tmp_path,
+):
+    asqg_file = tmp_path / "graph.asqg"
+    asqg_file.write_text(
+        "VT\tcontig1\tAAAAAAAA\n"
+        "VT\tcontig2\tCCCCCC\n"
+        "ED\tcontig1 contig2 5 7 8 1 3 6 0 0\n"
+    )
+
+    with pytest.raises(ValueError, match="Malformed ED line"):
+        _get_segments_and_links(str(asqg_file))
