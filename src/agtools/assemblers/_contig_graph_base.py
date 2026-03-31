@@ -69,7 +69,7 @@ def get_graph_edges(
                                 and (source_contig, target_contig) not in edge_list
                             ):
                                 edge_list.add((source_contig, target_contig))
-                            else:
+                            elif source_contig == target_contig:
                                 self_loops.add(source_contig)
 
             line = file.readline()
@@ -104,7 +104,7 @@ def build_contig_graph(
     )
 
     graph.add_edges(edge_list)
-    graph.simplify(multiple=True, loops=False, combine_edges=None)
+    graph.simplify(multiple=True, loops=True, combine_edges=None)
 
     parser = FastaParser(contigs_file)
 

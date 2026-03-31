@@ -226,7 +226,7 @@ class UnitigGraph:
             ug.graph.add_edges(edge_list_batch)
             edge_list_batch.clear()
 
-        ug.graph.simplify(multiple=True, loops=False, combine_edges=None)
+        ug.graph.simplify(multiple=True, loops=True, combine_edges=None)
 
         ug.ecount = ug.graph.ecount()
 

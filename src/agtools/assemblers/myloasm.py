@@ -119,7 +119,7 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     graph.add_edges(edge_list)
 
     # Simplify the graph
-    graph.simplify(multiple=True, loops=False, combine_edges=None)
+    graph.simplify(multiple=True, loops=True, combine_edges=None)
 
     # Create ContigGraph object
     contig_graph = ContigGraph(

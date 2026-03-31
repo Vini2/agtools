@@ -152,7 +152,7 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     graph.add_edges(edge_list)
 
     # Simplify the graph
-    graph.simplify(multiple=True, loops=False, combine_edges=None)
+    graph.simplify(multiple=True, loops=True, combine_edges=None)
 
     # Map original contig identifiers to contig identifiers of MEGAHIT assembly graph
     graph_to_contig_map = bidict()
