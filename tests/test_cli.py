@@ -119,6 +119,15 @@ def test_agtools_fastg2gfa(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_fastg2gfa_rejects_gfa_input(runner, tmp_dir):
+    outpath = tmp_dir / "fastg2gfa_error" / "converted_graph.gfa"
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -k 141 -o {outpath}".split()
+    r = runner.invoke(fastg2gfa, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like a GFA file" in r.output
+
+
 def test_agtools_gfa2fastg(runner, tmp_dir):
     outpath = tmp_dir / "gfa2fastg" / "converted_graph.fastg"
     graph = DATADIR / "test_graph.gfa"
@@ -144,12 +153,30 @@ def test_agtools_asqg2gfa(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_asqg2gfa_rejects_gfa_input(runner, tmp_dir):
+    outpath = tmp_dir / "asqg2gfa_error" / "converted_graph.gfa"
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(asqg2gfa, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like a GFA file" in r.output
+
+
 def test_agtools_gfa2dot(runner, tmp_dir):
     outpath = tmp_dir / "gfa2dot" / "graph.dot"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2dot, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
+
+def test_agtools_gfa2dot_rejects_fastg_input(runner, tmp_dir):
+    outpath = tmp_dir / "gfa2dot_error" / "graph.dot"
+    graph = DATADIR / "final.graph.fastg"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2dot, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like a FASTG file" in r.output
 
 
 def test_agtools_gfa2dot_abyss(runner, tmp_dir):
@@ -168,12 +195,30 @@ def test_agtools_gfa2fasta(runner, tmp_dir):
     assert r.exit_code == 0, r.output
 
 
+def test_agtools_gfa2fasta_rejects_fastg_input(runner, tmp_dir):
+    outpath = tmp_dir / "gfa2fasta_error" / "segments.fasta"
+    graph = DATADIR / "final.graph.fastg"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2fasta, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like a FASTG file" in r.output
+
+
 def test_agtools_gfa2adj(runner, tmp_dir):
     outpath = tmp_dir / "gfa2adj" / "adjacency_matrix.csv"
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o {outpath}".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
+
+def test_agtools_gfa2adj_rejects_fastg_input(runner, tmp_dir):
+    outpath = tmp_dir / "gfa2adj_error" / "adjacency_matrix.csv"
+    graph = DATADIR / "final.graph.fastg"
+    args = f"-g {graph} -o {outpath}".split()
+    r = runner.invoke(gfa2adj, args, catch_exceptions=False)
+    assert r.exit_code == 1
+    assert "looks like a FASTG file" in r.output
 
 
 def test_agtools_no_log_file_by_default(runner, tmp_dir):

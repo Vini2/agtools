@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import importlib
-
 import pytest
 
 from agtools.commands.fastg2gfa import _parse_fastg
@@ -12,8 +10,6 @@ from agtools.commands.gfa2fastg import (
     reverse_complement,
     reverse_orientation,
 )
-
-gfa2fastg_module = importlib.import_module("agtools.commands.gfa2fastg")
 
 
 def test_reverse_orientation_flips_link_direction():
@@ -79,21 +75,3 @@ def test_gfa2fastg_rejects_fastg_input_with_clear_error(tmp_path):
 
     with pytest.raises(ValueError, match="looks like a FASTG file"):
         gfa2fastg(str(fastg_file), str(tmp_path / "converted_graph.fastg"))
-
-
-def test_gfa2fastg_logs_error_for_fastg_input(tmp_path, monkeypatch):
-    fastg_file = tmp_path / "graph.fastg"
-    fastg_file.write_text(">A:B';\nACGT\n>B';\nTTTT\n")
-    logged = []
-
-    monkeypatch.setattr(
-        gfa2fastg_module.logger, "error", lambda message: logged.append(message)
-    )
-
-    with pytest.raises(ValueError, match="looks like a FASTG file"):
-        gfa2fastg(str(fastg_file), str(tmp_path / "converted_graph.fastg"))
-
-    assert logged == [
-        "graph.fastg looks like a FASTG file. "
-        "The gfa2fastg subcommand expects GFA input."
-    ]

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pytest
+
 from agtools.commands.gfa2fasta import (
     _get_segment_sequences,
     _write_segment_sequences,
@@ -45,3 +47,11 @@ def test_gfa2fasta_end_to_end(tmp_path):
     assert output_file == str(tmp_path / "segments.fasta")
     assert ">seg1" in content
     assert ">seg2" in content
+
+
+def test_gfa2fasta_rejects_fastg_input(tmp_path):
+    fastg_file = tmp_path / "graph.fastg"
+    fastg_file.write_text(">A:B';\nACGT\n>B';\nTTTT\n")
+
+    with pytest.raises(ValueError, match="looks like a FASTG file"):
+        gfa2fasta(str(fastg_file), str(tmp_path / "segments.fasta"))

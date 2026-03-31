@@ -3,6 +3,8 @@
 import importlib
 import types
 
+import pytest
+
 from agtools.commands.gfa2dot import _write_abyss_dot, _write_dot, gfa2dot
 
 gfa2dot_module = importlib.import_module("agtools.commands.gfa2dot")
@@ -55,6 +57,7 @@ def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):
     monkeypatch.setattr(
         gfa2dot_module.UnitigGraph, "from_gfa", staticmethod(lambda _path: dummy_ug)
     )
+    monkeypatch.setattr(gfa2dot_module, "validate_gfa_input", lambda *_args: None)
 
     def fake_abyss(graph, output_path):
         calls.append(("abyss", graph, output_path))
@@ -81,3 +84,11 @@ def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):
         ("abyss", dummy_ug, str(abyss_target)),
         ("dot", dummy_ug, str(dot_target)),
     ]
+
+
+def test_gfa2dot_rejects_fastg_input(tmp_path):
+    fastg_file = tmp_path / "graph.fastg"
+    fastg_file.write_text(">A:B';\nACGT\n>B';\nTTTT\n")
+
+    with pytest.raises(ValueError, match="looks like a FASTG file"):
+        gfa2dot(str(fastg_file), abyss=False, output_path=str(tmp_path / "graph.dot"))

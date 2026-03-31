@@ -63,3 +63,11 @@ def test_get_segments_and_links_raises_on_malformed_ed_line(tmp_path):
 
     with pytest.raises(ValueError, match="Malformed ED line"):
         _get_segments_and_links(str(asqg_file))
+
+
+def test_asqg2gfa_rejects_gfa_input(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tseg1\tATGC\n")
+
+    with pytest.raises(ValueError, match="looks like a GFA file"):
+        asqg2gfa(str(gfa_file), str(tmp_path / "converted_graph.gfa"))

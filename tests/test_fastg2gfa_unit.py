@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import pytest
+
 from agtools.commands.fastg2gfa import _parse_fastg, _write_gfa, fastg2gfa
 
 
@@ -52,3 +54,11 @@ def test_fastg2gfa_end_to_end_generates_expected_gfa(tmp_path):
     assert output_file == str(target)
     assert "S\tA\tACGT" in content
     assert "L\tA\t+\tB\t-\t55M" in content
+
+
+def test_fastg2gfa_rejects_gfa_input(tmp_path):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\tseg1\tATGC\n")
+
+    with pytest.raises(ValueError, match="looks like a GFA file"):
+        fastg2gfa(str(gfa_file), k_overlap=55, gfa_path=str(tmp_path / "out.gfa"))
