@@ -5,6 +5,7 @@
 * FASTG to GFA
 * GFA to FASTG
 * ASQG to GFA
+* GFA to ASQG
 * GFA to GraphViz DOT
 * GFA to ABySS DOT
 * GFA to FASTA

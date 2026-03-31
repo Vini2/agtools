@@ -23,6 +23,7 @@ Commands:
   fastg2gfa  Convert FASTG file to GFA format
   gfa2fastg  Convert GFA file to FASTG format
   asqg2gfa   Convert ASQG file to GFA format
+  gfa2asqg   Convert GFA file to ASQG format
   gfa2dot    Convert GFA file to DOT format (GraphViz)
   gfa2fasta  Get segments in FASTA format
   gfa2adj    Get adjacency matrix of the assembly graph
@@ -285,6 +286,33 @@ Options:
 **Outputs**
 
 * Assembly graph file in GFA format
+
+## `gfa2asqg`
+
+Convert a GFA file to ASQG format.
+
+Run `agtools gfa2asqg --help` or `agtools gfa2asqg -h` to list the help message.
+
+```bash
+Usage: agtools gfa2asqg [OPTIONS]
+
+  Convert GFA file to ASQG format
+
+Options:
+  -g, --graph PATH      path(s) to the assembly graph file(s)  [required]
+  -o, --output FILE     path to the output file  [required]
+  -lf, --log-file FILE  optional path to write output logs; by default no log
+                        file is created
+  -h, --help            Show this message and exit.
+```
+
+**Inputs**
+
+* Assembly graph file in GFA format
+
+**Outputs**
+
+* Assembly graph file in ASQG format
 
 ## `gfa2dot`
 
