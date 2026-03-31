@@ -39,7 +39,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
     """
 
     segments = {}
-    links = []
+    raw_edges = []
 
     # Get contig connections from .asqg file
     with open(asqg_file) as file:
@@ -61,7 +61,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                     raise ValueError(message)
 
                 parts = fields[1].split(" ")
-                if len(parts) < 9:
+                if len(parts) < 10:
                     message = f"Malformed ED line: {line.strip()}"
                     logger.error(message)
                     raise ValueError(message)
@@ -70,25 +70,105 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                 seq2_name = parts[1]
 
                 try:
-                    seq1_overlap = int(parts[3]) - int(parts[2])
-                    seq2_overlap = int(parts[6]) - int(parts[5])
+                    seq1_start = int(parts[2])
+                    seq1_end = int(parts[3])
+                    seq1_length = int(parts[4])
+                    seq2_start = int(parts[5])
+                    seq2_end = int(parts[6])
+                    seq2_length = int(parts[7])
                     seq2_orient = int(parts[8])
+                    overlap_dif = int(parts[9])
                 except ValueError as e:
                     message = f"Malformed ED line: {line.strip()}"
                     logger.error(message)
                     raise ValueError(message) from e
 
-                if seq1_overlap == seq2_overlap:
+                raw_edges.append(
+                    [
+                        seq1_name,
+                        seq2_name,
+                        seq1_start,
+                        seq1_end,
+                        seq1_length,
+                        seq2_start,
+                        seq2_end,
+                        seq2_length,
+                        seq2_orient,
+                        line.strip(),
+                    ]
+                )
 
-                    # seq2 is reversed with respect to seq1
-                    if seq2_orient == 1:
-                        links.append([seq1_name, "+", seq2_name, "-", seq1_overlap])
-                    elif seq2_orient == 0:
-                        links.append([seq1_name, "+", seq2_name, "+", seq1_overlap])
-                    else:
-                        message = f"Malformed ED line: {line.strip()}"
-                        logger.error(message)
-                        raise ValueError(message)
+    links = []
+    for (
+        seq1_name,
+        seq2_name,
+        seq1_start,
+        seq1_end,
+        seq1_length,
+        seq2_start,
+        seq2_end,
+        seq2_length,
+        seq2_orient,
+        raw_line,
+    ) in raw_edges:
+        if seq1_name not in segments or seq2_name not in segments:
+            message = f"Malformed ED line: {raw_line}"
+            logger.error(message)
+            raise ValueError(message)
+
+        seq1_overlap = seq1_end - seq1_start + 1
+        seq2_overlap = seq2_end - seq2_start + 1
+
+        if (
+            seq1_start < 0
+            or seq1_end < seq1_start
+            or seq1_end >= seq1_length
+            or seq2_start < 0
+            or seq2_end < seq2_start
+            or seq2_end >= seq2_length
+            or seq1_overlap != seq2_overlap
+            or seq1_length != len(segments[seq1_name])
+            or seq2_length != len(segments[seq2_name])
+        ):
+            message = f"Malformed ED line: {raw_line}"
+            logger.error(message)
+            raise ValueError(message)
+
+        overlap = seq1_overlap
+        seq1_is_suffix = (
+            seq1_start == seq1_length - overlap and seq1_end == seq1_length - 1
+        )
+        seq1_is_prefix = seq1_start == 0 and seq1_end == overlap - 1
+
+        if seq1_is_suffix:
+            seq1_orient = "+"
+        elif seq1_is_prefix:
+            seq1_orient = "-"
+        else:
+            message = f"Malformed ED line: {raw_line}"
+            logger.error(message)
+            raise ValueError(message)
+
+        if seq2_orient == 0:
+            if not (seq2_start == 0 and seq2_end == overlap - 1):
+                message = f"Malformed ED line: {raw_line}"
+                logger.error(message)
+                raise ValueError(message)
+            seq2_gfa_orient = "+"
+        elif seq2_orient == 1:
+            if not (
+                seq2_start == seq2_length - overlap and seq2_end == seq2_length - 1
+            ):
+                message = f"Malformed ED line: {raw_line}"
+                logger.error(message)
+                raise ValueError(message)
+            seq2_gfa_orient = "-"
+        else:
+            message = f"Malformed ED line: {raw_line}"
+            logger.error(message)
+            raise ValueError(message)
+
+        links.append([seq1_name, seq1_orient, seq2_name, seq2_gfa_orient, overlap])
 
     return segments, links
 
