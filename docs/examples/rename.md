@@ -19,15 +19,15 @@ S	seq8	ATCGATCGATCGATCGATCG
 S	seq9	GCGTGCGTGCGTGCGTGCGT
 S	seq10	TTGCTTGCTTGCTTGCTTGC
 S	seqX	ACGTACGTAC
-L	seqX	+	seq2	-	5M
+L	seqX	+	seq2	+	5M
 L	seq4	+	seq5	+	10M
 L	seq6	-	seq7	+	7M
 L	seq9	+	seq10	-	5M
 J	seq5	+	seqX	-	*
 J	seq3	-	seq8	+	*
 J	seq7	+	seq2	+	*
-C	seq1	+	seqX	-	10M	5	0
-C	seq2	+	seqX	+	10M	2	0
+C	seq1	+	seqX	-	5	10M
+C	seq2	+	seqX	+	2	10M
 P	seqpath1	seq1+,seqX+,seq3-	20M,10M,20M
 P	seqpath2	seq4+,seq5+,seq6+	20M,20M,20M
 W	seqread1	0	*	<seq6<seqX>seq9
@@ -57,15 +57,15 @@ S	TEST_seq8	ATCGATCGATCGATCGATCG
 S	TEST_seq9	GCGTGCGTGCGTGCGTGCGT
 S	TEST_seq10	TTGCTTGCTTGCTTGCTTGC
 S	TEST_seqX	ACGTACGTAC
-L	TEST_seqX	+	TEST_seq2	-	5M
+L	TEST_seqX	+	TEST_seq2	+	5M
 L	TEST_seq4	+	TEST_seq5	+	10M
 L	TEST_seq6	-	TEST_seq7	+	7M
 L	TEST_seq9	+	TEST_seq10	-	5M
 J	TEST_seq5	+	TEST_seqX	-	*
 J	TEST_seq3	-	TEST_seq8	+	*
 J	TEST_seq7	+	TEST_seq2	+	*
-C	TEST_seq1	+	TEST_seqX	-	10M	5	0
-C	TEST_seq2	+	TEST_seqX	+	10M	2	0
+C	TEST_seq1	+	TEST_seqX	-	5	10M
+C	TEST_seq2	+	TEST_seqX	+	2	10M
 P	TEST_seqpath1	TEST_seq1+,TEST_seqX+,TEST_seq3-	20M,10M,20M
 P	TEST_seqpath2	TEST_seq4+,TEST_seq5+,TEST_seq6+	20M,20M,20M
 W	TEST_seqread1	0	*	<TEST_seq6<TEST_seqX>TEST_seq9

@@ -19,15 +19,15 @@ S	seq8	ATCGATCGATCGATCGATCG
 S	seq9	GCGTGCGTGCGTGCGTGCGT
 S	seq10	TTGCTTGCTTGCTTGCTTGC
 S	seqX	ACGTACGTAC
-L	seqX	+	seq2	-	5M
+L	seqX	+	seq2	+	5M
 L	seq4	+	seq5	+	10M
 L	seq6	-	seq7	+	7M
 L	seq9	+	seq10	-	5M
 J	seq5	+	seqX	-	*
 J	seq3	-	seq8	+	*
 J	seq7	+	seq2	+	*
-C	seq1	+	seqX	-	10M	5	0
-C	seq2	+	seqX	+	10M	2	0
+C	seq1	+	seqX	-	5	10M
+C	seq2	+	seqX	+	2	10M
 P	seqpath1	seq1+,seqX+,seq3-	20M,10M,20M
 P	seqpath2	seq4+,seq5+,seq6+	20M,20M,20M
 W	seqread1	0	*	<seq6<seqX>seq9
