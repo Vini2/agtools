@@ -256,6 +256,26 @@ def fastg2gfa(ctx, graph, ksize, output, log_file=None):
 @_output
 @_log_file
 @click.pass_context
+def gfa2fastg(ctx, graph, output, log_file=None):
+    """Convert GFA file to FASTG format"""
+
+    begin_agtools(ctx, __version__, __url__, log_file)
+
+    logger.info(f"Converting GFA file {graph[0]} to FASTG format")
+
+    try:
+        fastg_path = commands.gfa2fastg(graph[0], output)
+    except ValueError as exc:
+        raise click.ClickException(str(exc)) from exc
+
+    logger.info(f"FASTG file written to {fastg_path}")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@_output
+@_log_file
+@click.pass_context
 def asqg2gfa(ctx, graph, output, log_file=None):
     """Convert ASQG file to GFA format"""
 
