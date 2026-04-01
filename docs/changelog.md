@@ -35,7 +35,7 @@
 == 0.1.1 ==
 
 - second alpha release
-- added new method `get_contig_sequence` to the `ContigGraph` class
+- added new method get_contig_sequence to the ContigGraph class
 - minor updates to UnitigGraph class
 
 == 0.1.0 ==
