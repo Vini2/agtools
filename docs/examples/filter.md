@@ -1,6 +1,6 @@
 ## Filtering segments from an assembly graph
 
-*agtools* can filter sequences given a minimum segment length. Sequences that are shorter than the minimum length will be removed, along with any other elements that contain these segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
+*agtools* can filter segments based on a minimum segment length. Segments that are shorter than the minimum length will be removed, along with any other elements that contain those segments. You can use the `filter` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `filter` subcommand.
 
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
@@ -34,7 +34,7 @@ W	seqread1	0	*	<seq6<seqX>seq9
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
-We want to remove segments shorter than 15 bp. You can run the following command to remove segments shorter than 15 bp.
+To remove segments shorter than 15 bp, run the following command.
 
 ```bash
 agtools filter -g test_graph.gfa -l 15 -o results/filtered_graph.gfa
@@ -61,10 +61,9 @@ L	seq6	-	seq7	+	7M
 L	seq9	+	seq10	-	5M
 J	seq3	-	seq8	+	*
 J	seq7	+	seq2	+	*
-P	seqpath1	seq1+,seqX+,seq3-	20M,10M,20M
 P	seqpath2	seq4+,seq5+,seq6+	20M,20M,20M
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
 !!! note
-    Note that `seqX` and all links, jumps, containments, paths and walks containing `seqX` have been removed from the assembly graph.
+    Note that `seqX` and all links, jumps, containments, paths, and walks containing `seqX` have been removed from the assembly graph.

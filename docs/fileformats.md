@@ -12,12 +12,12 @@ This page summarises the four most common formats supported by *agtools*.
 
 GFA (Graphical Fragment Assembly) is a standard format for describing genome assemblies as graphs, where:
 
-* Headers (starts with the tag `H`) denote metadata.
-* Segments (starts with the tag `S`) are nodes (contigs or unitigs).
-* Links (starts with the tag `L`) define edges between segments.
-* Paths (starts with the tag `P`) optionally define traversal orders.
+* Headers (start with the tag `H`) denote metadata.
+* Segments (start with the tag `S`) are nodes (contigs or unitigs).
+* Links (start with the tag `L`) define edges between segments.
+* Paths (start with the tag `P`) optionally define traversal orders.
 
-*agtools* also supports the tags `J`, `C` and `W`. Please refer to the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html) for further details.
+*agtools* also supports the tags `J`, `C`, and `W`. Please refer to the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html) for further details.
 
 **Example**
 
@@ -38,10 +38,10 @@ FASTG represents possible assembly paths using a FASTA-like structure that encod
 
 Each node (`NODE_X`) in the graph (contig or unitig) contains:
 
-* A path label (e.g. :neighbor1,neighbor2...) describing outgoing edges.
+* A path label (e.g. `:neighbor1,neighbor2...`) describing outgoing edges.
 * A sequence entry representing the nucleotide sequence.
 
-This is followed by the reverse complement entry (`NODE_X'`). See the example below.
+This is followed by a reverse-complement entry (`NODE_X'`). See the example below.
 
 **Example**
 
@@ -126,7 +126,7 @@ graph {
 }
 ```
 
-View using GraphViz:
+To view it using GraphViz:
 
 ```bash
 dot -Tpng graph.dot -o graph.png

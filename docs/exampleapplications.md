@@ -4,7 +4,7 @@ The following examples illustrate how *agtools* can be used to extract and manip
 
 ## Bin contigs by connected components
 
-Contigs from a genome ideally form connected components in the assembly graph. Below is a minimal, straightforward example using *agtools* that “bins” contigs by connected components (each bin = one connected component in the contig graph). It uses *agtools* to load a contig graph and then obtain connected components through the `get_connected_components()` function to group contigs.
+Contigs from a genome ideally form connected components in the assembly graph. Below is a minimal, straightforward example using *agtools* that "bins" contigs by connected components (each bin corresponds to one connected component in the contig graph). It uses *agtools* to load a contig graph and obtain connected components through the `get_connected_components()` function.
 
 ```python
 # 1) pick the assembler loader that matches your assembly
@@ -58,7 +58,7 @@ with open("contig_bins.tsv", "w") as out:
 
 ## Identify plasmid candidates
 
-Below is a simple example “plasmid candidate finder” using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a useful first pass before deeper validation.
+Below is a simple "plasmid candidate finder" example using the *agtools* API. It flags circular contigs (self-loops) and reports their lengths. This is a useful first pass before deeper validation.
 
 ```python
 from agtools.core.unitig_graph import UnitigGraph
@@ -117,7 +117,7 @@ print(f"\nSaved: {out.resolve()}")
 
 ## Identify bacteriophage candidates
 
-Bacteriophages (or phages) with circular genomes often form circular components in the assembly graph. Below is a simple “phage candidate finder” using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e. circular paths) and keeps the ones whose estimated genome length falls within a typical bacteriophage range (default 10–300 kb; many sequenced phages cluster around 30–50 kb). You can adjust `MIN_LEN` and `MAX_LEN` as needed.
+Bacteriophages (or phages) with circular genomes often form circular components in the assembly graph. Below is a simple "phage candidate finder" example using *agtools*. It looks for simple cycles in the oriented unitig graph (i.e. circular paths) and keeps the ones whose estimated genome length falls within a typical bacteriophage range (default 10-300 kb; many sequenced phages cluster around 30-50 kb). You can adjust `MIN_LEN` and `MAX_LEN` as needed.
 
 ```python
 import igraph as ig
@@ -238,7 +238,7 @@ print(f"\nSaved: {out.resolve()}")
 
 Haplotype phasing aims to distinguish and reconstruct the individual haplotypes present in a diploid or polyploid genome. In assembly graphs, this can often be approached by identifying and resolving **bubbles**, which are alternative paths in the graph corresponding to sequence differences between haplotypes.
 
-Below is a minimal local haplotype phasing example using graph bubbles with the agtools API. It:
+Below is a minimal local haplotype phasing example using graph bubbles with the *agtools* API. It:
 
 1. loads a `UnitigGraph` from a GFA,
 2. builds the **oriented unitig graph** (the +/− version),

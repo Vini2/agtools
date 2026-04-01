@@ -2,7 +2,7 @@
 
 # Quick Start Guide
 
-For those of you who are eager to get started, this quick start guide will cover the following basic operations with assembly graphs.
+For those of you who are eager to get started, this quick start guide covers the following basic operations on assembly graphs.
 
 * Load an assembly graph
 * Get basic graph-based statistics
@@ -90,7 +90,7 @@ ig.plot(
 )
 ```
 
-The plotted graph will be shown below.
+The plotted graph is shown below.
 
 ![](images/graph_plot.png)
 
@@ -102,6 +102,6 @@ The plotted graph will be shown below.
     <i class="bi bi-download"></i> Download Python source code: quickstart.py
   </a><br>
   <a href="../resources/quickstart.zip" download class="download-button">
-    <i class="bi bi-download"></i> Download zipped: quickstart.zip
+    <i class="bi bi-download"></i> Download ZIP archive: quickstart.zip
   </a>
 </div>

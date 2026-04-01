@@ -86,16 +86,16 @@ GTTCGGATAACTTAGCTTCTTTTTCAGTGATATCTTTAATTAACTTTTGTTTTTCTAACTTAACTTCTGGTGTAACTTCT
 ...
 ```
 
-Here
+Here:
 
 * `k141_4704` corresponds to `NODE_1_length_205_cov_1.0000_ID_1`
 * `k141_10879` corresponds to `NODE_2_length_301_cov_1.0000_ID_3`
 
-The `megahit` module of *agtools* automatically resolves this mapping.
+The `megahit` module in *agtools* automatically resolves this mapping.
 
 Files required:
 
-* GFA file - You can convert the `final.graph.fastg` in to GFA format using the *agtools* [`fastg2gfa`](https://agtools.readthedocs.io/en/latest/cli/#fastg2gfa) subcommand.
+* GFA file - You can convert `final.graph.fastg` into GFA format using the *agtools* [`fastg2gfa`](https://agtools.readthedocs.io/en/latest/cli/#fastg2gfa) subcommand.
 * Contigs file - `final.contigs.fa`
 
 Once you convert the FASTG file to GFA format, you can load a MEGAHIT contig graph as follows. We will use the provided [test data](https://github.com/Vini2/agtools/tree/main/tests/data/ESC).
@@ -128,7 +128,7 @@ You can query the other way around as well. Given the contig name in the FASTA f
 ['NODE_1_length_205_cov_1.0000_ID_1']
 ```
 
-!!! note 
+!!! note
     `graph_to_contig_map` is a bidirectional dictionary. Hence, you can query both ways: contig names from graph to FASTA and from FASTA to graph.
 
 You can get the contig sequences using the contig name in the graph as follows.
@@ -185,7 +185,7 @@ You can check the number of vertices (contigs), edges (connections) and number o
 
 ## myloasm contig graph
 
-myloasm outputs contig graphs directly, where segments represent contigs and links represent overlaps, so they are straightforward to represent.
+myloasm outputs contig graphs directly, where segments represent contigs and links represent overlaps, so they are straightforward to interpret.
 
 Files required:
 
@@ -204,7 +204,7 @@ Files required:
     Not all contigs in the `final_contig_graph.gfa` file appear in `assembly_primary.fa`, because contigs that are similar to larger contigs are removed (see [GitHub issue](https://github.com/bluenote-1577/myloasm/issues/5)). Also, some contig sequences are not present in the GFA file. This can raise warnings when retrieving contig sequences. Hence, it is recommended to run `agtools clean` to remove missing contigs and add back contig sequences to the GFA file.
 
 
-You can check the number of vertices (contigs), edges (connections), the number of link lines and contig names:
+You can check the number of vertices (contigs), edges (connections), the number of link lines, and the contig names:
 
 ```python
 >>> cg.vcount

@@ -1,6 +1,6 @@
 ## Get the component containing a segment
 
-*agtools* can extract the component containing a given segment and output the GFA file of that component. You can use the `component` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `component` subcommand.
+*agtools* can extract the component that contains a given segment and output the GFA file for that component. You can use the `component` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `component` subcommand.
 
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/component_ex_graph.gfa).
 
@@ -26,7 +26,7 @@ The graph will look as follows. It has two connected components.
 
 ![](../images/component_graph.png)
 
-We want to get the component containing segment `A3`. You can run the following command to get the GFA file of the component.
+We want to extract the component containing segment `A3`. You can run the following command to generate the GFA file for that component.
 
 ```bash
 agtools component -g test_graph.gfa -s A3 -o results/component_graph.gfa

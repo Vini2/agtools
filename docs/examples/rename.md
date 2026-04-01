@@ -1,6 +1,6 @@
 ## Renaming elements of an assembly graph
 
-*agtools* can rename segment IDs, path IDs and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `rename` subcommand.
+*agtools* can rename segment IDs, path IDs, and walk IDs by prepending a given prefix. You can use the `rename` subcommand provided through the command-line interface. Please refer to the [CLI reference](../cli.md) for further details on the `rename` subcommand.
 
 Here is an [example GFA file](https://github.com/Vini2/agtools/tree/main/docs/data/rename_ex_graph.gfa).
 
@@ -34,7 +34,7 @@ W	seqread1	0	*	<seq6<seqX>seq9
 W	seqread2	0	*	<seq1>seq2<seq3
 ```
 
-You can run the following command to rename using the prefix `TEST`.
+You can run the following command to rename the elements using the prefix `TEST`.
 
 ```bash
 agtools rename -g test_graph.gfa -p TEST -o results/renamed_graph.gfa

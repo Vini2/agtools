@@ -87,7 +87,7 @@ The plotted graph is shown below. You can see that each segment is represented b
 
 ![](images/directed_graph_plot.png)
 
-This is similar to how Bandage visualises the graph in `Double` style.
+This is similar to how Bandage visualises the graph using the `Double` style.
 
 ![](images/unitig_graph_directed.png)
 

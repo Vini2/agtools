@@ -4,13 +4,13 @@ It is recommended to install *agtools* using either [PyPI](https://pypi.org/proj
 
 ## PyPI
 
-Before installing *agtools*, you will have to have [`pycairo`](https://pycairo.readthedocs.io/en/latest/) installed.
+Before installing *agtools*, you will need to have [`pycairo`](https://pycairo.readthedocs.io/en/latest/) installed.
 
 ```bash
 pip install pycairo
 ```
 
-Then, to install *agtools* globally, use the following command.
+Then use the following command to install *agtools* globally.
 
 ```bash
 pip install agtools

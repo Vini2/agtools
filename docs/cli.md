@@ -171,7 +171,7 @@ Options:
 
 **Outputs**
 
-* Cleaned assembly graph file in GFA format. Removes segments which are not found in the FASTA file and adds the sequences if they are not present in the GFA file (to be compatible with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html)).
+* Cleaned assembly graph file in GFA format. Removes segments that are not found in the FASTA file and adds sequences if they are not present in the GFA file (to be compatible with the [GFA specification](https://gfa-spec.github.io/GFA-spec/GFA1.html)).
 
 ## `component`
 
@@ -316,7 +316,7 @@ Options:
 
 ## `gfa2dot`
 
-Convert GFA file to GraphViz DOT format or ABySS DOT format.
+Convert a GFA file to GraphViz DOT format or ABySS DOT format.
 
 Run `agtools gfa2dot --help` or `agtools gfa2dot -h` to list the help message.
 
@@ -344,7 +344,7 @@ Options:
 
 ## `gfa2fasta`
 
-Get segments from a GFA file in FASTA format
+Get segments from a GFA file in FASTA format.
 
 Run `agtools gfa2fasta --help` or `agtools gfa2fasta -h` to list the help message.
 
@@ -371,7 +371,7 @@ Options:
 
 ## `gfa2adj`
 
-Get adjacency matrix of the assembly graph
+Get the adjacency matrix of the assembly graph.
 
 Run `agtools gfa2adj --help` or `agtools gfa2adj -h` to list the help message.
 

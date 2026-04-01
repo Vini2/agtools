@@ -13,7 +13,7 @@
 == 1.0.0 ==
 
 - the first major release
-- major refactoring of UnitigGraph, ContigGraph and assembler specific functions to improve performance
+- major refactoring of UnitigGraph, ContigGraph and assembler-specific functions to improve performance
 - removed gfa2fastg subcommand
 - used in profiling for the manuscript
 
