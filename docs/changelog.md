@@ -4,10 +4,12 @@
 == 1.1.0 ==
 
 - added subcommands gfa2fastg and gfa2asqg
+- made logging to a file optional (default to stdout only)
+- updated --output to take a file name instead of a folder
 - major bug fix for gfa2dot abyss
-- updated outputs to take a file name instead of a folder
 - major improvements to input validation and modularity
 - added more comprehensive unit tests
+- minor fixes
 
 == 1.0.2 ==
 
