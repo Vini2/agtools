@@ -1,6 +1,14 @@
 # Changelog
 
 ```
+== 1.1.0 ==
+
+- added subcommands gfa2fastg and gfa2asqg
+- major bug fix for gfa2dot abyss
+- updated outputs to take a file name instead of a folder
+- major improvements to input validation and modularity
+- added more comprehensive unit tests
+
 == 1.0.2 ==
 
 - log version, repo, command name, and parameters of a subcommand run
