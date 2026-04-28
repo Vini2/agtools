@@ -11,7 +11,7 @@ df_gf = pd.read_csv("time_logs/gfapy_unitig_graph_flye_profiling_res.csv")
 # ===========================================================
 # FIGURE 1 — RUNTIME
 # ===========================================================
-plt.figure(figsize=(6, 3))
+plt.figure(figsize=(5, 5))
 
 # AGTools
 x_ag = df_ag["gfa_S"] + df_ag["gfa_L"] + df_ag["gfa_P"]
@@ -57,14 +57,14 @@ plt.title("Running time - loading Flye GFA")
 plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.1f}"))
 plt.grid(True)
 plt.legend()
-plt.savefig("plots/runtime_flye_agtools_vs_gfapy.png", dpi=300, bbox_inches="tight")
+plt.savefig("plots/runtime_flye_agtools_vs_gfapy.pdf", dpi=600, bbox_inches="tight")
 plt.show()
 
 
 # ===========================================================
 # FIGURE 2 — MEMORY
 # ===========================================================
-plt.figure(figsize=(6, 3))
+plt.figure(figsize=(5, 5))
 
 # AGTools
 y_ag_mem = df_ag["mem_mean_MB"]
@@ -106,5 +106,5 @@ plt.title("Memory usage - loading Flye GFA")
 plt.gca().xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.1f}"))
 plt.grid(True)
 plt.legend()
-plt.savefig("plots/memory_flye_agtools_vs_gfapy.png", dpi=300, bbox_inches="tight")
+plt.savefig("plots/memory_flye_agtools_vs_gfapy.pdf", dpi=600, bbox_inches="tight")
 plt.show()
