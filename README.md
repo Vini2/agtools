@@ -105,6 +105,6 @@ If you want to request a feature, please post it under [agtools Issues](https://
 
 ## Citation
 
-`agtools` is currently under review. In the meantime, if you use `agtools` in your work, please cite the preprint  as follows.
+`agtools` is publlished in [Bioinformatics Advances](https://doi.org/10.1093/bioadv/vbag126) with DOI: [10.1093/bioadv/vbag126](https://doi.org/10.1093/bioadv/vbag126). If you use `agtools` in your work, please cite as follows.
 
-> Vijini Mallawaarachchi, George Bouras, Ryan R. Wick, Susanna R. Grigson, Bhavya Papudeshi, Robert A. Edwards; agtools: a software framework to manipulate assembly graphs; bioRxiv 2025.09.14.676178; doi: https://doi.org/10.1101/2025.09.14.676178
+> Vijini Mallawaarachchi, George Bouras, Ryan R Wick, Susanna R Grigson, Bhavya Papudeshi, Robert A Edwards, agtools: A Software Framework to Manipulate Assembly Graphs, Bioinformatics Advances, 2026, vbag126, https://doi.org/10.1093/bioadv/vbag126
