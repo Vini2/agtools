@@ -1,7 +1,6 @@
 # **agtools**: A Software Framework to Manipulate Assembly Graphs
 
-[![](https://img.shields.io/static/v1?label=Preprint&message=10.1101/2025.09.14.676178&color=blueviolet)](https://doi.org/10.1101/2025.09.14.676178)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16777546.svg)](https://doi.org/10.5281/zenodo.16777546)
+[![DOI](https://img.shields.io/badge/DOI-10.1093/bioadv/vbag126-blue)](https://doi.org/10.1093/bioadv/vbag126)
 ![GitHub License](https://img.shields.io/github/license/Vini2/agtools)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
 
