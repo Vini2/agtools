@@ -4,7 +4,7 @@ import re
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -165,10 +165,9 @@ def _write_asqg(segments: dict[str, str], edges: list[list], output_path: str) -
         Path to the generated ASQG file.
     """
 
-    output_file = prepare_output_file(output_path)
     min_overlap = min((edge[3] - edge[2] + 1 for edge in edges), default=0)
 
-    with open(output_file, "w") as asqg_file:
+    with open_output_file(output_path) as (output_file, asqg_file):
         asqg_file.write(f"HT\tVN:i:1\tER:f:0\tOL:i:{min_overlap}\tCN:i:0\tTE:i:0\n")
 
         for segment_id, sequence in segments.items():

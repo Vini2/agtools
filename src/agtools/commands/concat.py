@@ -5,7 +5,7 @@ import sys
 import tempfile
 
 from agtools import __version__
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -43,8 +43,6 @@ def concat(graph_files: list, output_path: str) -> str:
         tag: tempfile.NamedTemporaryFile(mode="w+", delete=False) for tag in gfa_tags
     }
     other_lines = tempfile.NamedTemporaryFile(mode="w+", delete=False)
-
-    output_file = prepare_output_file(output_path)
 
     segments = set()
     paths = set()
@@ -105,7 +103,7 @@ def concat(graph_files: list, output_path: str) -> str:
                         other_lines.write(line_to_write)
 
         # Write to concatenated output
-        with open(output_file, "w") as out:
+        with open_output_file(output_path) as (output_file, out):
             # Write each tag group in order
             for tag in gfa_tags:
                 tf = temp_files[tag]

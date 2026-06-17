@@ -58,8 +58,8 @@ _graph = click.option(
 _output = click.option(
     "--output",
     "-o",
-    help="path to the output file",
-    type=click.Path(exists=False, dir_okay=False),
+    help="path to the output file, or '-' to write to stdout",
+    type=click.Path(exists=False, dir_okay=False, allow_dash=True),
     required=True,
 )
 _log_file = click.option(
@@ -382,7 +382,7 @@ def begin_agtools(
     ctx: click.Context, version: str, repo_url: str, log_file: str | None = None
 ):
     """Log version, repo, command name, and parameters of a subcommand run."""
-    configure_logger(log_file)
+    configure_logger(log_file, use_stderr=ctx.params.get("output") == "-")
     logger.info("agtools: A Software Framework to Manipulate Assembly Graphs")
     logger.info(f"You are using agtools version {version}")
     if repo_url:

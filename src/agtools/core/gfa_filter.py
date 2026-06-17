@@ -3,6 +3,8 @@
 import re
 from collections.abc import Callable
 
+from agtools.commands._output import open_output_file
+
 
 def parse_path_segment_ids(path_field: str) -> list[str]:
     """
@@ -51,7 +53,13 @@ def write_filtered_gfa(
     - others: copied unchanged
     """
 
-    with open(gfa_file, "r") as gfa, open(output_file, "w") as filtered_gfa:
+    with (
+        open(gfa_file, "r") as gfa,
+        open_output_file(output_file) as (
+            _,
+            filtered_gfa,
+        ),
+    ):
         for line in gfa:
             parts = line.rstrip("\n").split("\t")
             if not parts or parts == [""]:

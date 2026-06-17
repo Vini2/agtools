@@ -45,6 +45,18 @@ def test_stats_output_file_content(tmp_path):
     assert "GC content: 25.00%" in content
 
 
+def test_stats_output_stdout(tmp_path, capsys):
+    gfa_file = tmp_path / "graph.gfa"
+    _write_base_gfa(gfa_file)
+
+    output_file = stats(str(gfa_file), "-")
+    stdout = capsys.readouterr().out
+
+    assert output_file == "-"
+    assert "Basic graph statistics for" in stdout
+    assert "Number of segments: 3" in stdout
+
+
 def test_rename_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
@@ -94,13 +106,22 @@ def test_filter_output_file_content(tmp_path):
     assert "W\tw1\t*\t*\t*\t>s1<s2" not in content
 
 
+def test_filter_output_stdout(tmp_path, capsys):
+    gfa_file = tmp_path / "graph.gfa"
+    _write_base_gfa(gfa_file)
+
+    output_file = filter(str(gfa_file), min_length=3, output_path="-")
+    stdout = capsys.readouterr().out
+
+    assert output_file == "-"
+    assert "S\ts1\tAAAA" in stdout
+    assert "S\ts2\tCC" not in stdout
+
+
 def test_clean_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text(
-        "S\ts1\t\tLN:i:4\n"
-        "S\ts2\tCC\n"
-        "L\ts1\t+\ts2\t+\t1M\n"
-        "P\tp1\ts1+,s2+\t*\n"
+        "S\ts1\t\tLN:i:4\n" "S\ts2\tCC\n" "L\ts1\t+\ts2\t+\t1M\n" "P\tp1\ts1+,s2+\t*\n"
     )
     fasta_file = tmp_path / "contigs.fasta"
     fasta_file.write_text(">s1\nAAAA\n")
@@ -174,7 +195,9 @@ def test_asqg2gfa_output_file_content(tmp_path):
 
 def test_gfa2asqg_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
-    gfa_file.write_text("S\tcontig1\tAAAA\nS\tcontig2\tCCCC\nL\tcontig1\t+\tcontig2\t-\t3M\n")
+    gfa_file.write_text(
+        "S\tcontig1\tAAAA\nS\tcontig2\tCCCC\nL\tcontig1\t+\tcontig2\t-\t3M\n"
+    )
 
     target = tmp_path / "converted_graph.asqg"
     output_file = gfa2asqg(str(gfa_file), str(target))
@@ -217,6 +240,19 @@ def test_gfa2fasta_output_file_content(tmp_path):
     assert "GGTT" in content
 
 
+def test_gfa2fasta_output_stdout(tmp_path, capsys):
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text("S\ts1\tatgcn-\nS\ts2\tGGTT\n")
+
+    output_file = gfa2fasta(str(gfa_file), "-")
+    stdout = capsys.readouterr().out
+
+    assert output_file == "-"
+    assert ">s1" in stdout
+    assert "ATGC" in stdout
+    assert ">s2" in stdout
+
+
 def test_gfa2adj_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     _write_base_gfa(gfa_file)
@@ -230,3 +266,15 @@ def test_gfa2adj_output_file_content(tmp_path):
     assert any(row.startswith("s1,0,1,0") for row in rows[1:])
     assert any(row.startswith("s2,1,0,0") for row in rows[1:])
     assert any(row.startswith("s3,0,0,0") for row in rows[1:])
+
+
+def test_gfa2adj_output_stdout(tmp_path, capsys):
+    gfa_file = tmp_path / "graph.gfa"
+    _write_base_gfa(gfa_file)
+
+    output_file = gfa2adj(str(gfa_file), delimiter="comma", output_path="-")
+    stdout = capsys.readouterr().out
+
+    assert output_file == "-"
+    assert ",s1,s2,s3" in stdout
+    assert "s1,0,1,0" in stdout
