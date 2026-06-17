@@ -21,13 +21,14 @@ def configure_logger(log_file: Optional[str] = None):
     """Configure agtools logging sinks.
 
     By default, logs are emitted to stdout only. If ``log_file`` is
-    provided, DEBUG-level logs are also written to that file.
+    provided, logs are written to that file instead so command output
+    can be cleanly redirected from stdout.
     """
     logger.remove()
-    logger.add(sink=sys.stdout, level="INFO")
-
     if log_file:
         logger.add(sink=log_file, level="DEBUG")
+    else:
+        logger.add(sink=sys.stdout, level="INFO")
 
 
 # Default configuration for library/programmatic usage: console logs only.

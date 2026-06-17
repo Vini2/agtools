@@ -36,6 +36,5 @@ def test_configure_logger_adds_file_sink_when_requested(monkeypatch, tmp_path):
 
     assert calls == [
         ("remove",),
-        ("add", sys.stdout, "INFO"),
         ("add", str(log_file), "DEBUG"),
     ]
