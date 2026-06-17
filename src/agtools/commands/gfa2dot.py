@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from agtools.commands._format_checks import validate_gfa_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.core.unitig_graph import UnitigGraph
 
 
@@ -27,9 +27,7 @@ def _write_abyss_dot(graph, output_path):
     [https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot](https://github.com/bcgsc/abyss/wiki/ABySS-File-Formats#dot)
     """
 
-    output_file = prepare_output_file(output_path)
-
-    with open(output_file, "w") as f:
+    with open_output_file(output_path) as (output_file, f):
 
         f.write(f"digraph g {{\n")
 
@@ -71,8 +69,8 @@ def _write_dot(graph, output_path):
         Full path to the generated DOT file.
     """
 
-    output_file = prepare_output_file(output_path)
-    graph.graph.write_dot(output_file)
+    with open_output_file(output_path) as (output_file, output_handle):
+        graph.graph.write_dot(output_handle)
     return output_file
 
 

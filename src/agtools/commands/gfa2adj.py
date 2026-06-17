@@ -2,7 +2,7 @@
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -43,7 +43,7 @@ def gfa2adj(gfa_file: str, delimiter: str, output_path: str) -> str:
     adj_df = ug.get_adjacency_matrix(type="pandas")
 
     separator = "," if delimiter == "comma" else "\t"
-    output_file = prepare_output_file(output_path)
-    adj_df.to_csv(output_file, sep=separator)
+    with open_output_file(output_path) as (output_file, output_handle):
+        adj_df.to_csv(output_handle, sep=separator)
 
     return output_file

@@ -3,7 +3,7 @@
 import re
 
 from agtools import __version__
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -117,10 +117,14 @@ def _write_renamed_file(
         Path to the renamed GFA file.
     """
 
-    output_file = prepare_output_file(output_path)
-
     # Rewrite file with renamed segment IDs
-    with open(input_gfa, "r") as infile, open(output_file, "w") as outfile:
+    with (
+        open(input_gfa, "r") as infile,
+        open_output_file(output_path) as (
+            output_file,
+            outfile,
+        ),
+    ):
         for line in infile:
             parts = line.strip().split("\t")
             tag = parts[0]
@@ -137,19 +141,21 @@ def _write_renamed_file(
             elif tag == "P":
                 parts[1] = _remap_element(parts[1], path_map)
                 path_path = parts[2]
-                segments = re.split(r"([,;])", path_path)
-                segments = [
-                    _remap_element(s[:-1], segment_map) + s[-1] for s in segments
+                path_segments = re.split(r"([,;])", path_path)
+                remapped_path_segments = [
+                    _remap_element(s[:-1], segment_map) + s[-1] for s in path_segments
                 ]
-                parts[2] = "".join(segments)
+                parts[2] = "".join(remapped_path_segments)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "W":
                 parts[1] = _remap_element(parts[1], walk_map)
                 walk_path = parts[-1]
-                segments = re.split(r"([><])", walk_path)
-                segments = [_remap_element(s, segment_map) for s in segments]
-                parts[-1] = "".join(segments)
+                walk_segments = re.split(r"([><])", walk_path)
+                remapped_walk_segments = [
+                    _remap_element(s, segment_map) for s in walk_segments
+                ]
+                parts[-1] = "".join(remapped_walk_segments)
                 outfile.write("\t".join(parts) + "\n")
 
             else:

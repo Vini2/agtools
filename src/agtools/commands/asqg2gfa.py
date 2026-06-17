@@ -2,7 +2,7 @@
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_asqg_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -193,9 +193,7 @@ def _write_gfa(segments, links, output_path):
         Path to the generated GFA file.
     """
 
-    output_file = prepare_output_file(output_path)
-
-    with open(output_file, "w") as gfa_file:
+    with open_output_file(output_path) as (output_file, gfa_file):
 
         # Write segments
         for seg_id, seq in segments.items():

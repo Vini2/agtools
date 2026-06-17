@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from agtools import __version__
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 from agtools.core.unitig_graph import UnitigGraph
 from agtools.log_config import logger
 
@@ -33,9 +33,7 @@ def _write_stats_file(gfa_file: str, stats: dict, output_path: str) -> str:
     str
         Path to the written statistics file.
     """
-    output_file = prepare_output_file(output_path)
-
-    with open(output_file, "w") as f:
+    with open_output_file(output_path) as (output_file, f):
         # Write basic graph statistics
         f.write(f"Basic graph statistics for {gfa_file}:\n")
         f.write(f"Number of segments: {stats['nsegments']}\n")

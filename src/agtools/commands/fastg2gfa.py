@@ -4,7 +4,7 @@ import re
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_fastg_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -135,8 +135,7 @@ def _write_gfa(
         Full path to the written GFA file.
     """
 
-    output_file = prepare_output_file(output_path)
-    with open(output_file, "w") as f:
+    with open_output_file(output_path) as (output_file, f):
         f.write("H\tVN:Z:1.0\n")
         for segment_id, sequence in segments.items():
             f.write(f"S\t{segment_id}\t{sequence}\n")
