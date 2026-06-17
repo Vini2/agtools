@@ -298,3 +298,14 @@ def test_agtools_log_file_keeps_stdout_clean(runner, tmp_dir):
     assert "agtools:" not in r.output
     assert " | INFO     | " not in r.output
     assert log_file.exists()
+
+
+def test_agtools_stdout_output_routes_logs_to_stderr(tmp_dir):
+    runner = CliRunner(mix_stderr=False)
+    graph = DATADIR / "test_graph.gfa"
+    args = f"-g {graph} -o -".split()
+    r = runner.invoke(gfa2adj, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+    assert ",seg1,seg2" in r.output
+    assert "agtools:" not in r.output
+    assert "agtools:" in r.stderr

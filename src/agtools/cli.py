@@ -382,7 +382,7 @@ def begin_agtools(
     ctx: click.Context, version: str, repo_url: str, log_file: str | None = None
 ):
     """Log version, repo, command name, and parameters of a subcommand run."""
-    configure_logger(log_file)
+    configure_logger(log_file, use_stderr=ctx.params.get("output") == "-")
     logger.info("agtools: A Software Framework to Manipulate Assembly Graphs")
     logger.info(f"You are using agtools version {version}")
     if repo_url:
