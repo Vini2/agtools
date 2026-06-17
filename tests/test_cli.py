@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import inspect
 import pathlib
 
 import pytest
@@ -35,6 +36,12 @@ def workingdir(tmp_dir, monkeypatch):
 def runner():
     """exportrc works correctly."""
     return CliRunner()
+
+def make_cli_runner():
+    kwargs = {}
+    if "mix_stderr" in inspect.signature(CliRunner).parameters:
+        kwargs["mix_stderr"] = False
+    return CliRunner(**kwargs)
 
 
 def test_agtools_stats(runner, tmp_dir):
@@ -301,11 +308,11 @@ def test_agtools_log_file_keeps_stdout_clean(runner, tmp_dir):
 
 
 def test_agtools_stdout_output_routes_logs_to_stderr(tmp_dir):
-    runner = CliRunner(mix_stderr=False)
+    runner = make_cli_runner()
     graph = DATADIR / "test_graph.gfa"
     args = f"-g {graph} -o -".split()
     r = runner.invoke(gfa2adj, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
-    assert ",seg1,seg2" in r.output
-    assert "agtools:" not in r.output
+    assert ",seg1,seg2" in r.stdout
+    assert "agtools:" not in r.stdout
     assert "agtools:" in r.stderr
