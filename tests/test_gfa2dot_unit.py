@@ -90,8 +90,7 @@ def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):
         == "abyss-output"
     )
     assert (
-        gfa2dot("graph.gfa", abyss=False, output_path=str(dot_target))
-        == "dot-output"
+        gfa2dot("graph.gfa", abyss=False, output_path=str(dot_target)) == "dot-output"
     )
     assert calls == [
         ("abyss", dummy_ug, str(abyss_target)),

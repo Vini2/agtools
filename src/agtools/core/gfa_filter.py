@@ -53,9 +53,12 @@ def write_filtered_gfa(
     - others: copied unchanged
     """
 
-    with open(gfa_file, "r") as gfa, open_output_file(output_file) as (
-        _,
-        filtered_gfa,
+    with (
+        open(gfa_file, "r") as gfa,
+        open_output_file(output_file) as (
+            _,
+            filtered_gfa,
+        ),
     ):
         for line in gfa:
             parts = line.rstrip("\n").split("\t")

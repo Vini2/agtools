@@ -118,9 +118,12 @@ def _write_renamed_file(
     """
 
     # Rewrite file with renamed segment IDs
-    with open(input_gfa, "r") as infile, open_output_file(output_path) as (
-        output_file,
-        outfile,
+    with (
+        open(input_gfa, "r") as infile,
+        open_output_file(output_path) as (
+            output_file,
+            outfile,
+        ),
     ):
         for line in infile:
             parts = line.strip().split("\t")
@@ -149,7 +152,8 @@ def _write_renamed_file(
                 parts[1] = _remap_element(parts[1], walk_map)
                 walk_path = parts[-1]
                 segments = [
-                    _remap_element(s, segment_map) for s in re.split(r"([><])", walk_path)
+                    _remap_element(s, segment_map)
+                    for s in re.split(r"([><])", walk_path)
                 ]
                 parts[-1] = "".join(segments)
                 outfile.write("\t".join(parts) + "\n")

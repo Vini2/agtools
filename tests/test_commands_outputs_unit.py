@@ -121,10 +121,7 @@ def test_filter_output_stdout(tmp_path, capsys):
 def test_clean_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
     gfa_file.write_text(
-        "S\ts1\t\tLN:i:4\n"
-        "S\ts2\tCC\n"
-        "L\ts1\t+\ts2\t+\t1M\n"
-        "P\tp1\ts1+,s2+\t*\n"
+        "S\ts1\t\tLN:i:4\n" "S\ts2\tCC\n" "L\ts1\t+\ts2\t+\t1M\n" "P\tp1\ts1+,s2+\t*\n"
     )
     fasta_file = tmp_path / "contigs.fasta"
     fasta_file.write_text(">s1\nAAAA\n")
@@ -198,7 +195,9 @@ def test_asqg2gfa_output_file_content(tmp_path):
 
 def test_gfa2asqg_output_file_content(tmp_path):
     gfa_file = tmp_path / "graph.gfa"
-    gfa_file.write_text("S\tcontig1\tAAAA\nS\tcontig2\tCCCC\nL\tcontig1\t+\tcontig2\t-\t3M\n")
+    gfa_file.write_text(
+        "S\tcontig1\tAAAA\nS\tcontig2\tCCCC\nL\tcontig1\t+\tcontig2\t-\t3M\n"
+    )
 
     target = tmp_path / "converted_graph.asqg"
     output_file = gfa2asqg(str(gfa_file), str(target))
