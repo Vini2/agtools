@@ -33,5 +33,7 @@ dev = [
     "click",
     "flit",
     "isort==5.13.2",
-    "agtools[test]"
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
 ]
