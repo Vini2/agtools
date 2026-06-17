@@ -142,18 +142,20 @@ def _write_renamed_file(
                 parts[1] = _remap_element(parts[1], path_map)
                 path_path = parts[2]
                 path_segments = re.split(r"([,;])", path_path)
-                segments = [
+                remapped_path_segments = [
                     _remap_element(s[:-1], segment_map) + s[-1] for s in path_segments
                 ]
-                parts[2] = "".join(segments)
+                parts[2] = "".join(remapped_path_segments)
                 outfile.write("\t".join(parts) + "\n")
 
             elif tag == "W":
                 parts[1] = _remap_element(parts[1], walk_map)
                 walk_path = parts[-1]
                 walk_segments = re.split(r"([><])", walk_path)
-                segments = [_remap_element(s, segment_map) for s in walk_segments]
-                parts[-1] = "".join(segments)
+                remapped_walk_segments = [
+                    _remap_element(s, segment_map) for s in walk_segments
+                ]
+                parts[-1] = "".join(remapped_walk_segments)
                 outfile.write("\t".join(parts) + "\n")
 
             else:
