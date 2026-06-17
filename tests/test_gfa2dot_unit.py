@@ -32,12 +32,11 @@ def test_write_abyss_dot_emits_nodes_and_links(tmp_path):
 def test_write_dot_delegates_to_igraph_writer(tmp_path):
     class DummyInnerGraph:
         def __init__(self):
-            self.called_path = None
+            self.called_handle = None
 
-        def write_dot(self, path):
-            self.called_path = path
-            with open(path, "w") as f:
-                f.write("graph {}")
+        def write_dot(self, handle):
+            self.called_handle = handle
+            handle.write("graph {}")
 
     inner_graph = DummyInnerGraph()
     wrapper = types.SimpleNamespace(graph=inner_graph)
@@ -46,8 +45,22 @@ def test_write_dot_delegates_to_igraph_writer(tmp_path):
     output_file = _write_dot(wrapper, str(target))
 
     assert output_file == str(target)
-    assert inner_graph.called_path == str(target)
+    assert inner_graph.called_handle is not None
     assert target.read_text() == "graph {}"
+
+
+def test_write_dot_supports_stdout(capsys):
+    class DummyInnerGraph:
+        def write_dot(self, handle):
+            handle.write("graph {}")
+
+    wrapper = types.SimpleNamespace(graph=DummyInnerGraph())
+
+    output_file = _write_dot(wrapper, "-")
+    stdout = capsys.readouterr().out
+
+    assert output_file == "-"
+    assert stdout == "graph {}"
 
 
 def test_gfa2dot_selects_writer_based_on_flag(tmp_path, monkeypatch):

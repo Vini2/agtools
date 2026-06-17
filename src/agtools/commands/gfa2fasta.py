@@ -8,7 +8,7 @@ from Bio.SeqRecord import SeqRecord
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -78,8 +78,7 @@ def _write_segment_sequences(sequences: list, output_path: str) -> str:
     str
         Path to the output FASTA file.
     """
-    output_file = prepare_output_file(output_path)
-    with open(f"{output_file}", "w") as output_handle:
+    with open_output_file(output_path) as (output_file, output_handle):
         SeqIO.write(sequences, output_handle, "fasta")
 
     return output_file

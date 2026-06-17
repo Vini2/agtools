@@ -58,8 +58,8 @@ _graph = click.option(
 _output = click.option(
     "--output",
     "-o",
-    help="path to the output file",
-    type=click.Path(exists=False, dir_okay=False),
+    help="path to the output file, or '-' to write to stdout",
+    type=click.Path(exists=False, dir_okay=False, allow_dash=True),
     required=True,
 )
 _log_file = click.option(

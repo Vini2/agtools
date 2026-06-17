@@ -6,7 +6,7 @@ from Bio.Seq import Seq
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
-from agtools.commands._output import prepare_output_file
+from agtools.commands._output import open_output_file
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -129,9 +129,7 @@ def _write_fastg(
         Full path to the written FASTG file.
     """
 
-    output_file = prepare_output_file(output_path)
-
-    with open(output_file, "w") as file:
+    with open_output_file(output_path) as (output_file, file):
         for segment_id, sequence in sequences.items():
             for orient in ("+", "-"):
                 node = f"{segment_id}{orient}"
