@@ -12,6 +12,8 @@ jobs:
   tests:
     name: "Python ${{ matrix.python-version }}"
     runs-on: ${{ matrix.os }}
+    env:
+      CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
     strategy:
       matrix:
@@ -33,11 +35,14 @@ jobs:
           python --version
           python -m pip install --upgrade pip
           pip install --upgrade pip wheel setuptools flit
-          flit install
-      
+          flit install --deps develop
+
+      - name: "Lint on ${{ matrix.os }} for Python ${{ matrix.python-version }}"
+        run: |
+          ruff check src tests
+
       - name: "Generate coverage report on ${{ matrix.os }} for Python ${{ matrix.python-version }}"
         run: |
-          pip install pytest pytest-cov
           pytest --cov=agtools --cov-report=xml --cov-append
 
       - name: Upload coverage reports to Codecov
@@ -45,3 +50,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: Vini2/agtools
+
+      - name: Upload coverage reports to Codacy
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.12' && secrets.CODACY_PROJECT_TOKEN != '' }}
+        run: |
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
