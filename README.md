@@ -11,6 +11,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1cO6gDsGqCIJUvnDcwpy-EuB3FoXG4M-R?usp=sharing)
 
 [![CI](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/testing_python_app.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/97811ab05bef4a1ab5e954c6537b5f6d)](https://app.codacy.com/gh/Vini2/agtools/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/Vini2/agtools/graph/badge.svg?token=nYzx0Pd0h6)](https://codecov.io/gh/Vini2/agtools)
 [![CodeQL Advanced](https://github.com/Vini2/agtools/actions/workflows/codeql.yml/badge.svg)](https://github.com/Vini2/agtools/actions/workflows/codeql.yml)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Vini2/agtools/main?color=8a35da)
