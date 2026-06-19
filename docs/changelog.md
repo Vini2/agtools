@@ -1,6 +1,10 @@
 # Changelog
 
 ```
+== 1.1.1 ==
+
+- enhancements to the output handling
+
 == 1.1.0 ==
 
 - added subcommands gfa2fastg and gfa2asqg
