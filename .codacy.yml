@@ -1,0 +1,16 @@
+---
+exclude_paths:
+  - "demo/**"
+  - "docs/**"
+  - "profiling/**"
+  - "tests/data/**"
+  - "**/*.ipynb"
+
+engines:
+  duplication:
+    exclude_paths:
+      - "tests/**"
+  metric:
+    exclude_paths:
+      - "tests/**"
+      - "profiling/**"
