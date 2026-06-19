@@ -10,7 +10,7 @@ __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
-
+__version__ = __version__
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
@@ -94,6 +94,7 @@ def component(gfa_file: str, segment: str, output_path: str) -> str:
             component_segments = {ug.segment_names[node_id] for node_id in component}
             break
 
+    logger.info(f"Writing component graph...")
     output_file = _write_component_graph(component_segments, gfa_file, output_path)
 
     return output_file

@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
 
+from agtools import __version__
 from agtools.commands._output import prepare_output_file
 from agtools.core.fasta_parser import FastaParser
 from agtools.core.gfa_filter import write_filtered_gfa
 from agtools.core.unitig_graph import UnitigGraph
+
+__author__ = "Vijini Mallawaarachchi"
+__copyright__ = "Copyright 2025, agtools Project"
+__credits__ = ["Vijini Mallawaarachchi"]
+__license__ = "MIT"
+__version__ = __version__
+__maintainer__ = "Vijini Mallawaarachchi"
+__email__ = "viji.mallawaarachchi@gmail.com"
+__status__ = "Production"
 
 
 def _write_filtered_graph(

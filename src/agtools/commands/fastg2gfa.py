@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import re
-
 from agtools import __version__
 from agtools.commands._format_checks import validate_fastg_input
 from agtools.commands._output import open_output_file
@@ -10,7 +8,7 @@ __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
-
+__version__ = __version__
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
