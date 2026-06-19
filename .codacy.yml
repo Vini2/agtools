@@ -3,6 +3,7 @@ exclude_paths:
   - "demo/**"
   - "docs/**"
   - "profiling/**"
+  - "tests/**"
   - "tests/data/**"
   - "**/*.ipynb"
 
