@@ -1,14 +1,12 @@
 """agtools: A Software Framework to Manipulate Assembly Graphs"""
 
-from agtools import __version__ as __version__
-
-__all__ = ["__version__"]
+from agtools import __version__
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
 __credits__ = ["Vijini Mallawaarachchi"]
 __license__ = "MIT"
-
+__version__ = __version__
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
