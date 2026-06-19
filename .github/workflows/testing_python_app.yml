@@ -52,6 +52,6 @@ jobs:
           slug: Vini2/agtools
 
       - name: Upload coverage reports to Codacy
-        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.12' && secrets.CODACY_PROJECT_TOKEN != '' }}
+        if: ${{ matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.12' && env.CODACY_PROJECT_TOKEN != '' }}
         run: |
           bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
