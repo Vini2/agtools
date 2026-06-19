@@ -94,7 +94,7 @@ def component(gfa_file: str, segment: str, output_path: str) -> str:
             component_segments = {ug.segment_names[node_id] for node_id in component}
             break
 
-    logger.info(f"Writing component graph...")
+    logger.info("Writing component graph...")
     output_file = _write_component_graph(component_segments, gfa_file, output_path)
 
     return output_file

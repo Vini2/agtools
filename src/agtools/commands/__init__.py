@@ -25,3 +25,20 @@ from .gfa2fasta import gfa2fasta
 from .gfa2fastg import gfa2fastg
 from .rename import rename
 from .stats import stats
+
+__all__ = [
+    "__version__",
+    "asqg2gfa",
+    "clean",
+    "component",
+    "concat",
+    "fastg2gfa",
+    "filter",
+    "gfa2adj",
+    "gfa2asqg",
+    "gfa2dot",
+    "gfa2fasta",
+    "gfa2fastg",
+    "rename",
+    "stats",
+]

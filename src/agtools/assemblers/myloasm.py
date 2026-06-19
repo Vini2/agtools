@@ -51,7 +51,6 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str, contig_index: dict) -> 
             if tag == "S":  # Segment line
                 parts = line.rstrip().split("\t")
                 contig_name = parts[1]
-                seq = parts[2]
 
                 if contig_name in contig_index:
                     contig_id = len(contig_names)
@@ -61,9 +60,9 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str, contig_index: dict) -> 
             elif tag == "L":  # Link line
                 lcount += 1
                 parts = line.rstrip().split("\t")
-                from_seg, from_orient = parts[1], parts[2]
-                to_seg, to_orient = parts[3], parts[4]
-                overlap = int(parts[5][:-1])  # Remove trailing M
+                from_seg = parts[1]
+                to_seg = parts[3]
+                int(parts[5][:-1])  # Validate overlap after removing trailing M.
 
                 if from_seg in contig_index and to_seg in contig_index:
 

@@ -77,7 +77,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
                     seq2_end = int(parts[6])
                     seq2_length = int(parts[7])
                     seq2_orient = int(parts[8])
-                    overlap_dif = int(parts[9])
+                    int(parts[9])
                 except ValueError as e:
                     message = f"Malformed ED line: {line.strip()}"
                     logger.error(message)

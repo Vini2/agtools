@@ -74,9 +74,9 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
             if tag == "L":  # Link line
                 lcount += 1
                 parts = line.rstrip().split("\t")
-                from_seg, from_orient = parts[1], parts[2]
-                to_seg, to_orient = parts[3], parts[4]
-                overlap = int(parts[5][:-1])  # Remove trailing M
+                from_seg = parts[1]
+                to_seg = parts[3]
+                int(parts[5][:-1])  # Validate overlap after removing trailing M.
 
                 source = contig_name_to_id[from_seg]
                 target = contig_name_to_id[to_seg]
