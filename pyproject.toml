@@ -36,4 +36,31 @@ dev = [
     "pytest",
     "pytest-cov",
     "pytest-xdist",
+    "ruff",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["src", "tests"]
+exclude = [
+    "demo",
+    "docs",
+    "profiling",
+]
+
+[tool.ruff.lint]
+select = [
+    "E9",
+    "F63",
+    "F7",
+    "F82",
 ]
