@@ -43,7 +43,7 @@ jobs:
 
       - name: "Generate coverage report on ${{ matrix.os }} for Python ${{ matrix.python-version }}"
         run: |
-          pytest --cov=agtools --cov-report=xml --cov-append
+          PYTHONPATH=src pytest --cov=src/agtools --cov-report=xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
