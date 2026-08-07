@@ -15,10 +15,6 @@ dependencies = ["click", "loguru", "bidict", "biopython", "igraph", "pycairo", "
 [project.urls]
 Home = "https://agtools.readthedocs.io"
 
-[project.sdist]
-include = ["requirements.txt", "src/*", "pyproject.toml"]
-exclude = ["doc/*", "tests*"]
-
 [project.scripts]
 agtools = "agtools.cli:main"
 
@@ -64,3 +60,7 @@ select = [
     "F7",
     "F82",
 ]
+
+[tool.flit.sdist]
+include = ["requirements.txt", "src/*", "pyproject.toml"]
+exclude = ["doc/*", "tests*"]
