@@ -52,7 +52,7 @@ def _write_filtered_graph(
         return seg_id not in segments_to_remove
 
     def transform_segment(parts: list[str]) -> list[str]:
-        if len(parts) > 2 and parts[2] == "":
+        if len(parts) > 2 and parts[2] in ("", "*"):
             updated_parts = parts.copy()
             updated_parts[2] = str(parser.get_sequence(parts[1]))
             return updated_parts
