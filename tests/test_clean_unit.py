@@ -48,6 +48,32 @@ def test_write_filtered_graph_fills_missing_sequences_and_prunes_edges(tmp_path)
     assert "W\tw2\t*\t*\t*\t>s1" in content
 
 
+def test_write_filtered_graph_fills_star_placeholder_sequences(tmp_path):
+    """Real myloasm output uses the standard GFA1 "*" placeholder for an
+    unspecified sequence (confirmed against real myloasm assembly output), not
+    the empty-field convention the other test above covers. Both need to be
+    handled -- this was previously only handled for the empty-field case, so
+    real myloasm output silently kept "*" instead of getting a sequence filled
+    in from the FASTA.
+    """
+    gfa_file = tmp_path / "graph.gfa"
+    gfa_file.write_text(
+        "S\ts1\t*\tLN:i:4\n"
+        "S\ts2\tTT\n"
+        "L\ts1\t+\ts2\t-\t1M\n"
+    )
+
+    parser = DummyParser(index={"s1": 0}, sequences={"s1": "ACGT"})
+
+    target = tmp_path / "cleaned_graph.gfa"
+    _write_filtered_graph(set(), parser, str(gfa_file), str(target))
+    content = target.read_text()
+
+    assert "S\ts1\tACGT\tLN:i:4" in content
+    assert "S\ts1\t*\tLN:i:4" not in content
+    assert "S\ts2\tTT" in content
+
+
 def test_clean_removes_segments_missing_from_fasta_index(tmp_path, monkeypatch):
     class DummyUG:
         segment_names = ["s1", "s2"]
