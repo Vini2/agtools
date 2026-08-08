@@ -3,7 +3,7 @@
 ```
 == 1.1.2 ==
 
-- fix issue with clean when handling myloasm output
+- fix issue with clean when handling myloasm GFA files
 
 == 1.1.1 ==
 
