@@ -1,6 +1,10 @@
 # Changelog
 
 ```
+== 1.1.2 ==
+
+- fix issue with clean when handling myloasm output
+
 == 1.1.1 ==
 
 - enhancements to the output handling
