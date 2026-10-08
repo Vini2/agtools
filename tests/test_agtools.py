@@ -78,6 +78,12 @@ def test_agtools_clean():
     exec_command(cmd)
 
 
+def test_agtools_flye2contig():
+    """test agtools flye2contig"""
+    cmd = "agtools flye2contig --help"
+    exec_command(cmd)
+
+
 def test_agtools_component():
     """test agtools component"""
     cmd = "agtools component --help"
