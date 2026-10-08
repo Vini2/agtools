@@ -16,6 +16,7 @@ from .asqg2gfa import asqg2gfa
 from .clean import clean
 from .component import component
 from .concat import concat
+from .flye2contig import flye2contig
 from .fastg2gfa import fastg2gfa
 from .filter import filter
 from .gfa2adj import gfa2adj
@@ -32,6 +33,7 @@ __all__ = [
     "clean",
     "component",
     "concat",
+    "flye2contig",
     "fastg2gfa",
     "filter",
     "gfa2adj",

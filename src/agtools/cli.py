@@ -208,6 +208,43 @@ def clean(ctx, graph, fasta, assembler, output, log_file=None):
 @main.command(**_click_command_opts)
 @_graph
 @click.option(
+    "--fasta",
+    "-f",
+    help="path to the FASTA file with the final contig sequences (Flye assembly.fasta)",
+    type=click.Path(exists=True),
+    required=True,
+)
+@click.option(
+    "--info",
+    "-i",
+    help="path to the Flye assembly metadata file (assembly_info.txt)",
+    type=click.Path(exists=True),
+    required=False,
+)
+@_output
+@_log_file
+@click.pass_context
+def flye2contig(ctx, graph, fasta, info, output, log_file=None):
+    """Build a contig-level GFA file from a Flye assembly graph
+
+    Only Flye assemblies are supported for now.
+    """
+
+    begin_agtools(ctx, __version__, __url__, log_file)
+
+    logger.info(f"Building a contig-level graph from {graph[0]}")
+    logger.info(f"Using the contig sequences in {fasta}")
+
+    gfa_path = _run_value_error_as_click(
+        commands.flye2contig, graph[0], fasta, info, output
+    )
+
+    logger.info(f"Contig-level GFA file is written to {gfa_path}")
+
+
+@main.command(**_click_command_opts)
+@_graph
+@click.option(
     "--segment",
     "-s",
     help="segment ID",
