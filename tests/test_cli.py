@@ -83,6 +83,30 @@ def test_agtools_rename_walk(runner, tmp_dir):
     _assert_output_file_created(outpath)
 
 
+def test_agtools_rename_custom_separator(runner, tmp_dir):
+    outpath = tmp_dir / "rename_sep" / "renamed_graph.gfa"
+    graph = DATADIR / "test_path.gfa"
+    prefix = "test"
+    args = f"-g {graph} -p {prefix} -s . -o {outpath}".split()
+    r = runner.invoke(rename, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+    _assert_output_file_created(outpath)
+    assert "test." in pathlib.Path(outpath).read_text()
+
+
+def test_agtools_rename_collision_fails(runner, tmp_dir):
+    graph = pathlib.Path(tmp_dir) / "rename_clash" / "graph.gfa"
+    graph.parent.mkdir(parents=True, exist_ok=True)
+    graph.write_text("S\tseg1\tATGC\nS\ttest_seg1\tGCTA\n")
+
+    outpath = pathlib.Path(tmp_dir) / "rename_clash" / "renamed_graph.gfa"
+    args = f"-g {graph} -p test -o {outpath}".split()
+    r = runner.invoke(rename, args)
+    assert r.exit_code != 0
+    assert "duplicate segment IDs" in r.output
+    assert not outpath.exists()
+
+
 def test_agtools_concat(runner, tmp_dir):
     outpath = tmp_dir / "concat" / "concatenated_graph.gfa"
     graph_1 = DATADIR / "ESC" / "assembly_graph_with_scaffolds.gfa"
