@@ -15,6 +15,9 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
 
 
+DEFAULT_SEPARATOR = "_"
+
+
 def _remap_element(element_id: str, element_map: dict) -> str:
     """
     Remap an element ID using the provided mapping.
@@ -36,10 +39,67 @@ def _remap_element(element_id: str, element_map: dict) -> str:
     return element_map.get(element_id, element_id)
 
 
-def _build_element_maps(input_gfa: str, prefix: str) -> tuple:
+def _check_collisions(element_map: dict, element_type: str) -> None:
+    """
+    Check that renaming does not produce IDs that clash with existing ones.
+
+    A collision occurs when a newly generated ID is already used by a
+    different element of the same type in the input file, which would make
+    the two elements indistinguishable in the renamed file.
+
+    Parameters
+    ----------
+    element_map : dict
+        Mapping of original element IDs to new element IDs.
+
+    element_type : str
+        Name of the element type being checked (e.g. "segment"), used in the
+        error message.
+
+    Raises
+    ------
+    ValueError
+        If any new ID clashes with an existing ID, or if two different
+        original IDs map onto the same new ID.
+    """
+
+    existing_ids = set(element_map)
+
+    clashes = sorted(
+        old_id
+        for old_id, new_id in element_map.items()
+        if new_id != old_id and new_id in existing_ids
+    )
+
+    if clashes:
+        raise ValueError(
+            f"Renaming would produce duplicate {element_type} IDs. "
+            f"The following {element_type} IDs already exist in the input file "
+            f"after renaming: {', '.join(element_map[old_id] for old_id in clashes)}. "
+            "Please choose a different prefix or separator."
+        )
+
+    seen = {}
+
+    for old_id, new_id in element_map.items():
+        if new_id in seen:
+            raise ValueError(
+                f"Renaming would produce duplicate {element_type} IDs. "
+                f"Both '{seen[new_id]}' and '{old_id}' map to '{new_id}'. "
+                "Please choose a different prefix or separator."
+            )
+
+        seen[new_id] = old_id
+
+
+def _build_element_maps(
+    input_gfa: str, prefix: str, separator: str = DEFAULT_SEPARATOR
+) -> tuple:
     """
     Create a mapping of element IDs from an input GFA file, applying
     a prefix to each element ID. Used for segments, paths and walks.
+
+    An empty prefix leaves all IDs unchanged.
 
     Parameters
     ----------
@@ -48,6 +108,9 @@ def _build_element_maps(input_gfa: str, prefix: str) -> tuple:
 
     prefix : str
         Prefix to prepend to each element ID.
+
+    separator : str
+        String placed between the prefix and the original ID.
 
     Returns
     -------
@@ -58,32 +121,35 @@ def _build_element_maps(input_gfa: str, prefix: str) -> tuple:
             A dictionary mapping original path IDs to prefixed path IDs.
         - walk_map : dict[str, str]
             A dictionary mapping original walk IDs to prefixed walk IDs.
+
+    Raises
+    ------
+    ValueError
+        If renaming would produce duplicate segment, path or walk IDs.
     """
 
     segment_map = {}
     path_map = {}
     walk_map = {}
 
+    maps_by_tag = {"S": segment_map, "P": path_map, "W": walk_map}
+
+    # An empty prefix is a no-op, so no separator is prepended
+    new_prefix = f"{prefix}{separator}" if prefix else ""
+
     # Build map of old_id -> new_id
     with open(input_gfa, "r") as infile:
         for line in infile:
-            if line.startswith("S"):
-                parts = line.strip().split("\t")
-                old_id = parts[1]
-                new_id = f"{prefix}_{old_id}"
-                segment_map[old_id] = new_id
+            tag = line[:1]
 
-            elif line.startswith("P"):
+            if tag in maps_by_tag:
                 parts = line.strip().split("\t")
                 old_id = parts[1]
-                new_id = f"{prefix}_{old_id}"
-                path_map[old_id] = new_id
+                maps_by_tag[tag][old_id] = f"{new_prefix}{old_id}"
 
-            elif line.startswith("W"):
-                parts = line.strip().split("\t")
-                old_id = parts[1]
-                new_id = f"{prefix}_{old_id}"
-                walk_map[old_id] = new_id
+    _check_collisions(segment_map, "segment")
+    _check_collisions(path_map, "path")
+    _check_collisions(walk_map, "walk")
 
     return segment_map, path_map, walk_map
 
@@ -164,7 +230,12 @@ def _write_renamed_file(
     return output_file
 
 
-def rename(gfa_file: str, prefix: str, output_path: str) -> str:
+def rename(
+    gfa_file: str,
+    prefix: str,
+    output_path: str,
+    separator: str = DEFAULT_SEPARATOR,
+) -> str:
     """
     Rename segment IDs in a GFA file by applying a prefix and save the modified file.
 
@@ -174,18 +245,27 @@ def rename(gfa_file: str, prefix: str, output_path: str) -> str:
         Path to the input GFA file.
 
     prefix : str
-        Prefix to prepend to each segment ID.
+        Prefix to prepend to each segment ID. An empty prefix leaves all IDs
+        unchanged.
 
     output_path : str
         Path where the renamed GFA file will be saved.
+
+    separator : str
+        String placed between the prefix and the original ID. Defaults to "_".
 
     Returns
     -------
     str
         Path to the renamed GFA file.
+
+    Raises
+    ------
+    ValueError
+        If renaming would produce duplicate segment, path or walk IDs.
     """
 
-    segment_map, path_map, walk_map = _build_element_maps(gfa_file, prefix)
+    segment_map, path_map, walk_map = _build_element_maps(gfa_file, prefix, separator)
     output_file = _write_renamed_file(
         gfa_file, segment_map, path_map, walk_map, output_path
     )

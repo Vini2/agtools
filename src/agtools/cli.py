@@ -112,18 +112,30 @@ def stats(ctx, graph, output, log_file=None):
     default="",
     required=False,
 )
+@click.option(
+    "--separator",
+    "-s",
+    help="separator placed between the prefix and the original element ID",
+    type=str,
+    default="_",
+    show_default=True,
+    required=False,
+)
 @_output
 @_log_file
 @click.pass_context
-def rename(ctx, graph, prefix, output, log_file=None):
+def rename(ctx, graph, prefix, separator, output, log_file=None):
     """Rename segments, paths and walks in a GFA file"""
 
     begin_agtools(ctx, __version__, __url__, log_file)
 
     logger.info(f"Renaming elements in graph file {graph[0]}")
     logger.info(f"Prefix used is {prefix}")
+    logger.info(f"Separator used is {separator}")
 
-    output_file = commands.rename(graph[0], prefix, output)
+    output_file = _run_value_error_as_click(
+        commands.rename, graph[0], prefix, output, separator
+    )
 
     logger.info(f"Renamed graph file is {output_file}")
 
