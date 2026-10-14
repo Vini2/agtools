@@ -313,3 +313,33 @@ def get_contig_links(graph_file: str, contig_paths: dict) -> list:
                         )
 
     return sorted(links)
+
+
+def get_segment_lengths(graph_file: str) -> dict:
+    """
+    Map each segment name in a GFA file to its sequence length.
+
+    Parameters
+    ----------
+    graph_file : str
+        Path to the GFA file.
+
+    Returns
+    -------
+    dict[str, int]
+        Mapping from segment name to the length of its sequence.
+    """
+
+    segment_lengths = {}
+
+    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
+        for line in file:
+            if not line.startswith("S"):
+                continue
+
+            parts = line.rstrip("\n").split("\t")
+
+            if len(parts) > 2:
+                segment_lengths[parts[1]] = len(parts[2])
+
+    return segment_lengths

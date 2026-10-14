@@ -3,7 +3,11 @@
 import io
 
 from agtools import __version__
-from agtools.assemblers.flye import get_contig_links, get_contig_paths
+from agtools.assemblers.flye import (
+    get_contig_links,
+    get_contig_paths,
+    get_segment_lengths,
+)
 from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import open_output_file
 from agtools.core.fasta_parser import FastaParser
@@ -180,6 +184,7 @@ def flye2contig(
     validate_gfa_input(gfa_file, "flye2contig")
 
     contig_paths = get_contig_paths(gfa_file)
+    segment_lengths = get_segment_lengths(gfa_file)
 
     if not contig_paths:
         message = (
@@ -204,11 +209,21 @@ def flye2contig(
         )
         contig_names.extend(missing_paths)
 
-    dropped = len(contig_paths) - (len(contig_names) - len(missing_paths))
-    if dropped > 0:
+    dropped_contigs = [name for name in contig_paths if name not in parser.index]
+    if dropped_contigs:
+        dropped_bases = sum(
+            segment_lengths.get(edge, 0)
+            for name in dropped_contigs
+            for edge, _ in contig_paths[name]
+        )
         logger.warning(
-            f"Dropping {dropped} contig paths that are not present in {fasta}. "
-            "These were discarded by Flye when writing the final contigs."
+            f"Dropping {len(dropped_contigs)} contig paths that are not present "
+            f"in {fasta}, spanning roughly {dropped_bases:,} bp of graph "
+            "sequence. Flye records these paths in the assembly graph but "
+            "discards them when writing the final contigs, typically because "
+            "of low coverage or haplotype deduplication. If that sequence "
+            "matters for your analysis, take it from the assembly graph rather "
+            "than from this file."
         )
 
     kept_paths = {
