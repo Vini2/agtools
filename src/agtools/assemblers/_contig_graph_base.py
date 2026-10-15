@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import io
 from collections.abc import Callable
 
 from igraph import Graph
 
+from agtools.core._io import open_text
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 from agtools.core.unitig_graph import UnitigGraph
@@ -18,7 +18,7 @@ def get_segments(graph_file: str) -> dict[str, int]:
     segment_name_to_id = {}
     segment_names = []
 
-    with io.open(graph_file, mode="r", buffering=1024 * 1024) as f:
+    with open_text(graph_file, "rt", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -46,7 +46,7 @@ def get_graph_edges(
     self_loops = set()
     edge_list = set()
 
-    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
+    with open_text(graph_file, "rt", buffering=1024 * 1024) as file:
         line = file.readline()
 
         while line != "":

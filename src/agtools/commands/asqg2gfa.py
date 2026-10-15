@@ -3,6 +3,7 @@
 from agtools import __version__
 from agtools.commands._format_checks import validate_asqg_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -42,7 +43,7 @@ def _get_segments_and_links(asqg_file: str) -> tuple:
     raw_edges = []
 
     # Get contig connections from .asqg file
-    with open(asqg_file) as file:
+    with open_text(asqg_file, "rt") as file:
         for line in file.readlines():
 
             # Count the number of contigs

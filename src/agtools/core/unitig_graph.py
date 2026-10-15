@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import io
 import sys
 from collections import defaultdict
 
 import pandas as pd
-from Bio.Seq import Seq
 from igraph import Graph
+
+from agtools.core._io import open_text
 
 EDGE_BATCH = 1_000_000
 
@@ -149,7 +149,7 @@ class UnitigGraph:
 
         ug.file_path = file_path
 
-        with io.open(file_path, mode="r", buffering=1024 * 1024) as f:
+        with open_text(file_path, "rt", buffering=1024 * 1024) as f:
             while True:
                 pos = f.tell()
                 line = f.readline()
@@ -173,7 +173,7 @@ class UnitigGraph:
         ug.graph.add_vertices(ug.vcount)
         ug.graph.vs["name"] = ug.segment_names
 
-        with io.open(file_path, mode="r", buffering=1024 * 1024) as f:
+        with open_text(file_path, "rt", buffering=1024 * 1024) as f:
             while True:
                 pos = f.tell()
                 line = f.readline()
@@ -226,7 +226,7 @@ class UnitigGraph:
 
         return ug
 
-    def get_segment_sequence(self, seg_name: str) -> Seq:
+    def get_segment_sequence(self, seg_name: str) -> str:
         """
         Retrieve a DNA sequence for a segment.
 
@@ -240,7 +240,7 @@ class UnitigGraph:
 
         Returns
         -------
-        Bio.Seq.Seq
+        str
             The DNA sequence corresponding to the given segment.
 
         Raises
@@ -254,20 +254,20 @@ class UnitigGraph:
         Examples
         --------
         >>> ug.get_segment_sequence("unitig_1")[:10]
-        Seq('ATGCGTACGG')
+        'ATGCGTACGG'
         """
 
         if seg_name not in self.segment_offsets or seg_name not in self.segment_lengths:
             raise KeyError("Segment name does not exist in the graph")
 
         pos = self.segment_offsets[seg_name]
-        with open(self.file_path, "r") as f:
+        with open_text(self.file_path, "rt") as f:
             f.seek(pos)
             line = f.readline()
             seq = line.rstrip().split("\t")[2]
 
             if len(seq) == self.segment_lengths[seg_name]:
-                return Seq(seq)
+                return seq
             else:
                 raise ValueError("Wrong sequence retrieved")
 
@@ -305,7 +305,7 @@ class UnitigGraph:
 
         offset = self.path_index[path_name]
 
-        with io.open(self.file_path, "r", buffering=1024 * 1024) as f:
+        with open_text(self.file_path, "rt", buffering=1024 * 1024) as f:
             f.seek(offset)
             line = f.readline().rstrip("\n")
 
@@ -560,9 +560,6 @@ class UnitigGraph:
         0.42
         """
 
-        sequences = [
-            self.get_segment_sequence(seq) for seq in self.segment_lengths.keys()
-        ]
         total_length = self.calculate_total_length()
 
         if total_length == 0:
@@ -570,5 +567,12 @@ class UnitigGraph:
                 "Total length of segments is zero, cannot calculate GC content"
             )
 
-        gc_count = sum(seq.count("G") + seq.count("C") for seq in sequences)
+        # Streamed rather than materialised, so memory stays flat on large
+        # assemblies.
+        gc_count = sum(
+            sequence.count("G") + sequence.count("C")
+            for sequence in (
+                self.get_segment_sequence(name) for name in self.segment_lengths
+            )
+        )
         return gc_count / total_length

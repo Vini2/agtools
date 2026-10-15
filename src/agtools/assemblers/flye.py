@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import io
 from collections import defaultdict
 
 from agtools.assemblers._contig_graph_base import (
     build_contig_graph as _build_contig_graph,
 )
 from agtools.assemblers._contig_graph_base import get_unitig_graph as _get_unitig_graph
+from agtools.core._io import open_text
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.unitig_graph import UnitigGraph
 
@@ -40,7 +40,7 @@ def _get_segment_paths_and_contig_mapping(
 
     segment_contigs = defaultdict(set)
 
-    with io.open(contig_paths, mode="r", buffering=1024 * 1024) as file:
+    with open_text(contig_paths, "rt", buffering=1024 * 1024) as file:
         for line in file.readlines():
             if not (line.startswith("#") or line.startswith("seq_name")):
                 strings = line.strip().split()
@@ -212,7 +212,7 @@ def get_contig_paths(graph_file: str) -> dict:
 
     contig_paths = {}
 
-    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
+    with open_text(graph_file, "rt", buffering=1024 * 1024) as file:
         for line in file:
             if not line.startswith("P"):
                 continue
@@ -281,7 +281,7 @@ def get_contig_links(graph_file: str, contig_paths: dict) -> list:
 
     links = set()
 
-    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
+    with open_text(graph_file, "rt", buffering=1024 * 1024) as file:
         for line in file:
             if not line.startswith("L"):
                 continue
@@ -332,7 +332,7 @@ def get_segment_lengths(graph_file: str) -> dict:
 
     segment_lengths = {}
 
-    with io.open(graph_file, mode="r", buffering=1024 * 1024) as file:
+    with open_text(graph_file, "rt", buffering=1024 * 1024) as file:
         for line in file:
             if not line.startswith("S"):
                 continue

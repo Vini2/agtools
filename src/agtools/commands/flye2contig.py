@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import io
 
 from agtools import __version__
 from agtools.assemblers.flye import (
@@ -10,6 +9,7 @@ from agtools.assemblers.flye import (
 )
 from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 from agtools.core.fasta_parser import FastaParser
 from agtools.log_config import logger
 
@@ -45,7 +45,7 @@ def _read_assembly_info(info_file: str) -> dict:
 
     contig_info = {}
 
-    with io.open(info_file, mode="r", buffering=1024 * 1024) as file:
+    with open_text(info_file, "rt", buffering=1024 * 1024) as file:
         for line in file:
             if line.startswith("#") or line.startswith("seq_name"):
                 continue

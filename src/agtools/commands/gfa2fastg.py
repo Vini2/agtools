@@ -2,11 +2,11 @@
 
 from collections import defaultdict
 
-from Bio.Seq import Seq
-
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
+from agtools.core.seqops import reverse_complement as _reverse_complement
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -51,7 +51,7 @@ def reverse_complement(sequence: str) -> str:
         Reverse-complemented DNA sequence.
     """
 
-    return str(Seq(sequence).reverse_complement())
+    return _reverse_complement(sequence)
 
 
 def _get_graph_sequences(
@@ -78,7 +78,7 @@ def _get_graph_sequences(
     sequences = {}
     graph_nodes = defaultdict(set)
 
-    with open(gfa_file, "r") as file:
+    with open_text(gfa_file, "rt") as file:
         for line in file:
             if line.startswith("S\t"):
                 parts = line.rstrip().split("\t")

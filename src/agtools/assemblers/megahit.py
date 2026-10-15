@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import io
-
 from bidict import bidict
-from Bio import SeqIO
 from igraph import Graph
+from rsbio_seq import SeqReader
 
+from agtools.core._io import open_text
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.fasta_parser import FastaParser
 
@@ -44,7 +43,7 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
 
     graph_contig_seqs = {}
 
-    with io.open(gfa_file, mode="r", buffering=1024 * 1024) as f:
+    with open_text(gfa_file, "rt", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -63,7 +62,7 @@ def _get_links_and_contig_mapping_myloasm(gfa_file: str) -> tuple:
 
                 graph_contig_seqs[contig_name] = len(seq)
 
-    with io.open(gfa_file, mode="r", buffering=1024 * 1024) as f:
+    with open_text(gfa_file, "rt", buffering=1024 * 1024) as f:
         while True:
             line = f.readline()
             if not line:
@@ -120,9 +119,11 @@ def get_contig_graph(gfa_file: str, contigs_file: str) -> ContigGraph:
     contig_descriptions = {}
 
     # Get mapping of original contig identifiers with descriptions
-    for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
+    for record in SeqReader(str(contigs_file)):
         original_contig_seqs[record.id] = len(record.seq)
-        contig_descriptions[record.id] = record.description
+        contig_descriptions[record.id] = (
+            f"{record.id} {record.desc}" if record.desc else record.id
+        )
 
     (
         contig_names,

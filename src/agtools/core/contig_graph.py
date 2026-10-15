@@ -3,7 +3,6 @@
 import warnings
 
 import pandas as pd
-from Bio.Seq import Seq
 
 
 class ContigGraph:
@@ -104,7 +103,7 @@ class ContigGraph:
         )
         self.self_loops = self_loops
 
-    def get_contig_sequence(self, contig_name: str) -> Seq:
+    def get_contig_sequence(self, contig_name: str) -> str:
         """
         Retrieve a DNA sequence for a contig.
 
@@ -118,13 +117,13 @@ class ContigGraph:
 
         Returns
         -------
-        Bio.Seq.Seq
+        str
             The DNA sequence corresponding to the given contig.
 
         Examples
         --------
         >>> cg.get_contig_sequence("contig_1")
-        Seq('TTGATGCGACGTACGG')
+        'TTGATGCGACGTACGG'
         """
         return self.contig_parser.get_sequence(contig_name)
 
@@ -297,6 +296,28 @@ class ContigGraph:
 
         return sum(self.graph.degree()) / self.graph.vcount()
 
+    def _iter_contig_lengths(self):
+        """
+        Yield the length of every contig in the graph.
+
+        When the parser has an ``.fai`` index, lengths are streamed from it
+        and no sequence data is read at all -- on a 1 GB assembly that turns
+        a full read of every base into a scan of the index. Otherwise this
+        falls back to measuring the sequences themselves.
+        """
+        parser = self.contig_parser
+        cheap = getattr(parser, "has_cheap_lengths", None)
+
+        if cheap is not None and cheap():
+            wanted = {parser.lookup_key(name) for name in self.contig_names}
+            for name, length in parser.iter_lengths():
+                if name in wanted:
+                    yield length
+            return
+
+        for name in self.contig_names:
+            yield len(parser.get_sequence(name))
+
     def calculate_total_length(self) -> int:
         """
         Calculate the total length of all contigs in the graph.
@@ -311,10 +332,7 @@ class ContigGraph:
         >>> cg.calculate_total_length()
         120000
         """
-        contig_lengths = [
-            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
-        ]
-        return sum(contig_lengths)
+        return sum(self._iter_contig_lengths())
 
     def calculate_average_contig_length(self) -> float:
         """
@@ -336,9 +354,7 @@ class ContigGraph:
         40000
         """
 
-        contig_lengths = [
-            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
-        ]
+        contig_lengths = list(self._iter_contig_lengths())
         if len(contig_lengths) == 0:
             raise ValueError(
                 "Graph does not have any contigs, cannot calculate average contig length"
@@ -365,10 +381,7 @@ class ContigGraph:
         (15000, 12)
         """
 
-        contig_lengths = [
-            len(self.contig_parser.get_sequence(seq)) for seq in self.contig_names
-        ]
-        sorted_lengths = sorted(contig_lengths, reverse=True)
+        sorted_lengths = sorted(self._iter_contig_lengths(), reverse=True)
         total_length = sum(sorted_lengths)
         cum_sum = 0
 
@@ -397,9 +410,6 @@ class ContigGraph:
         0.42
         """
 
-        contig_sequences = [
-            self.contig_parser.get_sequence(seq) for seq in self.contig_names
-        ]
         total_length = self.calculate_total_length()
 
         if total_length == 0:
@@ -407,5 +417,12 @@ class ContigGraph:
                 "Total length of contigs is zero, cannot calculate GC content"
             )
 
-        gc_count = sum(seq.count("G") + seq.count("C") for seq in contig_sequences)
+        # Streamed rather than materialised, so memory stays flat on large
+        # assemblies.
+        gc_count = sum(
+            sequence.count("G") + sequence.count("C")
+            for sequence in (
+                self.contig_parser.get_sequence(name) for name in self.contig_names
+            )
+        )
         return gc_count / total_length

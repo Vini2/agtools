@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from agtools.core._io import open_text
 from agtools.log_config import logger
 
 _GFA_TAGS = {"H", "S", "L", "J", "C", "P", "W"}
@@ -14,7 +15,7 @@ def _scan_graph_file(file_path: str) -> tuple[str | None, dict[str, int], str]:
     first_format = None
     counts = {"gfa_segments": 0, "fastg_headers": 0, "asqg_segments": 0}
 
-    with open(file_path, "r") as file:
+    with open_text(file_path, "rt") as file:
         for line in file:
             stripped = line.strip()
             if not stripped:

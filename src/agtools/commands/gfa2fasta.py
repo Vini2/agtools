@@ -2,13 +2,12 @@
 
 import re
 
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
+from rsbio_seq import Sequence
 
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -19,6 +18,8 @@ __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Production"
 
+LINE_WIDTH = 60
+
 
 def _get_segment_sequences(gfa_file: str) -> list:
     """
@@ -26,8 +27,9 @@ def _get_segment_sequences(gfa_file: str) -> list:
 
     This function reads the GFA file and extracts lines starting with 'S'
     (which represent segments), cleaning the sequence strings to include only
-    valid nucleotide characters (G, A, T, C). It returns a list of BioPython
-    SeqRecord objects representing each segment.
+    valid nucleotide characters (G, A, T, C). It returns a list of
+    ``rsbio_seq.Sequence`` objects representing each segment. The GFA file may
+    be plain text or gzip-compressed.
 
     Parameters
     ----------
@@ -36,25 +38,24 @@ def _get_segment_sequences(gfa_file: str) -> list:
 
     Returns
     -------
-    list of Bio.SeqRecord.SeqRecord
-        A list of SeqRecord objects containing the cleaned segment sequences.
+    list of rsbio_seq.Sequence
+        A list of Sequence objects containing the cleaned segment sequences.
     """
 
     sequences = []
 
-    with open(gfa_file) as file:
-        for line in file.readlines():
+    with open_text(gfa_file, "rt", buffering=1024 * 1024) as file:
+        for line in file:
             if line.startswith("S"):
                 strings = line.split("\t")
 
-                record = SeqRecord(
-                    Seq(re.sub("[^GATC]", "", str(strings[2].strip()).upper())),
-                    id=str(strings[1]),
-                    name=str(strings[1]),
-                    description="",
+                sequences.append(
+                    Sequence(
+                        str(strings[1]),
+                        "",
+                        re.sub("[^GATC]", "", str(strings[2].strip()).upper()),
+                    )
                 )
-
-                sequences.append(record)
 
     return sequences
 
@@ -63,15 +64,16 @@ def _write_segment_sequences(sequences: list, output_path: str) -> str:
     """
     Write segment sequences to a FASTA file.
 
-    This function saves a list of BioPython SeqRecord objects to a FASTA file
-    at the specified output path.
+    This function saves a list of ``rsbio_seq.Sequence`` objects to a FASTA
+    file at the specified output path. Sequences are wrapped at
+    ``LINE_WIDTH`` characters.
 
     Parameters
     ----------
-    sequences : list of Bio.SeqRecord.SeqRecord
-        A list of SeqRecord objects to write to the FASTA file.
+    sequences : list of rsbio_seq.Sequence
+        A list of Sequence objects to write to the FASTA file.
     output_path : str
-        Path where the FASTA file will be saved.
+        Path where the FASTA file will be saved, or `-` for stdout.
 
     Returns
     -------
@@ -79,7 +81,11 @@ def _write_segment_sequences(sequences: list, output_path: str) -> str:
         Path to the output FASTA file.
     """
     with open_output_file(output_path) as (output_file, output_handle):
-        SeqIO.write(sequences, output_handle, "fasta")
+        for record in sequences:
+            output_handle.write(f">{record.id}\n")
+            sequence = record.seq
+            for start in range(0, len(sequence), LINE_WIDTH):
+                output_handle.write(f"{sequence[start : start + LINE_WIDTH]}\n")
 
     return output_file
 
@@ -94,7 +100,7 @@ def gfa2fasta(gfa_file: str, output_path: str) -> str:
     Parameters
     ----------
     gfa_file : str
-        Path to the input GFA file.
+        Path to the input GFA file. May be plain text or gzip-compressed.
     output_path : str
         Path where the output FASTA file should be saved.
 

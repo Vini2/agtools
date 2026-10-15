@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import io
 import re
 from collections import defaultdict
 
@@ -8,6 +7,7 @@ from agtools.assemblers._contig_graph_base import (
     build_contig_graph as _build_contig_graph,
 )
 from agtools.assemblers._contig_graph_base import get_unitig_graph as _get_unitig_graph
+from agtools.core._io import open_text
 from agtools.core.contig_graph import ContigGraph
 from agtools.core.unitig_graph import UnitigGraph
 
@@ -43,7 +43,7 @@ def _get_segment_paths_and_contig_mapping(
 
     current_contig_num = -1
 
-    with io.open(contig_paths, mode="r", buffering=1024 * 1024) as file:
+    with open_text(contig_paths, "rt", buffering=1024 * 1024) as file:
         name = file.readline().rstrip()
         path = file.readline().rstrip("\n")
 

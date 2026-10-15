@@ -5,6 +5,7 @@ import re
 from agtools import __version__
 from agtools.commands._format_checks import validate_gfa_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -67,7 +68,7 @@ def _get_segments_and_edges(gfa_file: str) -> tuple[dict[str, str], list[list]]:
     segment_lengths = {}
     raw_links = []
 
-    with open(gfa_file) as file:
+    with open_text(gfa_file, "rt") as file:
         for line in file:
             if line.startswith("S\t"):
                 parts = line.strip().split("\t")

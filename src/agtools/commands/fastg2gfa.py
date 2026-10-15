@@ -3,6 +3,7 @@
 from agtools import __version__
 from agtools.commands._format_checks import validate_fastg_input
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -39,7 +40,7 @@ def _parse_fastg(fastg_file: str) -> tuple:
     segment_key = None
     seq_lines = []
 
-    with open(fastg_file, "r") as f:
+    with open_text(fastg_file, "rt") as f:
         for line in f.readlines():
             line = line.strip()
 

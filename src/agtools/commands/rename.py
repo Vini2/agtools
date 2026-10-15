@@ -4,6 +4,7 @@ import re
 
 from agtools import __version__
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2025, agtools Project"
@@ -138,7 +139,7 @@ def _build_element_maps(
     new_prefix = f"{prefix}{separator}" if prefix else ""
 
     # Build map of old_id -> new_id
-    with open(input_gfa, "r") as infile:
+    with open_text(input_gfa, "rt") as infile:
         for line in infile:
             tag = line[:1]
 
@@ -185,7 +186,7 @@ def _write_renamed_file(
 
     # Rewrite file with renamed segment IDs
     with (
-        open(input_gfa, "r") as infile,
+        open_text(input_gfa, "rt") as infile,
         open_output_file(output_path) as (
             output_file,
             outfile,

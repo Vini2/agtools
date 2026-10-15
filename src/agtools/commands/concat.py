@@ -6,6 +6,7 @@ import tempfile
 
 from agtools import __version__
 from agtools.commands._output import open_output_file
+from agtools.core._io import open_text
 from agtools.log_config import logger
 
 __author__ = "Vijini Mallawaarachchi"
@@ -51,7 +52,7 @@ def concat(graph_files: list, output_path: str) -> str:
     try:
         # Single pass per file: distribute lines into per-tag temp files
         for graph_file in graph_files:
-            with open(graph_file, "r") as f:
+            with open_text(graph_file, "rt") as f:
                 for line in f:
                     tag = line[0]
 

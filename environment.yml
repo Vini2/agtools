@@ -8,7 +8,10 @@ dependencies:
   - click
   - loguru
   - bidict
-  - biopython
+  - pip
   - python-igraph
   - pycairo
   - pandas
+  - pip:
+      # rsbio-seq is not yet packaged for conda; installed from PyPI
+      - rsbio-seq
