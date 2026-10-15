@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pytest
-from Bio.Seq import Seq
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
@@ -13,7 +12,7 @@ class DummyParser:
         self.sequences = sequences or {}
 
     def get_sequence(self, seq_name):
-        return Seq(self.sequences.get(seq_name, ""))
+        return self.sequences.get(seq_name, "")
 
 
 def _build_empty_contig_graph():

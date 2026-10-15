@@ -44,9 +44,10 @@ def test_contig_sequences(contig_graph):
 
 
 def test_contig_index(contig_graph):
+    # Offsets point at the first sequence base, as recorded in the .fai index.
 
-    assert contig_graph.contig_parser.index["contig_2"] == 8896084
-    assert contig_graph.contig_parser.index["contig_57"] == 20574852
+    assert contig_graph.contig_parser.index["contig_2"] == 8896094
+    assert contig_graph.contig_parser.index["contig_57"] == 20574863
 
 
 def test_contig_mappings(contig_graph):

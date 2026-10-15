@@ -72,12 +72,13 @@ def test_contig_sequences(contig_graph):
 
 
 def test_contig_index(contig_graph):
+    # Offsets point at the first sequence base, as recorded in the .fai index.
 
     assert (
-        contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485847
+        contig_graph.contig_parser.index["NODE_174_length_58_cov_650.333333"] == 8485882
     )
     assert (
-        contig_graph.contig_parser.index["NODE_189_length_56_cov_33.000000"] == 8487228
+        contig_graph.contig_parser.index["NODE_189_length_56_cov_33.000000"] == 8487262
     )
 
 

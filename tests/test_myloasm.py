@@ -52,9 +52,10 @@ def test_contig_sequences(contig_graph):
 
 
 def test_contig_index(contig_graph):
+    # Offsets point at the first sequence base, as recorded in the .fai index.
 
-    assert contig_graph.contig_parser.index["u579439ctg"] == 0
-    assert contig_graph.contig_parser.index["u913838ctg"] == 39374
+    assert contig_graph.contig_parser.index["u579439ctg"] == 56
+    assert contig_graph.contig_parser.index["u913838ctg"] == 39430
 
 
 def test_adjacency_matrix_raw(contig_graph):

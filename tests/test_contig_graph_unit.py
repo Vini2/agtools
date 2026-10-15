@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pytest
-from Bio.Seq import Seq
 from igraph import Graph
 
 from agtools.core.contig_graph import ContigGraph
@@ -12,7 +11,7 @@ class DummyParser:
         self.sequences = sequences
 
     def get_sequence(self, seq_name):
-        return Seq(self.sequences[seq_name])
+        return self.sequences[seq_name]
 
 
 def _build_contig_graph():
@@ -72,4 +71,3 @@ def test_contig_graph_connected_components_and_metrics():
     assert cg.calculate_average_contig_length() == pytest.approx(8 / 3)
     assert cg.calculate_n50_l50() == (4, 1)
     assert cg.get_gc_content() == pytest.approx(4 / 8)
-
