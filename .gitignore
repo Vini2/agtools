@@ -176,3 +176,7 @@ demo/*.csv
 # Profiling data
 profiling/data/*
 profiling/time_logs/*
+
+# Sequence index files generated on demand
+*.fai
+*.gzi
